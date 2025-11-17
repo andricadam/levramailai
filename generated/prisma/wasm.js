@@ -167,8 +167,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           String  @id @default(cuid())\n  emailAddress String  @unique\n  firstName    String\n  lastName     String\n  imageUrl     String?\n}\n",
-  "inlineSchemaHash": "c8e0b39698f60383007b4671b38e2d9918553d5cb46dfdf7e8a5a6a18cf23a19",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           String  @id // Using Clerk's user ID, no default needed\n  emailAddress String  @unique\n  firstName    String\n  lastName     String\n  imageUrl     String?\n}\n",
+  "inlineSchemaHash": "7bb65137ec98c99e6ec2ee1588ba3d8778f5b788533d3e603f6c3cc39f0c8995",
   "copyEngine": true
 }
 config.dirname = '/'

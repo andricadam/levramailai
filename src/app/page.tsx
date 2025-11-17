@@ -1,10 +1,6 @@
-import { Button } from "@/components/ui/button"
-
-// Force dynamic rendering to prevent caching
-export const dynamic = 'force-dynamic'
+import LinkAccountButton from "@/components/ui/link-account-button";
+import { Button } from "@/components/ui/button";
 
 export default async function Home() {
-  return <Button>Hello World</Button> 
-
-
+  return <LinkAccountButton />
 }

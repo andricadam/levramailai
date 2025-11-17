@@ -1994,7 +1994,7 @@ export namespace Prisma {
   }
 
   export type UserCreateInput = {
-    id?: string
+    id: string
     emailAddress: string
     firstName: string
     lastName: string
@@ -2002,7 +2002,7 @@ export namespace Prisma {
   }
 
   export type UserUncheckedCreateInput = {
-    id?: string
+    id: string
     emailAddress: string
     firstName: string
     lastName: string
@@ -2026,7 +2026,7 @@ export namespace Prisma {
   }
 
   export type UserCreateManyInput = {
-    id?: string
+    id: string
     emailAddress: string
     firstName: string
     lastName: string

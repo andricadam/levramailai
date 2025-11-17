@@ -13,6 +13,7 @@ export const env = createEnv({
       .default("development"),
     WEBHOOK_SECRET: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
+    AURINKO_CLIENT_ID: z.string().min(1),
   },
 
   /**
@@ -33,6 +34,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    AURINKO_CLIENT_ID: process.env.AURINKO_CLIENT_ID,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
   },
   /**

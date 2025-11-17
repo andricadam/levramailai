@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id           String  @id @default(cuid())
+  id           String  @id // Using Clerk's user ID, no default needed
   emailAddress String  @unique
   firstName    String
   lastName     String
