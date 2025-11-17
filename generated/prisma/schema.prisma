@@ -12,9 +12,21 @@ datasource db {
 }
 
 model User {
-  id           String  @id // Using Clerk's user ID, no default needed
-  emailAddress String  @unique
+  id           String    @id // Using Clerk's user ID, no default needed
+  emailAddress String    @unique
   firstName    String
   lastName     String
   imageUrl     String?
+  accounts     Account[]
+}
+
+model Account {
+  id     String @id @default(cuid())
+  userId String
+
+  accessToken  String @unique
+  emailAddress String
+  name         String
+
+  user User @relation(fields: [userId], references: [id])
 }

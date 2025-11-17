@@ -53,12 +53,24 @@ export const getAurinkoAuthUrl = async (serviceType: 'Google' | 'Office365') => 
 
 export const exchangeCodeForAccessToken = async (code: string) => {
     try {
-        const response = await axios.post(`https://api.aurinko.io/v1/auth/token/${code}`, {
-            auth: {
-                username: process.env.AURINKO_CLIENT_ID as string,
-                password: process.env.AURINKO_CLIENT_SECRET as string,
+        const clientId = env.AURINKO_CLIENT_ID
+        const clientSecret = env.AURINKO_CLIENT_SECRET
+
+        if (!clientId || !clientSecret) {
+            throw new Error('AURINKO_CLIENT_ID or AURINKO_CLIENT_SECRET is not configured')
+        }
+
+        // Aurinko returns a JWT as the code parameter - use it directly in the URL path
+        const response = await axios.post(
+            `https://api.aurinko.io/v1/auth/token/${code}`,
+            {},
+            {
+                auth: {
+                    username: clientId,
+                    password: clientSecret,
+                }
             }
-        })
+        )
         return response.data as {
             accountId: number,
             accessToken: string,
@@ -67,9 +79,18 @@ export const exchangeCodeForAccessToken = async (code: string) => {
         }
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            console.error(error.response?.data)
+            const errorData = error.response?.data
+            const errorMessage = errorData?.message || error.message || 'Unknown error'
+            const statusCode = error.response?.status
+            console.error('=== TOKEN EXCHANGE ERROR ===')
+            console.error('Status:', statusCode)
+            console.error('Message:', errorMessage)
+            console.error('Full error data:', JSON.stringify(errorData, null, 2))
+            console.error('Response headers:', error.response?.headers)
+            throw new Error(`Failed to exchange code for access token: ${errorMessage}`)
         }
-        console.error(error)
+        console.error('Unexpected error exchanging code:', error)
+        throw error
     }
 }
 
