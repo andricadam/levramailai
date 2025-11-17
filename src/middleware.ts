@@ -11,17 +11,9 @@ const isPublicRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   // Protect all routes except public ones
   if (!isPublicRoute(req)) {
-    const { userId } = await auth()
-    
-    // If user is not authenticated, redirect to sign-in
-    if (!userId) {
-      const signInUrl = new URL('/sign-in', req.url)
-      signInUrl.searchParams.set('redirect_url', req.url)
-      return NextResponse.redirect(signInUrl)
-    }
+    // Use auth.protect() which handles all Clerk edge cases including handshakes
+    await auth.protect()
   }
-  
-  return NextResponse.next()
 })
 
 export const config = {
