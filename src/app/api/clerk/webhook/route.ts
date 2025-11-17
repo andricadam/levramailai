@@ -101,7 +101,14 @@ export async function POST(req: Request) {
       }
 
       // Upsert user (create or update) - only if we have an email
-      await db.user.upsert({
+      console.log('Attempting to save user to database:', {
+        id,
+        email: primaryEmail,
+        firstName: first_name,
+        lastName: last_name,
+      });
+
+      const savedUser = await db.user.upsert({
         where: { id: id },
         update: {
           emailAddress: primaryEmail,
@@ -118,13 +125,26 @@ export async function POST(req: Request) {
         },
       });
 
-      console.log('User saved to database:', id);
-      return new Response('User saved', { status: 200 });
+      console.log('User successfully saved to database:', savedUser);
+      return new Response(JSON.stringify({ message: 'User saved', user: savedUser }), { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
     } catch (error) {
       console.error('Error saving user to database:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      console.error('Error details:', { errorMessage, errorStack, error });
       return new Response(
-        `Error saving user: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        { status: 500 }
+        JSON.stringify({ 
+          error: 'Error saving user', 
+          message: errorMessage,
+          stack: errorStack 
+        }),
+        { 
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
       );
     }
   }
