@@ -21,7 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
   
-  // Allow the request to proceed
+  // Allow authenticated requests to proceed
   return NextResponse.next()
 })
 
