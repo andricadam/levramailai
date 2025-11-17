@@ -7,13 +7,13 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.string().url().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    WEBHOOK_SECRET: z.string().min(1),
-    CLERK_SECRET_KEY: z.string().min(1),
-    AURINKO_CLIENT_ID: z.string().min(1),
+    WEBHOOK_SECRET: z.string().min(1).optional(),
+    CLERK_SECRET_KEY: z.string().min(1).optional(),
+    AURINKO_CLIENT_ID: z.string().min(1).optional(),
   },
 
   /**

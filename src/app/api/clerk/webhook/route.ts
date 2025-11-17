@@ -25,6 +25,12 @@ export async function POST(req: Request) {
   // Get the webhook secret from environment variables
   const WEBHOOK_SECRET = env.WEBHOOK_SECRET;
 
+  if (!WEBHOOK_SECRET) {
+    return new Response('Error occurred -- WEBHOOK_SECRET is not configured', {
+      status: 500,
+    });
+  }
+
   // Create a new Svix instance with your webhook secret
   const wh = new Webhook(WEBHOOK_SECRET);
 
