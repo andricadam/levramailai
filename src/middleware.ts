@@ -32,6 +32,3 @@ export const config = {
     '/(api|trpc)(.*)',
   ],
 }
-
-// Ensure middleware runs on edge runtime
-export const runtime = 'edge'
