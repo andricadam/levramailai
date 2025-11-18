@@ -4,8 +4,10 @@ import React from 'react'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { Separator } from '@/components/ui/separator'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
+import { AccountSwitcher } from './account-switcher'
+import { Sidebar } from './sidebar'
 
 type Props = {
     defaultLayout: number[] | undefined
@@ -39,11 +41,11 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                 <div className='flex flex-col h-full flex-1'>
                     <div className={cn('flex h-[52px] items-center justify-between', isCollapsed ? 'h-[52px]' : 'px-2')}>
                         {/* Account Switcher */}
-                        Account Switcher
+                        <AccountSwitcher isCollapsed={isCollapsed} />
                     </div>
                     <Separator />
                     {/* Sidebar */}
-                    Sidebar
+                    <Sidebar isCollapsed={isCollapsed} />
                     <div className="flex-1"></div>
                     {/* AI */}
                     Ask AI
@@ -63,7 +65,20 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                             </TabsTrigger>
                         </TabsList>
                     </div>
+                    <Separator />
+                    {/* Search Bar */}
+                    Search Bar
+                    <TabsContent value="inbox">
+                    Inbox
+                    </TabsContent>
+                    <TabsContent value="done">
+                    Done
+                    </TabsContent>
                 </Tabs>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
+                thread display
             </ResizablePanel>
         </ResizablePanelGroup>
     </TooltipProvider>
