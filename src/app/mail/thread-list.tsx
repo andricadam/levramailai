@@ -1,5 +1,5 @@
 'use client'
-import DOMPurify from 'dompurify'
+import DOMPurify from 'isomorphic-dompurify'
 import { Badge } from '@/components/ui/badge'
 import { type ComponentProps } from 'react'
 import useThreads from '@/hooks/use-threads'

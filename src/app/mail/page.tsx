@@ -1,6 +1,8 @@
 import React from 'react'
 import Mail from './mail'
 
+export const dynamic = 'force-dynamic'
+
 const MailDashboard = () => {
     return (
         <Mail
