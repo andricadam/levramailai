@@ -1,6 +1,7 @@
 import { Account } from "@/lib/acount";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/server/db";
+import { syncEmailsToDatabase } from "@/lib/sync-to-db";
 
 export const POST = async (req: NextRequest) => {
     const { accountId, userId } = await req.json();
@@ -23,10 +24,13 @@ export const POST = async (req: NextRequest) => {
     }
     const { emails, deltaToken } = response
 
-    // Log the emails to console (like in the tutorial)
-    console.log(emails);
+    // Log initial sync completion with email count (like in tutorial)
+    console.log(`initial sync completed, we have synced ${emails.length} emails`);
 
-    // Log the delta token (like in the tutorial)
+    // Sync emails to database (this will log "upserting email X" for each email)
+    await syncEmailsToDatabase(emails, accountId);
+
+    // Log the delta token after sync completes (like in the tutorial)
     console.log('sync completed', deltaToken);
 
     // TODO: Add nextDeltaToken field to Account model in schema
@@ -38,9 +42,6 @@ export const POST = async (req: NextRequest) => {
     //         nextDeltaToken: deltaToken
     //     }
     // })
-    
-    // TODO: Implement syncEmailsToDatabase function
-    // await syncEmailsToDatabase(emails);
 
     console.log('Initial sync triggered', { success: true });
     return NextResponse.json({ success: true }, { status: 200 });

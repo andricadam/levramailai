@@ -1,9 +1,14 @@
-export default function MailPage() {
+import React from 'react'
+import Mail from './mail'
+
+const MailDashboard = () => {
     return (
-        <div className="container mx-auto p-8">
-            <h1 className="text-2xl font-bold mb-4">Mail</h1>
-            <p>Your email account has been successfully linked!</p>
-        </div>
+        <Mail
+            defaultLayout={[20,32,48]}
+            navCollapsedSize={4}
+            defaultCollapsed={false}
+        />
     )
 }
 
+export default MailDashboard
