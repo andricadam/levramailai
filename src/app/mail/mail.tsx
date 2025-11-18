@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { AccountSwitcher } from './account-switcher'
 import { Sidebar } from './sidebar'
+import ThreadList from './thread-list'
 
 type Props = {
     defaultLayout: number[] | undefined
@@ -69,10 +70,10 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                     {/* Search Bar */}
                     Search Bar
                     <TabsContent value="inbox">
-                    Inbox
+                        <ThreadList />
                     </TabsContent>
                     <TabsContent value="done">
-                    Done
+                        <ThreadList />
                     </TabsContent>
                 </Tabs>
             </ResizablePanel>
