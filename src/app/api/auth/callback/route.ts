@@ -2,6 +2,9 @@ import { auth, currentUser } from "@clerk/nextjs/server"
 import { NextRequest, NextResponse } from 'next/server'
 import { exchangeCodeForAccessToken, getAccountDetails } from '@/lib/aurinko'
 import { db } from '@/server/db'
+import { waitUntil } from '@vercel/functions'
+import axios from 'axios'
+import { headers } from 'next/headers'
 
 export async function GET(req: NextRequest) {
     const { userId } = await auth()
@@ -75,6 +78,26 @@ export async function GET(req: NextRequest) {
             accessToken: token.accessToken,
         }
     })
+
+    // Trigger initial sync in the background via POST to /api/initial-sync
+    const headersList = await headers()
+    const host = headersList.get('host')
+    const protocol = headersList.get('x-forwarded-proto') || 'http'
+    const baseUrl = `${protocol}://${host}`
+    
+    waitUntil(
+        axios.post(`${baseUrl}/api/initial-sync`, { 
+            accountId: token.accountId.toString(), 
+            userId 
+        }).then((res) => {
+            console.log(res.data)
+        }).catch((err) => {
+            console.error('Initial sync error:', err.message)
+            if (err.response) {
+                console.error('Error response:', err.response.data)
+            }
+        })
+    )
 
     return NextResponse.redirect(new URL('/mail', req.url))
 }
