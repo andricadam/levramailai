@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { db } from "@/server/db";
+import { emailAddressSchema } from "@/types";
+import { Account } from "@/lib/acount";
 
 export const authoriseAccess = async (accountId: string, userId: string) => {
     const account = await db.account.findFirst({
@@ -18,14 +20,37 @@ export const authoriseAccess = async (accountId: string, userId: string) => {
 
 export const accountRouter = createTRPCRouter({
     getAccounts: privateProcedure.query(async ({ctx})=>{
-        return await ctx.db.account.findMany({
-            where: {
-                userId: ctx.auth.userId
-            },
-            select: {
-                id: true, emailAddress: true, name: true
+        const userId = ctx.auth.userId
+        console.log('getAccounts query - userId:', userId)
+        
+        try {
+            const accounts = await ctx.db.account.findMany({
+                where: {
+                    userId: userId
+                },
+                select: {
+                    id: true, emailAddress: true, name: true
+                }
+            })
+            
+            console.log('getAccounts query - found accounts:', accounts.length, accounts)
+            
+            return accounts
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error)
+            console.error('❌ getAccounts query failed:', errorMessage)
+            
+            // If it's a connection error, provide helpful message
+            if (errorMessage.includes("Can't reach database server")) {
+                console.error('💡 Database connection issue detected!')
+                console.error('   This usually means:')
+                console.error('   1. Supabase database is paused (most common on free tier)')
+                console.error('   2. Go to https://supabase.com/dashboard and resume your project')
+                console.error('   3. Or check your DATABASE_URL in .env file')
             }
-        })
+            
+            throw error
+        }
     }),
     getMyAccount: privateProcedure
         .input(z.object({
@@ -165,5 +190,87 @@ export const accountRouter = createTRPCRouter({
             from: { name: account.name, address: account.emailAddress },
             id: lastExternalEmail.internetMessageId
         }
+    }),
+    sendEmail: privateProcedure.input(z.object({
+        accountId: z.string(),
+        body: z.string(),
+        subject: z.string(),
+        from: emailAddressSchema,
+        cc: z.array(emailAddressSchema).optional(),
+        bcc: z.array(emailAddressSchema).optional(),
+        to: z.array(emailAddressSchema),
+
+        replyTo: z.array(emailAddressSchema).optional(),
+        inReplyTo: z.string().optional(),
+        threadId: z.string().optional(),
+        references: z.array(z.string()).optional(),
+    })).mutation(async ({ ctx, input }) => {
+        const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        const acc = new Account(account.accessToken as string)
+        await acc.sendEmail({
+            body: input.body,
+            subject: input.subject,
+            from: input.from,
+            to: input.to,
+            cc: input.cc,
+            bcc: input.bcc,
+            replyTo: input.replyTo,
+            inReplyTo: input.inReplyTo,
+            threadId: input.threadId,
+            references: input.references
+        })
+    }),
+    deleteAccount: privateProcedure.input(z.object({
+        accountId: z.string(),
+    })).mutation(async ({ ctx, input }) => {
+        // Verify the account belongs to the user
+        const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        
+        // Get all thread IDs for this account
+        const threads = await ctx.db.thread.findMany({
+            where: { accountId: account.id },
+            select: { id: true }
+        });
+        const threadIds = threads.map(t => t.id);
+
+        // Delete in correct order due to foreign key constraints
+        if (threadIds.length > 0) {
+            // 1. Delete email attachments
+            await ctx.db.emailAttachment.deleteMany({
+                where: {
+                    Email: {
+                        threadId: { in: threadIds }
+                    }
+                }
+            });
+
+            // 2. Delete emails
+            await ctx.db.email.deleteMany({
+                where: {
+                    threadId: { in: threadIds }
+                }
+            });
+        }
+
+        // 3. Delete threads
+        await ctx.db.thread.deleteMany({
+            where: {
+                accountId: account.id
+            }
+        });
+
+        // 4. Delete email addresses
+        await ctx.db.emailAddress.deleteMany({
+            where: {
+                accountId: account.id
+            }
+        });
+
+        // 5. Delete the account
+        await ctx.db.account.delete({
+            where: { id: account.id }
+        });
+
+        return { success: true };
     })
 })

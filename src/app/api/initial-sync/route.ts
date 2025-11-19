@@ -33,15 +33,15 @@ export const POST = async (req: NextRequest) => {
     // Log the delta token after sync completes (like in the tutorial)
     console.log('sync completed', deltaToken);
 
-    // TODO: Add nextDeltaToken field to Account model in schema
-    // await db.account.update({
-    //     where: {
-    //         id: accountId,
-    //     },
-    //     data: {
-    //         nextDeltaToken: deltaToken
-    //     }
-    // })
+    // Save the delta token to the database for future incremental syncs
+    await db.account.update({
+        where: {
+            id: accountId,
+        },
+        data: {
+            nextDeltaToken: deltaToken
+        }
+    })
 
     console.log('Initial sync triggered', { success: true });
     return NextResponse.json({ success: true }, { status: 200 });

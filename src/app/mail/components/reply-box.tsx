@@ -4,6 +4,8 @@ import { api, type RouterOutputs } from '@/trpc/react'
 import useThreads from '@/hooks/use-threads'
 import { useState } from 'react'
 import React from 'react'
+import type { EmailAddress } from '@/types'
+import { toast } from 'sonner'
 
 const ReplyBox = () => {
     const { threadId, accountId } = useThreads()
@@ -55,14 +57,29 @@ const Component = ({ replyDetails }: { replyDetails: RouterOutputs['account']['g
     )
     const [isSending, setIsSending] = useState(false)
 
+    const sendEmail = api.account.sendEmail.useMutation()
+
     const handleSend = async (value: string) => {
-        setIsSending(true)
-        try {
-            // TODO: Implement send email logic
-            console.log('Sending email:', { subject, toValues, ccValues, body: value, threadId, accountId })
-        } finally {
-            setIsSending(false)
-        }
+        if (!replyDetails) return
+        sendEmail.mutate({
+            accountId: accountId ?? "",
+            threadId: threadId ?? undefined,
+            body: value,
+            subject: subject,
+            from: replyDetails.from,
+            to: replyDetails.to.map(to => ({ address: to.address, name: to.name ?? "" })),
+            cc: replyDetails.cc.map(cc => ({ address: cc.address, name: cc.name ?? "" })),
+            replyTo: [replyDetails.from],
+            inReplyTo: replyDetails.id
+        }, {
+            onSuccess: () => {
+                toast.success('Email sent successfully')
+            },
+            onError: (error) => {
+                console.log(error)
+                toast.error('Failed to send email')
+            }
+        })
     }
 
     const to = toValues.map(v => v.value)

@@ -24,7 +24,10 @@ const ComposeButton = () => {
     const [toValues, setToValues] = React.useState<{ label: string; value: string; }[]>([])
     const [ccValues, setCcValues] = React.useState<{ label: string; value: string; }[]>([])
     const [subject, setSubject] = React.useState<string>('')
-    const { data: account } = api.account.getMyAccount.useQuery({ accountId })
+    const { data: account } = api.account.getMyAccount.useQuery(
+        { accountId },
+        { enabled: !!accountId, retry: false }
+    )
 
 
     React.useEffect(() => {
@@ -42,21 +45,19 @@ const ComposeButton = () => {
         };
     }, []);
 
-    const sendEmail = api.mail.sendEmail.useMutation()
+    const sendEmail = api.account.sendEmail.useMutation()
 
     const handleSend = async (value: string) => {
-        console.log(account)
-        console.log({ value })
         if (!account) return
         sendEmail.mutate({
-            accountId,
+            accountId: account.id,
             threadId: undefined,
             body: value,
-            subject,
-            from: { name: account?.name ?? 'Me', address: account?.emailAddress ?? 'me@example.com' },
+            subject: subject,
+            from: { name: account.name ?? 'Me', address: account.emailAddress ?? 'me@example.com' },
             to: toValues.map(to => ({ name: to.value, address: to.value })),
             cc: ccValues.map(cc => ({ name: cc.value, address: cc.value })),
-            replyTo: { name: account?.name ?? 'Me', address: account?.emailAddress ?? 'me@example.com' },
+            replyTo: [{ name: account.name ?? 'Me', address: account.emailAddress ?? 'me@example.com' }],
             inReplyTo: undefined,
         }, {
             onSuccess: () => {
@@ -94,7 +95,7 @@ const ComposeButton = () => {
                         defaultToolbarExpanded={true}
 
                         handleSend={handleSend}
-                        isSending={false}
+                        isSending={sendEmail.isPending}
                     />
                 </DrawerHeader>
             </DrawerContent>

@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import { TRPCReactProvider } from "@/trpc/react";
 import KBar from "@/components/kbar";
+import { Toaster } from "@/components/ui/sonner"
 
 import {
   ClerkProvider,
@@ -44,6 +45,7 @@ export default function RootLayout({
           <TRPCReactProvider>
             <KBar>
               {children}
+              <Toaster />
             </KBar>
             </TRPCReactProvider>
           </ThemeProvider>

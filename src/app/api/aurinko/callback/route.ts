@@ -6,15 +6,47 @@ import { Account } from "@/lib/acount";
 
 export const GET = async (req: NextRequest) => {
     const { userId } = await auth()
-    if (!userId) return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+    if (!userId) {
+        return NextResponse.redirect(new URL('/sign-in?redirect_url=/mail', req.url))
+    }
 
     const params = req.nextUrl.searchParams
     const status = params.get('status');
-    if (status !== 'success') return NextResponse.json({ error: "Account connection failed" }, { status: 400 });
+    
+    // Handle error status from Aurinko
+    if (status === 'error') {
+        const error = params.get('error') || 'Unknown error'
+        console.error('Aurinko auth error:', error)
+        return NextResponse.redirect(new URL(`/mail?error=${encodeURIComponent(error)}`, req.url))
+    }
+    
+    if (status !== 'success') {
+        return NextResponse.redirect(new URL('/mail?error=Account connection failed', req.url))
+    }
 
     const code = params.get('code');
-    const token = await exchangeCodeForAccessToken(code as string)
-    if (!token) return NextResponse.json({ error: "Failed to fetch token" }, { status: 400 });
+    if (!code) {
+        return NextResponse.redirect(new URL('/mail?error=No authorization code provided', req.url))
+    }
+
+    let token;
+    try {
+        token = await exchangeCodeForAccessToken(code)
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to exchange code for access token'
+        console.error('Token exchange error:', errorMessage)
+        
+        // Check if it's an expired code error
+        if (errorMessage.includes('code.expired')) {
+            return NextResponse.redirect(new URL('/mail?error=Authorization code expired. Please try adding the account again.', req.url))
+        }
+        
+        return NextResponse.redirect(new URL(`/mail?error=${encodeURIComponent(errorMessage)}`, req.url))
+    }
+    
+    if (!token) {
+        return NextResponse.redirect(new URL('/mail?error=Failed to fetch token', req.url))
+    }
     const accountDetails = await getAccountDetails(token.accessToken)
     await db.account.upsert({
         where: { id: token.accountId.toString() },
@@ -43,11 +75,11 @@ export const GET = async (req: NextRequest) => {
             // Log emails like in the tutorial
             console.log(emails);
             
-            // TODO: Add nextDeltaToken field to Account model in schema
-            // await db.account.update({
-            //     where: { id: token.accountId.toString() },
-            //     data: { nextDeltaToken: deltaToken }
-            // })
+            // Save the delta token to the database for future incremental syncs
+            await db.account.update({
+                where: { id: token.accountId.toString() },
+                data: { nextDeltaToken: deltaToken }
+            })
             
             // TODO: Implement syncEmailsToDatabase function
             // await syncEmailsToDatabase(emails);

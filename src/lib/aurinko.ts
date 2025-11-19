@@ -21,7 +21,8 @@ export const getAurinkoAuthUrl = async (serviceType: 'Google' | 'Office365') => 
     const host = headersList.get('host')
     const protocol = headersList.get('x-forwarded-proto') || 'http'
     const baseUrl = `${protocol}://${host}`
-    const returnUrl = `${baseUrl}/api/auth/callback`
+    // Ensure no trailing slash and exact path
+    const returnUrl = `${baseUrl}/api/aurinko/callback`.replace(/\/+$/, '')
 
     // Set scopes - Aurinko uses its own scope identifiers (space-separated)
     // Valid scopes include: Mail.Read, Mail.ReadWrite, Mail.Send, Mail.Drafts, Mail.All
@@ -38,14 +39,27 @@ export const getAurinkoAuthUrl = async (serviceType: 'Google' | 'Office365') => 
 
     const authUrl = `https://api.aurinko.io/v1/auth/authorize?${params.toString()}`
     
-    // Debug logging (remove in production)
-    console.log('Aurinko Auth URL generated:', {
-        clientIdLength: clientId.length,
-        clientIdPrefix: clientId.substring(0, 10) + '...', // Only log first 10 chars for security
+    // Debug logging - IMPORTANT: The returnUrl below must be added to your Aurinko app settings!
+    console.log('\n' + '='.repeat(60))
+    console.log('🔴 AURINKO CALLBACK URL CONFIGURATION REQUIRED')
+    console.log('='.repeat(60))
+    console.log('⚠️  You MUST add this EXACT URL to your Aurinko app settings:')
+    console.log('')
+    console.log(`   ${returnUrl}`)
+    console.log('')
+    console.log('📋 Steps to fix:')
+    console.log('   1. Go to https://developer.aurinko.io/ (or your Aurinko dashboard)')
+    console.log('   2. Find your app with Client ID:', clientId.substring(0, 10) + '...')
+    console.log('   3. Go to OAuth/Callback URL settings')
+    console.log('   4. Add the URL above EXACTLY as shown (no trailing slash)')
+    console.log('   5. Save the settings')
+    console.log('='.repeat(60) + '\n')
+    
+    console.log('Aurinko Auth URL details:', {
         returnUrl,
+        host,
+        protocol,
         serviceType,
-        scopes,
-        fullUrl: authUrl, // Log full URL for debugging
     })
 
     return authUrl
