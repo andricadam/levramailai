@@ -12,6 +12,22 @@ type Thread = RouterOutputs["account"]["getThreads"][number]
 
 const ThreadList = () => {
     const { threads, isFetching, threadId, setThreadId } = useThreads()
+    const [mounted, setMounted] = React.useState(false)
+
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    // During SSR and initial hydration, show a consistent state
+    if (!mounted) {
+        return (
+            <div className='max-w-full overflow-y-scroll max-h-[calc(100vh-120px)]'>
+                <div className='flex flex-col gap-2 p-4 pt-0'>
+                    <div className='text-sm text-muted-foreground'>Loading...</div>
+                </div>
+            </div>
+        )
+    }
 
     if (isFetching && (!threads || threads.length === 0)) {
         return (

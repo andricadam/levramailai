@@ -20,10 +20,12 @@ type Props = {
 const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }: Props) => {
 
     const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed ?? false)
+    const panelGroupId = React.useId()
+    const tabsId = React.useId()
 
     return (
         <TooltipProvider delayDuration={0}>
-        <ResizablePanelGroup direction="horizontal" onLayout={(sizes: number []) => {
+        <ResizablePanelGroup id={panelGroupId} direction="horizontal" onLayout={(sizes: number []) => {
             console.log(sizes)
         }} className='items-stretch h-full min-h-screen'>
             <ResizablePanel 
@@ -55,7 +57,7 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-                <Tabs defaultValue="inbox">
+                <Tabs id={tabsId} defaultValue="inbox">
                     <div className='flex items-center px-4 py-2'>
                         <h1 className='text-xl font-bold'>Inbox</h1>
                         <TabsList className='ml-auto'>

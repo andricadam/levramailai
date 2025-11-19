@@ -43,11 +43,14 @@ import { isSearchingAtom } from "./search-bar";
 import SearchDisplay from "./search-display";
 import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
+import { useId } from "react";
 
 
 export function ThreadDisplay() {
   const { threads, threadId } = useThreads()
   const today = new Date()
+  const popoverId = useId()
+  const dropdownMenuId = useId()
   const _thread = threads?.find(t => t.id === threadId)
   const [isSearching] = useAtom(isSearchingAtom)
 
@@ -91,7 +94,7 @@ export function ThreadDisplay() {
           </Tooltip>
           <Separator orientation="vertical" className="h-6 mx-1" />
           <Tooltip>
-            <Popover>
+            <Popover id={popoverId}>
               <PopoverTrigger asChild>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="icon" disabled={!thread}>
@@ -180,7 +183,7 @@ export function ThreadDisplay() {
           </Tooltip>
         </div>
         <Separator orientation="vertical" className="h-6 mx-2" />
-        <DropdownMenu>
+        <DropdownMenu id={dropdownMenuId}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" disabled={!thread}>
               <MoreVertical className="w-4 h-4" />
