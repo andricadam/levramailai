@@ -8,6 +8,9 @@ import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 import TagInput from './tag-input'
 import { Input } from '@/components/ui/input'
+import AIComposeButton from './ai-compose-button'
+import { generate } from './action'
+import { readStreamableValue } from '@ai-sdk/rsc'
 
 type Props = {
     subject: string
@@ -30,12 +33,40 @@ type Props = {
 const EmailEditor = ({ subject, setSubject, toValues, setToValues, ccValues, setCcValues, to, handleSend, isSending, defaultToolbarExpanded = false }: Props) => {
     const [value, setValue] = React.useState<string>('')
     const [expanded, setExpanded] = React.useState<boolean>(defaultToolbarExpanded)
+    const insertedTextRef = React.useRef<string>('') // Track what's already been inserted
+    const aiGenerateRef = React.useRef<((editorInstance: any) => Promise<void>) | null>(null)
+
+    const aiGenerate = React.useCallback(async (editorInstance: any) => {
+        if (!editorInstance) return
+        const currentText = editorInstance.getText()
+        const { output } = await generate(currentText)
+        let accumulatedText = ''
+        insertedTextRef.current = '' // Reset tracker
+        
+        for await (const delta of readStreamableValue(output)) {
+            if (delta) {
+                accumulatedText += delta
+                // Only insert the new text that hasn't been inserted yet
+                const newText = accumulatedText.slice(insertedTextRef.current.length)
+                if (newText) {
+                    editorInstance.commands.insertContent(newText)
+                    insertedTextRef.current = accumulatedText
+                }
+            }
+        }
+    }, [])
+
+    // Store the function in a ref so the extension can access it
+    aiGenerateRef.current = aiGenerate
 
     const CustomText = Text.extend({
         addKeyboardShortcuts() {
             return {
                 'Meta-j': () => {
-                    console.log('Meta-j')
+                    // Call the async function without blocking
+                    if (aiGenerateRef.current) {
+                        aiGenerateRef.current(this.editor).catch(console.error)
+                    }
                     return true
                 }
             }
@@ -50,6 +81,13 @@ const EmailEditor = ({ subject, setSubject, toValues, setToValues, ccValues, set
             setValue(editor.getHTML())
         }
     })
+
+    const onGenerate = React.useCallback((content: string) => {
+        if (editor) {
+            // Set content in the editor with the accumulated text
+            editor.commands.setContent(content)
+        }
+    }, [editor])
 
     if (!editor) return null
 
@@ -88,12 +126,13 @@ const EmailEditor = ({ subject, setSubject, toValues, setToValues, ccValues, set
                             to {to.join(', ')}
                         </span>
                     </div>
+                    <AIComposeButton isComposing={defaultToolbarExpanded} onGenerate={onGenerate} />
                 </div>
 
             </div>
 
-            <div className='prose w-full px-4'>
-                <EditorContent editor={editor} value={value} />
+            <div className='prose w-full px-4 min-h-[150px]'>
+                <EditorContent editor={editor} />
             </div>
 
             <Separator />

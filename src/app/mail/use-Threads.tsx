@@ -2,9 +2,15 @@ import { api } from '@/trpc/react'
 import { getQueryKey } from '@trpc/react-query'
 import React from 'react'
 import { useLocalStorage } from 'usehooks-ts'
+import { useAuth } from '@clerk/nextjs'
 
 const useThreads = () => {
-    const { data: accounts } = api.account.getAccounts.useQuery()
+    const { isSignedIn, isLoaded } = useAuth()
+    const shouldFetch = isLoaded && !!isSignedIn
+    const { data: accounts } = api.account.getAccounts.useQuery(undefined, {
+        enabled: shouldFetch,
+        retry: false,
+    })
     const [accountId] = useLocalStorage('accountId', '')
     const [tab] = useLocalStorage('levramail-tab', 'inbox')
     const [done] = useLocalStorage('levramail-done', false)

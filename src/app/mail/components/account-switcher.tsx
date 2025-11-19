@@ -14,6 +14,7 @@ import { api, type RouterOutputs } from "@/trpc/react"
 import { useLocalStorage } from "usehooks-ts"
 import { Plus } from "lucide-react"
 import { getAurinkoAuthUrl } from "@/lib/aurinko"
+import { useAuth } from "@clerk/nextjs"
 
 interface AccountSwitcherProps {
   isCollapsed: boolean
@@ -22,7 +23,12 @@ interface AccountSwitcherProps {
 export function AccountSwitcher({
   isCollapsed
 }: AccountSwitcherProps) {
-  const { data: accounts } = api.account.getAccounts.useQuery()
+  const { isSignedIn, isLoaded } = useAuth()
+  const shouldFetch = isLoaded && !!isSignedIn
+  const { data: accounts } = api.account.getAccounts.useQuery(undefined, {
+    enabled: shouldFetch,
+    retry: false,
+  })
   const [accountId, setAccountId] = useLocalStorage('accountId', '')
 
   React.useEffect(() => {

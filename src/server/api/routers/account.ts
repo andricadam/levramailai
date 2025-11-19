@@ -27,6 +27,13 @@ export const accountRouter = createTRPCRouter({
             }
         })
     }),
+    getMyAccount: privateProcedure
+        .input(z.object({
+            accountId: z.string(),
+        }))
+        .query(async ({ ctx, input }) => {
+            return await authoriseAccess(input.accountId, ctx.auth.userId);
+        }),
     getNumThreads: privateProcedure.input(z.object({
         accountId: z.string(),
         tab: z.string()

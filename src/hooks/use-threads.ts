@@ -3,13 +3,19 @@ import { useLocalStorage } from "usehooks-ts"
 import { type RouterOutputs } from "@/trpc/react"
 import { atom } from "jotai"
 import { useAtom } from "jotai"
+import { useAuth } from "@clerk/nextjs"
 
 export const threadIdAtom = atom<string | null>(null)
 
 type Thread = RouterOutputs["account"]["getThreads"][number]
 
 const useThreads = () => {
-    const { data: accounts } = api.account.getAccounts.useQuery()
+    const { isSignedIn, isLoaded } = useAuth()
+    const shouldFetch = isLoaded && !!isSignedIn
+    const { data: accounts } = api.account.getAccounts.useQuery(undefined, {
+        enabled: shouldFetch,
+        retry: false,
+    })
     const [accountId] = useLocalStorage('accountId', '')
     const [tab] = useLocalStorage('levramail-tab', 'inbox')
     const [done] = useLocalStorage('levramail-done', false)

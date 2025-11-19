@@ -1,8 +1,33 @@
 import TurndownService from 'turndown';
 
-const turndownService = new TurndownService();
+export const turndown = new TurndownService({
+    headingStyle: 'atx',
+    codeBlockStyle: 'fenced',
+    emDelimiter: '*',
+    strongDelimiter: '**',
+    bulletListMarker: '-',
+    linkStyle: 'inlined',
+});
 
-export const turndown = {
-  turndown: (html: string) => turndownService.turndown(html),
-};
+// Remove link tags
+turndown.addRule('linkRemover', {
+    filter: 'a',
+    replacement: (content) => content,
+});
 
+// Remove style tags
+turndown.addRule('styleRemover', {
+    filter: 'style',
+    replacement: () => '',
+});
+
+// Remove script tags
+turndown.addRule('scriptRemover', {
+    filter: 'script',
+    replacement: () => '',
+});
+
+turndown.addRule('imageRemover', {
+    filter: 'img',
+    replacement: (content) => content,
+});

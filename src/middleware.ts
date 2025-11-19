@@ -5,26 +5,45 @@ import { NextResponse } from 'next/server'
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
-  '/api/clerk/webhook(.*)',
-  '/api/initial-sync(.*)',
+])
+
+// Define API routes that should return JSON errors instead of HTML redirects
+// (they handle authentication internally with proper error responses)
+const isApiRoute = createRouteMatcher([
+  '/api(.*)',
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Protect all routes except public ones
-  if (!isPublicRoute(req)) {
-    const authResult = await auth()
-    
-    // Explicitly check for userId and redirect if not authenticated
-    if (!authResult.userId) {
-      const signInUrl = new URL('/sign-in', req.url)
-      // Preserve the original URL but clean it up
-      const redirectUrl = new URL(req.url)
-      redirectUrl.searchParams.delete('_clerk_handshake')
-      signInUrl.searchParams.set('redirect_url', redirectUrl.pathname + redirectUrl.search)
-      return NextResponse.redirect(signInUrl)
-    }
+  // Allow API routes to be handled by their own error handling
+  // (they should return JSON errors, not HTML redirects)
+  if (isApiRoute(req)) {
+    return NextResponse.next()
   }
   
+  // Allow public routes (sign-in/sign-up)
+  if (isPublicRoute(req)) {
+    return NextResponse.next()
+  }
+  
+  // Protect all other routes - check authentication
+  const authResult = await auth()
+  
+  // If not authenticated, redirect to sign-in with redirect_url
+  if (!authResult?.userId) {
+    const signInUrl = new URL('/sign-in', req.url)
+    const redirectUrl = new URL(req.url)
+    
+    // Clean up Clerk-specific params
+    redirectUrl.searchParams.delete('_clerk_handshake')
+    redirectUrl.searchParams.delete('__clerk_db_jwt')
+    
+    // Set redirect_url parameter
+    signInUrl.searchParams.set('redirect_url', redirectUrl.pathname + redirectUrl.search)
+    
+    return NextResponse.redirect(signInUrl)
+  }
+  
+  // User is authenticated, allow access
   return NextResponse.next()
 })
 

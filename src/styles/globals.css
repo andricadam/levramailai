@@ -126,6 +126,29 @@
 
 .tiptap.ProseMirror {
   outline: none;
+  min-height: 150px;
+  padding: 1rem;
+  line-height: 1.6;
+  height: auto !important;
+  overflow-y: visible !important;
+  max-height: none !important;
+}
+
+.tiptap.ProseMirror:focus {
+  outline: none;
+}
+
+.tiptap.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Ensure the editor container doesn't constrain height */
+.ProseMirror-focused {
+  outline: none;
 }
 
 .is-active {

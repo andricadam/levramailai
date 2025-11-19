@@ -1,11 +1,33 @@
-import Mail from './components/mail'
+"use client"
 
-export default function MailDashboard() {
+import ThemeToggle from '@/components/theme-toggle'
+import dynamic from 'next/dynamic'
+import React from 'react'
+import { UserButton } from '@clerk/nextjs'
+import ComposeButton from './components/compose-button'
+// import Mail from './mail'
+
+const Mail = dynamic(() => import('./components/mail'), {
+  ssr: false,
+})
+
+const MailDashboard = () => {
   return (
-    <Mail 
-      defaultLayout={[20, 32, 48]}
-      navCollapsedSize={4}
-      defaultCollapsed={false}
-    />
+    <>
+      <div className="absolute bottom-4 left-4">
+        <div className="flex items-center gap-2">
+            <UserButton />
+            <ThemeToggle />
+            <ComposeButton />
+        </div>
+      </div>
+      <Mail 
+        defaultLayout={[20, 32, 48]}
+        defaultCollapsed={false}
+        navCollapsedSize={4}
+      />
+    </>
   )
 }
+
+export default MailDashboard
