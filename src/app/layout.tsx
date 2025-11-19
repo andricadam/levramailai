@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider"
 import { TRPCReactProvider } from "@/trpc/react";
+import KBar from "@/components/kbar";
 
 import {
   ClerkProvider,
@@ -40,7 +41,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <KBar>
+              {children}
+            </KBar>
+            </TRPCReactProvider>
           </ThemeProvider>
         </body>
       </html>
