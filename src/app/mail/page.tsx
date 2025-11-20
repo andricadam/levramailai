@@ -4,9 +4,13 @@ import ThemeToggle from '@/components/theme-toggle'
 import dynamic from 'next/dynamic'
 import React, { Suspense } from 'react'
 import { UserButton } from '@clerk/nextjs'
-import ComposeButton from './components/compose-button'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
+const ComposeButton = dynamic(() => {
+  return import('./components/compose-button')
+}, {
+  ssr: false
+})
 // import Mail from './mail'
 
 const Mail = dynamic(() => import('./components/mail'), {
