@@ -6,7 +6,7 @@ import type { SyncUpdatedResponse, EmailMessage, EmailAddress, EmailAttachment, 
 // import { turndown } from './turndown';
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
-    console.log(`attempting to sync emails to database ${emails.length}`);
+    console.log(`attempting to sync emails to database ${emails.length}`)
 
     try {
         // Sync emails to database

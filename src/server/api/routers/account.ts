@@ -93,6 +93,8 @@ export const accountRouter = createTRPCRouter({
         done: z.boolean()
     })).query(async ({ctx, input})=>{
         const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        const acc = new Account(account.accessToken)
+        acc.syncEmails().catch(console.error)
 
         const filter: {
             accountId: string;

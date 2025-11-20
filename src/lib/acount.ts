@@ -1,5 +1,8 @@
 import axios from "axios";
 import type { SyncResponse, SyncUpdatedResponse, EmailMessage, EmailAddress } from "@/types";
+import { db } from "@/server/db";
+import { syncEmailsToDatabase } from "./sync-to-db";
+
 
 export class Account {
     private token: string;
@@ -26,13 +29,22 @@ export class Account {
         if (deltaToken) params.deltaToken = deltaToken
         if (pageToken) params.pageToken = pageToken
 
-        const response = await axios.get<SyncUpdatedResponse>('https://api.aurinko.io/v1/email/sync/updated', {
-            headers: {
-                Authorization: `Bearer ${this.token}`
-            },
-            params
-        })
-        return response.data
+        try {
+            const response = await axios.get<SyncUpdatedResponse>('https://api.aurinko.io/v1/email/sync/updated', {
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                },
+                params
+            })
+            return response.data
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('API Error:', error.response?.status, error.response?.statusText)
+                console.error('Error data:', JSON.stringify(error.response?.data, null, 2))
+                throw error
+            }
+            throw error
+        }
     }
 
     async performInitialSync() {
@@ -80,6 +92,47 @@ export class Account {
                 console.error('Error during sync:', error)
             }
             return null;
+        }
+    }
+
+    async syncEmails() {
+        const account = await db.account.findUnique({
+            where: { accessToken: this.token }
+        })
+        if (!account) throw new Error('Account not found')
+        if (!account.nextDeltaToken) throw new Error('Account not ready to sync')
+        let response = await this.getUpdatedEmails({
+            deltaToken: account.nextDeltaToken
+        })
+        let allEmails: EmailMessage[] = response.records
+        let storedDeltaToken: string = account.nextDeltaToken
+
+        if (response.nextDeltaToken) {
+            storedDeltaToken = response.nextDeltaToken
+        }
+
+        while (response.nextPageToken) {
+            response = await this.getUpdatedEmails({ pageToken: response.nextPageToken })
+            allEmails = allEmails.concat(response.records)
+            if (response.nextDeltaToken) {
+                storedDeltaToken = response.nextDeltaToken
+            }
+        }
+
+        try {
+            console.log(`Syncing ${allEmails.length} emails to database`)
+            await syncEmailsToDatabase(allEmails, account.id)
+        } catch (error) {
+            console.error('Error syncing emails to database:', error);
+        }
+        await db.account.update({
+            where: { id: account.id },
+            data: { nextDeltaToken: storedDeltaToken }
+        })
+
+        return {
+            emails: allEmails,
+            deltaToken: storedDeltaToken
         }
     }
 
