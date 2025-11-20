@@ -1,16 +1,29 @@
 import { db } from '@/server/db';
 import type { SyncUpdatedResponse, EmailMessage, EmailAddress, EmailAttachment, EmailHeader } from '@/types';
+import { OramaClient } from './orama';
 // TODO: Implement these modules
-// import { OramaManager } from './orama';
 // import { getEmbeddings } from './embeddings';
-// import { turndown } from './turndown';
+import { turndown } from './turndown';
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
     console.log(`attempting to sync emails to database ${emails.length}`)
 
+
+    const orama = new OramaClient(accountId)
+    await orama.initialize()
     try {
         // Sync emails to database
         for (const [index, email] of emails.entries()) {
+            const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
+            await orama.insert({
+                subject: email.subject,
+                body: body,
+                from: email.from.address,
+                rawBody: email.bodySnippet ?? '',
+                to: email.to.map(to => to.address),
+                sentAt: email.sentAt.toLocaleString(),
+                threadId: email.threadId,
+            })
             await upsertEmail(email, index, accountId);
         }
 

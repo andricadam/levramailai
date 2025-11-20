@@ -2685,6 +2685,7 @@ export namespace Prisma {
     emailAddress: string | null
     name: string | null
     nextDeltaToken: string | null
+    oramaIndex: string | null
   }
 
   export type AccountMaxAggregateOutputType = {
@@ -2694,6 +2695,7 @@ export namespace Prisma {
     emailAddress: string | null
     name: string | null
     nextDeltaToken: string | null
+    oramaIndex: string | null
   }
 
   export type AccountCountAggregateOutputType = {
@@ -2703,6 +2705,7 @@ export namespace Prisma {
     emailAddress: number
     name: number
     nextDeltaToken: number
+    oramaIndex: number
     _all: number
   }
 
@@ -2714,6 +2717,7 @@ export namespace Prisma {
     emailAddress?: true
     name?: true
     nextDeltaToken?: true
+    oramaIndex?: true
   }
 
   export type AccountMaxAggregateInputType = {
@@ -2723,6 +2727,7 @@ export namespace Prisma {
     emailAddress?: true
     name?: true
     nextDeltaToken?: true
+    oramaIndex?: true
   }
 
   export type AccountCountAggregateInputType = {
@@ -2732,6 +2737,7 @@ export namespace Prisma {
     emailAddress?: true
     name?: true
     nextDeltaToken?: true
+    oramaIndex?: true
     _all?: true
   }
 
@@ -2814,6 +2820,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken: string | null
+    oramaIndex: string | null
     _count: AccountCountAggregateOutputType | null
     _min: AccountMinAggregateOutputType | null
     _max: AccountMaxAggregateOutputType | null
@@ -2840,6 +2847,7 @@ export namespace Prisma {
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
+    oramaIndex?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Account$threadsArgs<ExtArgs>
     emailAddresses?: boolean | Account$emailAddressesArgs<ExtArgs>
@@ -2853,6 +2861,7 @@ export namespace Prisma {
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
+    oramaIndex?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -2863,6 +2872,7 @@ export namespace Prisma {
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
+    oramaIndex?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -2873,9 +2883,10 @@ export namespace Prisma {
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
+    oramaIndex?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accessToken" | "emailAddress" | "name" | "nextDeltaToken", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accessToken" | "emailAddress" | "name" | "nextDeltaToken" | "oramaIndex", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Account$threadsArgs<ExtArgs>
@@ -2903,6 +2914,7 @@ export namespace Prisma {
       emailAddress: string
       name: string
       nextDeltaToken: string | null
+      oramaIndex: string | null
     }, ExtArgs["result"]["account"]>
     composites: {}
   }
@@ -3335,6 +3347,7 @@ export namespace Prisma {
     readonly emailAddress: FieldRef<"Account", 'String'>
     readonly name: FieldRef<"Account", 'String'>
     readonly nextDeltaToken: FieldRef<"Account", 'String'>
+    readonly oramaIndex: FieldRef<"Account", 'String'>
   }
     
 
@@ -8752,7 +8765,8 @@ export namespace Prisma {
     accessToken: 'accessToken',
     emailAddress: 'emailAddress',
     name: 'name',
-    nextDeltaToken: 'nextDeltaToken'
+    nextDeltaToken: 'nextDeltaToken',
+    oramaIndex: 'oramaIndex'
   };
 
   export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -9070,6 +9084,7 @@ export namespace Prisma {
     emailAddress?: StringFilter<"Account"> | string
     name?: StringFilter<"Account"> | string
     nextDeltaToken?: StringNullableFilter<"Account"> | string | null
+    oramaIndex?: StringNullableFilter<"Account"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ThreadListRelationFilter
     emailAddresses?: EmailAddressListRelationFilter
@@ -9082,6 +9097,7 @@ export namespace Prisma {
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrderInput | SortOrder
+    oramaIndex?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
     threads?: ThreadOrderByRelationAggregateInput
     emailAddresses?: EmailAddressOrderByRelationAggregateInput
@@ -9097,6 +9113,7 @@ export namespace Prisma {
     emailAddress?: StringFilter<"Account"> | string
     name?: StringFilter<"Account"> | string
     nextDeltaToken?: StringNullableFilter<"Account"> | string | null
+    oramaIndex?: StringNullableFilter<"Account"> | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ThreadListRelationFilter
     emailAddresses?: EmailAddressListRelationFilter
@@ -9109,6 +9126,7 @@ export namespace Prisma {
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrderInput | SortOrder
+    oramaIndex?: SortOrderInput | SortOrder
     _count?: AccountCountOrderByAggregateInput
     _max?: AccountMaxOrderByAggregateInput
     _min?: AccountMinOrderByAggregateInput
@@ -9124,6 +9142,7 @@ export namespace Prisma {
     emailAddress?: StringWithAggregatesFilter<"Account"> | string
     name?: StringWithAggregatesFilter<"Account"> | string
     nextDeltaToken?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    oramaIndex?: StringNullableWithAggregatesFilter<"Account"> | string | null
   }
 
   export type ThreadWhereInput = {
@@ -9591,6 +9610,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     user: UserCreateNestedOneWithoutAccountsInput
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
@@ -9603,6 +9623,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
   }
@@ -9613,6 +9634,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
@@ -9625,6 +9647,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
   }
@@ -9636,6 +9659,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
   }
 
   export type AccountUpdateManyMutationInput = {
@@ -9644,6 +9668,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AccountUncheckedUpdateManyInput = {
@@ -9653,6 +9678,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ThreadCreateInput = {
@@ -10251,6 +10277,7 @@ export namespace Prisma {
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrder
+    oramaIndex?: SortOrder
   }
 
   export type AccountMaxOrderByAggregateInput = {
@@ -10260,6 +10287,7 @@ export namespace Prisma {
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrder
+    oramaIndex?: SortOrder
   }
 
   export type AccountMinOrderByAggregateInput = {
@@ -10269,6 +10297,7 @@ export namespace Prisma {
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrder
+    oramaIndex?: SortOrder
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -11636,6 +11665,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
   }
@@ -11646,6 +11676,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
   }
@@ -11686,6 +11717,7 @@ export namespace Prisma {
     emailAddress?: StringFilter<"Account"> | string
     name?: StringFilter<"Account"> | string
     nextDeltaToken?: StringNullableFilter<"Account"> | string | null
+    oramaIndex?: StringNullableFilter<"Account"> | string | null
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -11868,6 +11900,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     user: UserCreateNestedOneWithoutAccountsInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
   }
@@ -11879,6 +11912,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
   }
 
@@ -11978,6 +12012,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
   }
@@ -11989,6 +12024,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
   }
 
@@ -12766,6 +12802,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     user: UserCreateNestedOneWithoutAccountsInput
     threads?: ThreadCreateNestedManyWithoutAccountInput
   }
@@ -12777,6 +12814,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
   }
 
@@ -12882,6 +12920,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     threads?: ThreadUpdateManyWithoutAccountNestedInput
   }
@@ -12893,6 +12932,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
   }
 
@@ -13046,6 +13086,7 @@ export namespace Prisma {
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
+    oramaIndex?: string | null
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -13054,6 +13095,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
   }
@@ -13064,6 +13106,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
   }
@@ -13074,6 +13117,7 @@ export namespace Prisma {
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ThreadCreateManyAccountInput = {

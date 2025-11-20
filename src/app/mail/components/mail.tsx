@@ -10,6 +10,7 @@ import { AccountSwitcher } from './account-switcher'
 import { Sidebar } from './sidebar'
 import ThreadList from './thread-list'
 import { ThreadDisplay } from './thread-display'
+import SearchBar from './search-bar'
 
 type Props = {
     defaultLayout: number[] | undefined
@@ -70,8 +71,7 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                         </TabsList>
                     </div>
                     <Separator />
-                    {/* Search Bar */}
-                    Search Bar
+                    <SearchBar />
                     <TabsContent value="inbox">
                         <ThreadList />
                     </TabsContent>
