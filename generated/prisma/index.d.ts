@@ -43,6 +43,11 @@ export type EmailAddress = $Result.DefaultSelection<Prisma.$EmailAddressPayload>
  * 
  */
 export type EmailAttachment = $Result.DefaultSelection<Prisma.$EmailAttachmentPayload>
+/**
+ * Model ChatbotInteraction
+ * 
+ */
+export type ChatbotInteraction = $Result.DefaultSelection<Prisma.$ChatbotInteractionPayload>
 
 /**
  * Enums
@@ -268,6 +273,16 @@ export class PrismaClient<
     * ```
     */
   get emailAttachment(): Prisma.EmailAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chatbotInteraction`: Exposes CRUD operations for the **ChatbotInteraction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatbotInteractions
+    * const chatbotInteractions = await prisma.chatbotInteraction.findMany()
+    * ```
+    */
+  get chatbotInteraction(): Prisma.ChatbotInteractionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -714,7 +729,8 @@ export namespace Prisma {
     Thread: 'Thread',
     Email: 'Email',
     EmailAddress: 'EmailAddress',
-    EmailAttachment: 'EmailAttachment'
+    EmailAttachment: 'EmailAttachment',
+    ChatbotInteraction: 'ChatbotInteraction'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -733,7 +749,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment"
+      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1181,6 +1197,80 @@ export namespace Prisma {
           }
         }
       }
+      ChatbotInteraction: {
+        payload: Prisma.$ChatbotInteractionPayload<ExtArgs>
+        fields: Prisma.ChatbotInteractionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatbotInteractionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatbotInteractionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>
+          }
+          findFirst: {
+            args: Prisma.ChatbotInteractionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatbotInteractionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>
+          }
+          findMany: {
+            args: Prisma.ChatbotInteractionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>[]
+          }
+          create: {
+            args: Prisma.ChatbotInteractionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>
+          }
+          createMany: {
+            args: Prisma.ChatbotInteractionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatbotInteractionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>[]
+          }
+          delete: {
+            args: Prisma.ChatbotInteractionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>
+          }
+          update: {
+            args: Prisma.ChatbotInteractionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatbotInteractionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatbotInteractionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChatbotInteractionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChatbotInteractionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatbotInteractionPayload>
+          }
+          aggregate: {
+            args: Prisma.ChatbotInteractionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatbotInteraction>
+          }
+          groupBy: {
+            args: Prisma.ChatbotInteractionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatbotInteractionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatbotInteractionCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatbotInteractionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1283,6 +1373,7 @@ export namespace Prisma {
     email?: EmailOmit
     emailAddress?: EmailAddressOmit
     emailAttachment?: EmailAttachmentOmit
+    chatbotInteraction?: ChatbotInteractionOmit
   }
 
   /* Types for Logging */
@@ -8735,6 +8826,1009 @@ export namespace Prisma {
 
 
   /**
+   * Model ChatbotInteraction
+   */
+
+  export type AggregateChatbotInteraction = {
+    _count: ChatbotInteractionCountAggregateOutputType | null
+    _avg: ChatbotInteractionAvgAggregateOutputType | null
+    _sum: ChatbotInteractionSumAggregateOutputType | null
+    _min: ChatbotInteractionMinAggregateOutputType | null
+    _max: ChatbotInteractionMaxAggregateOutputType | null
+  }
+
+  export type ChatbotInteractionAvgAggregateOutputType = {
+    count: number | null
+  }
+
+  export type ChatbotInteractionSumAggregateOutputType = {
+    count: number | null
+  }
+
+  export type ChatbotInteractionMinAggregateOutputType = {
+    day: string | null
+    userId: string | null
+    count: number | null
+  }
+
+  export type ChatbotInteractionMaxAggregateOutputType = {
+    day: string | null
+    userId: string | null
+    count: number | null
+  }
+
+  export type ChatbotInteractionCountAggregateOutputType = {
+    day: number
+    userId: number
+    count: number
+    _all: number
+  }
+
+
+  export type ChatbotInteractionAvgAggregateInputType = {
+    count?: true
+  }
+
+  export type ChatbotInteractionSumAggregateInputType = {
+    count?: true
+  }
+
+  export type ChatbotInteractionMinAggregateInputType = {
+    day?: true
+    userId?: true
+    count?: true
+  }
+
+  export type ChatbotInteractionMaxAggregateInputType = {
+    day?: true
+    userId?: true
+    count?: true
+  }
+
+  export type ChatbotInteractionCountAggregateInputType = {
+    day?: true
+    userId?: true
+    count?: true
+    _all?: true
+  }
+
+  export type ChatbotInteractionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatbotInteraction to aggregate.
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatbotInteractions to fetch.
+     */
+    orderBy?: ChatbotInteractionOrderByWithRelationInput | ChatbotInteractionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatbotInteractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatbotInteractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatbotInteractions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatbotInteractions
+    **/
+    _count?: true | ChatbotInteractionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChatbotInteractionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChatbotInteractionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatbotInteractionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatbotInteractionMaxAggregateInputType
+  }
+
+  export type GetChatbotInteractionAggregateType<T extends ChatbotInteractionAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatbotInteraction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatbotInteraction[P]>
+      : GetScalarType<T[P], AggregateChatbotInteraction[P]>
+  }
+
+
+
+
+  export type ChatbotInteractionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatbotInteractionWhereInput
+    orderBy?: ChatbotInteractionOrderByWithAggregationInput | ChatbotInteractionOrderByWithAggregationInput[]
+    by: ChatbotInteractionScalarFieldEnum[] | ChatbotInteractionScalarFieldEnum
+    having?: ChatbotInteractionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatbotInteractionCountAggregateInputType | true
+    _avg?: ChatbotInteractionAvgAggregateInputType
+    _sum?: ChatbotInteractionSumAggregateInputType
+    _min?: ChatbotInteractionMinAggregateInputType
+    _max?: ChatbotInteractionMaxAggregateInputType
+  }
+
+  export type ChatbotInteractionGroupByOutputType = {
+    day: string
+    userId: string
+    count: number
+    _count: ChatbotInteractionCountAggregateOutputType | null
+    _avg: ChatbotInteractionAvgAggregateOutputType | null
+    _sum: ChatbotInteractionSumAggregateOutputType | null
+    _min: ChatbotInteractionMinAggregateOutputType | null
+    _max: ChatbotInteractionMaxAggregateOutputType | null
+  }
+
+  type GetChatbotInteractionGroupByPayload<T extends ChatbotInteractionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatbotInteractionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatbotInteractionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatbotInteractionGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatbotInteractionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatbotInteractionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    day?: boolean
+    userId?: boolean
+    count?: boolean
+  }, ExtArgs["result"]["chatbotInteraction"]>
+
+  export type ChatbotInteractionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    day?: boolean
+    userId?: boolean
+    count?: boolean
+  }, ExtArgs["result"]["chatbotInteraction"]>
+
+  export type ChatbotInteractionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    day?: boolean
+    userId?: boolean
+    count?: boolean
+  }, ExtArgs["result"]["chatbotInteraction"]>
+
+  export type ChatbotInteractionSelectScalar = {
+    day?: boolean
+    userId?: boolean
+    count?: boolean
+  }
+
+  export type ChatbotInteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"day" | "userId" | "count", ExtArgs["result"]["chatbotInteraction"]>
+
+  export type $ChatbotInteractionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatbotInteraction"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      day: string
+      userId: string
+      count: number
+    }, ExtArgs["result"]["chatbotInteraction"]>
+    composites: {}
+  }
+
+  type ChatbotInteractionGetPayload<S extends boolean | null | undefined | ChatbotInteractionDefaultArgs> = $Result.GetResult<Prisma.$ChatbotInteractionPayload, S>
+
+  type ChatbotInteractionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChatbotInteractionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChatbotInteractionCountAggregateInputType | true
+    }
+
+  export interface ChatbotInteractionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatbotInteraction'], meta: { name: 'ChatbotInteraction' } }
+    /**
+     * Find zero or one ChatbotInteraction that matches the filter.
+     * @param {ChatbotInteractionFindUniqueArgs} args - Arguments to find a ChatbotInteraction
+     * @example
+     * // Get one ChatbotInteraction
+     * const chatbotInteraction = await prisma.chatbotInteraction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatbotInteractionFindUniqueArgs>(args: SelectSubset<T, ChatbotInteractionFindUniqueArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChatbotInteraction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChatbotInteractionFindUniqueOrThrowArgs} args - Arguments to find a ChatbotInteraction
+     * @example
+     * // Get one ChatbotInteraction
+     * const chatbotInteraction = await prisma.chatbotInteraction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatbotInteractionFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatbotInteractionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatbotInteraction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionFindFirstArgs} args - Arguments to find a ChatbotInteraction
+     * @example
+     * // Get one ChatbotInteraction
+     * const chatbotInteraction = await prisma.chatbotInteraction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatbotInteractionFindFirstArgs>(args?: SelectSubset<T, ChatbotInteractionFindFirstArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatbotInteraction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionFindFirstOrThrowArgs} args - Arguments to find a ChatbotInteraction
+     * @example
+     * // Get one ChatbotInteraction
+     * const chatbotInteraction = await prisma.chatbotInteraction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatbotInteractionFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatbotInteractionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChatbotInteractions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatbotInteractions
+     * const chatbotInteractions = await prisma.chatbotInteraction.findMany()
+     * 
+     * // Get first 10 ChatbotInteractions
+     * const chatbotInteractions = await prisma.chatbotInteraction.findMany({ take: 10 })
+     * 
+     * // Only select the `day`
+     * const chatbotInteractionWithDayOnly = await prisma.chatbotInteraction.findMany({ select: { day: true } })
+     * 
+     */
+    findMany<T extends ChatbotInteractionFindManyArgs>(args?: SelectSubset<T, ChatbotInteractionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChatbotInteraction.
+     * @param {ChatbotInteractionCreateArgs} args - Arguments to create a ChatbotInteraction.
+     * @example
+     * // Create one ChatbotInteraction
+     * const ChatbotInteraction = await prisma.chatbotInteraction.create({
+     *   data: {
+     *     // ... data to create a ChatbotInteraction
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatbotInteractionCreateArgs>(args: SelectSubset<T, ChatbotInteractionCreateArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChatbotInteractions.
+     * @param {ChatbotInteractionCreateManyArgs} args - Arguments to create many ChatbotInteractions.
+     * @example
+     * // Create many ChatbotInteractions
+     * const chatbotInteraction = await prisma.chatbotInteraction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatbotInteractionCreateManyArgs>(args?: SelectSubset<T, ChatbotInteractionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatbotInteractions and returns the data saved in the database.
+     * @param {ChatbotInteractionCreateManyAndReturnArgs} args - Arguments to create many ChatbotInteractions.
+     * @example
+     * // Create many ChatbotInteractions
+     * const chatbotInteraction = await prisma.chatbotInteraction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatbotInteractions and only return the `day`
+     * const chatbotInteractionWithDayOnly = await prisma.chatbotInteraction.createManyAndReturn({
+     *   select: { day: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatbotInteractionCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatbotInteractionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChatbotInteraction.
+     * @param {ChatbotInteractionDeleteArgs} args - Arguments to delete one ChatbotInteraction.
+     * @example
+     * // Delete one ChatbotInteraction
+     * const ChatbotInteraction = await prisma.chatbotInteraction.delete({
+     *   where: {
+     *     // ... filter to delete one ChatbotInteraction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatbotInteractionDeleteArgs>(args: SelectSubset<T, ChatbotInteractionDeleteArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChatbotInteraction.
+     * @param {ChatbotInteractionUpdateArgs} args - Arguments to update one ChatbotInteraction.
+     * @example
+     * // Update one ChatbotInteraction
+     * const chatbotInteraction = await prisma.chatbotInteraction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatbotInteractionUpdateArgs>(args: SelectSubset<T, ChatbotInteractionUpdateArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChatbotInteractions.
+     * @param {ChatbotInteractionDeleteManyArgs} args - Arguments to filter ChatbotInteractions to delete.
+     * @example
+     * // Delete a few ChatbotInteractions
+     * const { count } = await prisma.chatbotInteraction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatbotInteractionDeleteManyArgs>(args?: SelectSubset<T, ChatbotInteractionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatbotInteractions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatbotInteractions
+     * const chatbotInteraction = await prisma.chatbotInteraction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatbotInteractionUpdateManyArgs>(args: SelectSubset<T, ChatbotInteractionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatbotInteractions and returns the data updated in the database.
+     * @param {ChatbotInteractionUpdateManyAndReturnArgs} args - Arguments to update many ChatbotInteractions.
+     * @example
+     * // Update many ChatbotInteractions
+     * const chatbotInteraction = await prisma.chatbotInteraction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChatbotInteractions and only return the `day`
+     * const chatbotInteractionWithDayOnly = await prisma.chatbotInteraction.updateManyAndReturn({
+     *   select: { day: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChatbotInteractionUpdateManyAndReturnArgs>(args: SelectSubset<T, ChatbotInteractionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChatbotInteraction.
+     * @param {ChatbotInteractionUpsertArgs} args - Arguments to update or create a ChatbotInteraction.
+     * @example
+     * // Update or create a ChatbotInteraction
+     * const chatbotInteraction = await prisma.chatbotInteraction.upsert({
+     *   create: {
+     *     // ... data to create a ChatbotInteraction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatbotInteraction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatbotInteractionUpsertArgs>(args: SelectSubset<T, ChatbotInteractionUpsertArgs<ExtArgs>>): Prisma__ChatbotInteractionClient<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChatbotInteractions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionCountArgs} args - Arguments to filter ChatbotInteractions to count.
+     * @example
+     * // Count the number of ChatbotInteractions
+     * const count = await prisma.chatbotInteraction.count({
+     *   where: {
+     *     // ... the filter for the ChatbotInteractions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatbotInteractionCountArgs>(
+      args?: Subset<T, ChatbotInteractionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatbotInteractionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatbotInteraction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatbotInteractionAggregateArgs>(args: Subset<T, ChatbotInteractionAggregateArgs>): Prisma.PrismaPromise<GetChatbotInteractionAggregateType<T>>
+
+    /**
+     * Group by ChatbotInteraction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatbotInteractionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatbotInteractionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatbotInteractionGroupByArgs['orderBy'] }
+        : { orderBy?: ChatbotInteractionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatbotInteractionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatbotInteractionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatbotInteraction model
+   */
+  readonly fields: ChatbotInteractionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatbotInteraction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatbotInteractionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatbotInteraction model
+   */
+  interface ChatbotInteractionFieldRefs {
+    readonly day: FieldRef<"ChatbotInteraction", 'String'>
+    readonly userId: FieldRef<"ChatbotInteraction", 'String'>
+    readonly count: FieldRef<"ChatbotInteraction", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatbotInteraction findUnique
+   */
+  export type ChatbotInteractionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatbotInteraction to fetch.
+     */
+    where: ChatbotInteractionWhereUniqueInput
+  }
+
+  /**
+   * ChatbotInteraction findUniqueOrThrow
+   */
+  export type ChatbotInteractionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatbotInteraction to fetch.
+     */
+    where: ChatbotInteractionWhereUniqueInput
+  }
+
+  /**
+   * ChatbotInteraction findFirst
+   */
+  export type ChatbotInteractionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatbotInteraction to fetch.
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatbotInteractions to fetch.
+     */
+    orderBy?: ChatbotInteractionOrderByWithRelationInput | ChatbotInteractionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatbotInteractions.
+     */
+    cursor?: ChatbotInteractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatbotInteractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatbotInteractions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatbotInteractions.
+     */
+    distinct?: ChatbotInteractionScalarFieldEnum | ChatbotInteractionScalarFieldEnum[]
+  }
+
+  /**
+   * ChatbotInteraction findFirstOrThrow
+   */
+  export type ChatbotInteractionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatbotInteraction to fetch.
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatbotInteractions to fetch.
+     */
+    orderBy?: ChatbotInteractionOrderByWithRelationInput | ChatbotInteractionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatbotInteractions.
+     */
+    cursor?: ChatbotInteractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatbotInteractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatbotInteractions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatbotInteractions.
+     */
+    distinct?: ChatbotInteractionScalarFieldEnum | ChatbotInteractionScalarFieldEnum[]
+  }
+
+  /**
+   * ChatbotInteraction findMany
+   */
+  export type ChatbotInteractionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Filter, which ChatbotInteractions to fetch.
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatbotInteractions to fetch.
+     */
+    orderBy?: ChatbotInteractionOrderByWithRelationInput | ChatbotInteractionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatbotInteractions.
+     */
+    cursor?: ChatbotInteractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatbotInteractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatbotInteractions.
+     */
+    skip?: number
+    distinct?: ChatbotInteractionScalarFieldEnum | ChatbotInteractionScalarFieldEnum[]
+  }
+
+  /**
+   * ChatbotInteraction create
+   */
+  export type ChatbotInteractionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ChatbotInteraction.
+     */
+    data: XOR<ChatbotInteractionCreateInput, ChatbotInteractionUncheckedCreateInput>
+  }
+
+  /**
+   * ChatbotInteraction createMany
+   */
+  export type ChatbotInteractionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatbotInteractions.
+     */
+    data: ChatbotInteractionCreateManyInput | ChatbotInteractionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatbotInteraction createManyAndReturn
+   */
+  export type ChatbotInteractionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChatbotInteractions.
+     */
+    data: ChatbotInteractionCreateManyInput | ChatbotInteractionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatbotInteraction update
+   */
+  export type ChatbotInteractionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ChatbotInteraction.
+     */
+    data: XOR<ChatbotInteractionUpdateInput, ChatbotInteractionUncheckedUpdateInput>
+    /**
+     * Choose, which ChatbotInteraction to update.
+     */
+    where: ChatbotInteractionWhereUniqueInput
+  }
+
+  /**
+   * ChatbotInteraction updateMany
+   */
+  export type ChatbotInteractionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatbotInteractions.
+     */
+    data: XOR<ChatbotInteractionUpdateManyMutationInput, ChatbotInteractionUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatbotInteractions to update
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * Limit how many ChatbotInteractions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatbotInteraction updateManyAndReturn
+   */
+  export type ChatbotInteractionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * The data used to update ChatbotInteractions.
+     */
+    data: XOR<ChatbotInteractionUpdateManyMutationInput, ChatbotInteractionUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatbotInteractions to update
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * Limit how many ChatbotInteractions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatbotInteraction upsert
+   */
+  export type ChatbotInteractionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ChatbotInteraction to update in case it exists.
+     */
+    where: ChatbotInteractionWhereUniqueInput
+    /**
+     * In case the ChatbotInteraction found by the `where` argument doesn't exist, create a new ChatbotInteraction with this data.
+     */
+    create: XOR<ChatbotInteractionCreateInput, ChatbotInteractionUncheckedCreateInput>
+    /**
+     * In case the ChatbotInteraction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatbotInteractionUpdateInput, ChatbotInteractionUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatbotInteraction delete
+   */
+  export type ChatbotInteractionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Filter which ChatbotInteraction to delete.
+     */
+    where: ChatbotInteractionWhereUniqueInput
+  }
+
+  /**
+   * ChatbotInteraction deleteMany
+   */
+  export type ChatbotInteractionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatbotInteractions to delete
+     */
+    where?: ChatbotInteractionWhereInput
+    /**
+     * Limit how many ChatbotInteractions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatbotInteraction without action
+   */
+  export type ChatbotInteractionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8842,6 +9936,15 @@ export namespace Prisma {
   };
 
   export type EmailAttachmentScalarFieldEnum = (typeof EmailAttachmentScalarFieldEnum)[keyof typeof EmailAttachmentScalarFieldEnum]
+
+
+  export const ChatbotInteractionScalarFieldEnum: {
+    day: 'day',
+    userId: 'userId',
+    count: 'count'
+  };
+
+  export type ChatbotInteractionScalarFieldEnum = (typeof ChatbotInteractionScalarFieldEnum)[keyof typeof ChatbotInteractionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9544,6 +10647,51 @@ export namespace Prisma {
     emailId?: StringWithAggregatesFilter<"EmailAttachment"> | string
   }
 
+  export type ChatbotInteractionWhereInput = {
+    AND?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
+    OR?: ChatbotInteractionWhereInput[]
+    NOT?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
+    day?: StringFilter<"ChatbotInteraction"> | string
+    userId?: StringFilter<"ChatbotInteraction"> | string
+    count?: IntFilter<"ChatbotInteraction"> | number
+  }
+
+  export type ChatbotInteractionOrderByWithRelationInput = {
+    day?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+  }
+
+  export type ChatbotInteractionWhereUniqueInput = Prisma.AtLeast<{
+    day_userId?: ChatbotInteractionDayUserIdCompoundUniqueInput
+    AND?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
+    OR?: ChatbotInteractionWhereInput[]
+    NOT?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
+    day?: StringFilter<"ChatbotInteraction"> | string
+    userId?: StringFilter<"ChatbotInteraction"> | string
+    count?: IntFilter<"ChatbotInteraction"> | number
+  }, "day_userId">
+
+  export type ChatbotInteractionOrderByWithAggregationInput = {
+    day?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+    _count?: ChatbotInteractionCountOrderByAggregateInput
+    _avg?: ChatbotInteractionAvgOrderByAggregateInput
+    _max?: ChatbotInteractionMaxOrderByAggregateInput
+    _min?: ChatbotInteractionMinOrderByAggregateInput
+    _sum?: ChatbotInteractionSumOrderByAggregateInput
+  }
+
+  export type ChatbotInteractionScalarWhereWithAggregatesInput = {
+    AND?: ChatbotInteractionScalarWhereWithAggregatesInput | ChatbotInteractionScalarWhereWithAggregatesInput[]
+    OR?: ChatbotInteractionScalarWhereWithAggregatesInput[]
+    NOT?: ChatbotInteractionScalarWhereWithAggregatesInput | ChatbotInteractionScalarWhereWithAggregatesInput[]
+    day?: StringWithAggregatesFilter<"ChatbotInteraction"> | string
+    userId?: StringWithAggregatesFilter<"ChatbotInteraction"> | string
+    count?: IntWithAggregatesFilter<"ChatbotInteraction"> | number
+  }
+
   export type UserCreateInput = {
     id: string
     emailAddress: string
@@ -10140,6 +11288,48 @@ export namespace Prisma {
     emailId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ChatbotInteractionCreateInput = {
+    day: string
+    userId: string
+    count?: number
+  }
+
+  export type ChatbotInteractionUncheckedCreateInput = {
+    day: string
+    userId: string
+    count?: number
+  }
+
+  export type ChatbotInteractionUpdateInput = {
+    day?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChatbotInteractionUncheckedUpdateInput = {
+    day?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChatbotInteractionCreateManyInput = {
+    day: string
+    userId: string
+    count?: number
+  }
+
+  export type ChatbotInteractionUpdateManyMutationInput = {
+    day?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChatbotInteractionUncheckedUpdateManyInput = {
+    day?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10704,6 +11894,37 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type ChatbotInteractionDayUserIdCompoundUniqueInput = {
+    day: string
+    userId: string
+  }
+
+  export type ChatbotInteractionCountOrderByAggregateInput = {
+    day?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+  }
+
+  export type ChatbotInteractionAvgOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type ChatbotInteractionMaxOrderByAggregateInput = {
+    day?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+  }
+
+  export type ChatbotInteractionMinOrderByAggregateInput = {
+    day?: SortOrder
+    userId?: SortOrder
+    count?: SortOrder
+  }
+
+  export type ChatbotInteractionSumOrderByAggregateInput = {
+    count?: SortOrder
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {

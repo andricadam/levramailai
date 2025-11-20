@@ -199,6 +199,12 @@ exports.Prisma.EmailAttachmentScalarFieldEnum = {
   emailId: 'emailId'
 };
 
+exports.Prisma.ChatbotInteractionScalarFieldEnum = {
+  day: 'day',
+  userId: 'userId',
+  count: 'count'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -251,7 +257,8 @@ exports.Prisma.ModelName = {
   Thread: 'Thread',
   Email: 'Email',
   EmailAddress: 'EmailAddress',
-  EmailAttachment: 'EmailAttachment'
+  EmailAttachment: 'EmailAttachment',
+  ChatbotInteraction: 'ChatbotInteraction'
 };
 
 /**

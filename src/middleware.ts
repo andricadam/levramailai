@@ -20,16 +20,29 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next()
   }
   
-  // Allow public routes (sign-in/sign-up)
+  // Check authentication status
+  const authResult = await auth()
+  const isAuthenticated = !!authResult?.userId
+  
+  // Handle sign-in/sign-up routes - always allow access (Clerk handles redirects)
   if (isPublicRoute(req)) {
+    // If user is authenticated, let Clerk's SignIn component handle the redirect
+    // Don't redirect here to avoid conflicts with Clerk's internal redirect logic
     return NextResponse.next()
   }
   
   // Protect all other routes - check authentication
-  const authResult = await auth()
-  
   // If not authenticated, redirect to sign-in with redirect_url
-  if (!authResult?.userId) {
+  if (!isAuthenticated) {
+    // Check if this is an OAuth callback - if so, allow it through to let Clerk handle it
+    const isOAuthCallback = req.nextUrl.searchParams.has('__clerk_db_jwt') || 
+                            req.nextUrl.searchParams.has('_clerk_handshake')
+    
+    if (isOAuthCallback) {
+      // Allow OAuth callback to proceed - Clerk will handle the session setup
+      return NextResponse.next()
+    }
+    
     const signInUrl = new URL('/sign-in', req.url)
     const redirectUrl = new URL(req.url)
     

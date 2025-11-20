@@ -11,6 +11,7 @@ import { Sidebar } from './sidebar'
 import ThreadList from './thread-list'
 import { ThreadDisplay } from './thread-display'
 import SearchBar from './search-bar'
+import AskAI from './ask-ai'
 
 type Props = {
     defaultLayout: number[] | undefined
@@ -53,7 +54,7 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                     <Sidebar isCollapsed={isCollapsed} />
                     <div className="flex-1"></div>
                     {/* AI */}
-                    Ask AI
+                    <AskAI isCollapsed={isCollapsed} />
                 </div>
             </ResizablePanel>
             <ResizableHandle withHandle />

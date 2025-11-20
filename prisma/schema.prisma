@@ -151,3 +151,12 @@ enum MeetingMessageMethod {
     counter
     other
 }
+
+model ChatbotInteraction {
+    day    String
+    userId String
+    count  Int @default(0)
+
+    @@unique([day, userId])
+    @@index([userId])
+}

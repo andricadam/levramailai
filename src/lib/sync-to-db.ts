@@ -15,6 +15,7 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
         // Sync emails to database
         for (const [index, email] of emails.entries()) {
             const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
+            const embeddings = await getEmbeddings(body)
             await orama.insert({
                 subject: email.subject,
                 body: body,
@@ -23,6 +24,7 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
                 to: email.to.map(to => to.address),
                 sentAt: email.sentAt.toLocaleString(),
                 threadId: email.threadId,
+                embeddings
             })
             await upsertEmail(email, index, accountId);
         }
