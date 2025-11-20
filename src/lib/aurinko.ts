@@ -16,11 +16,30 @@ export const getAurinkoAuthUrl = async (serviceType: 'Google' | 'Office365') => 
         throw new Error("AURINKO_CLIENT_ID is not set or is empty")
     }
 
-    // Get the base URL from headers
-    const headersList = await headers()
-    const host = headersList.get('host')
-    const protocol = headersList.get('x-forwarded-proto') || 'http'
-    const baseUrl = `${protocol}://${host}`
+    // Get the base URL - prefer environment variable, then headers, then fallback
+    let baseUrl: string
+    let host: string | null = null
+    let protocol: string = 'http'
+    
+    if (process.env.AURINKO_RETURN_URL_BASE) {
+        // Use explicit base URL from environment variable
+        baseUrl = process.env.AURINKO_RETURN_URL_BASE.replace(/\/+$/, '')
+    } else {
+        // Try to get from headers
+        const headersList = await headers()
+        host = headersList.get('host')
+        protocol = headersList.get('x-forwarded-proto') || 
+                   (host?.includes('localhost') ? 'http' : 'https')
+        
+        if (host) {
+            baseUrl = `${protocol}://${host}`
+        } else {
+            // Fallback for localhost development
+            const port = process.env.PORT || '3000'
+            baseUrl = `http://localhost:${port}`
+        }
+    }
+    
     // Ensure no trailing slash and exact path
     const returnUrl = `${baseUrl}/api/aurinko/callback`.replace(/\/+$/, '')
 
@@ -57,9 +76,11 @@ export const getAurinkoAuthUrl = async (serviceType: 'Google' | 'Office365') => 
     
     console.log('Aurinko Auth URL details:', {
         returnUrl,
+        baseUrl,
         host,
         protocol,
         serviceType,
+        usingEnvVar: !!process.env.AURINKO_RETURN_URL_BASE,
     })
 
     return authUrl

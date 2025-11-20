@@ -24,9 +24,15 @@ const ComposeButton = () => {
     const [toValues, setToValues] = React.useState<{ label: string; value: string; }[]>([])
     const [ccValues, setCcValues] = React.useState<{ label: string; value: string; }[]>([])
     const [subject, setSubject] = React.useState<string>('')
+    
+    // Only query when accountId is valid (non-empty string)
+    const isValidAccountId = Boolean(accountId && typeof accountId === 'string' && accountId.trim().length > 0)
     const { data: account } = api.account.getMyAccount.useQuery(
-        { accountId },
-        { enabled: !!accountId, retry: false }
+        { accountId: accountId || '' },
+        { 
+            enabled: isValidAccountId, 
+            retry: false,
+        }
     )
 
 

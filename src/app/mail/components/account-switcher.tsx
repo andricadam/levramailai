@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select"
 import { api, type RouterOutputs } from "@/trpc/react"
 import { useLocalStorage } from "usehooks-ts"
-import { Plus, Trash2 } from "lucide-react"
+import { Plus, Trash2, RefreshCw } from "lucide-react"
 import { getAurinkoAuthUrl } from "@/lib/aurinko"
 import { useAuth } from "@clerk/nextjs"
 import { toast } from "sonner"
@@ -46,6 +46,17 @@ export function AccountSwitcher({
   }, [shouldFetch, isLoaded, isSignedIn, userId, accounts, error])
   const [accountId, setAccountId] = useLocalStorage('accountId', '')
   const utils = api.useUtils()
+  const syncAccount = api.account.syncAccount.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message || `Successfully synced ${data.emailsSynced} emails`)
+      // Invalidate threads to refresh the UI
+      utils.account.getThreads.invalidate()
+      utils.account.getNumThreads.invalidate()
+    },
+    onError: (error) => {
+      toast.error(`Failed to sync account: ${error.message}`)
+    }
+  })
   const deleteAccount = api.account.deleteAccount.useMutation({
     onSuccess: async () => {
       toast.success("Account deleted successfully")
@@ -205,6 +216,19 @@ export function AccountSwitcher({
               </div>
             </SelectItem>
           ))}
+          {accountId && (
+            <div 
+              onClick={(e) => {
+                e.stopPropagation()
+                if (syncAccount.isPending) return
+                syncAccount.mutate({ accountId })
+              }} 
+              className="relative flex hover:bg-gray-50 dark:hover:bg-gray-800 w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+            >
+              <RefreshCw className={cn("size-4 mr-1", syncAccount.isPending && "animate-spin")} />
+              <span>{syncAccount.isPending ? "Syncing..." : "Sync emails"}</span>
+            </div>
+          )}
           <div onClick={async (e) => {
             try {
               const url = await getAurinkoAuthUrl('Google')
@@ -219,7 +243,7 @@ export function AccountSwitcher({
               console.error((error as Error).message)
               toast.error((error as Error).message)
             }
-          }} className="relative flex hover:bg-gray-50 w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+          }} className="relative flex hover:bg-gray-50 dark:hover:bg-gray-800 w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
             <Plus className="size-4 mr-1" />
             Add account
           </div>

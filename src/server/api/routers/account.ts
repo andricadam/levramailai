@@ -3,6 +3,7 @@ import { createTRPCRouter, privateProcedure } from "../trpc";
 import { db } from "@/server/db";
 import { emailAddressSchema } from "@/types";
 import { Account } from "@/lib/acount";
+import { syncEmailsToDatabase } from "@/lib/sync-emails";
 
 export const authoriseAccess = async (accountId: string, userId: string) => {
     const account = await db.account.findFirst({
@@ -54,7 +55,7 @@ export const accountRouter = createTRPCRouter({
     }),
     getMyAccount: privateProcedure
         .input(z.object({
-            accountId: z.string(),
+            accountId: z.string().min(1, "Account ID cannot be empty"),
         }))
         .query(async ({ ctx, input }) => {
             return await authoriseAccess(input.accountId, ctx.auth.userId);
@@ -272,5 +273,48 @@ export const accountRouter = createTRPCRouter({
         });
 
         return { success: true };
+    }),
+    syncAccount: privateProcedure.input(z.object({
+        accountId: z.string(),
+    })).mutation(async ({ ctx, input }) => {
+        // Verify the account belongs to the user
+        const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        
+        console.log(`Starting manual sync for account ${account.id}...`);
+        
+        try {
+            // Create Account instance and perform initial sync
+            const acc = new Account(account.accessToken as string);
+            const response = await acc.performInitialSync();
+            
+            if (!response) {
+                throw new Error("Failed to perform initial sync - no response from Aurinko");
+            }
+            
+            const { emails, deltaToken } = response;
+            
+            console.log(`Fetched ${emails.length} emails from Aurinko`);
+            
+            // Sync emails to database
+            await syncEmailsToDatabase(account.id, emails);
+            
+            // Update the delta token for future incremental syncs
+            await ctx.db.account.update({
+                where: { id: account.id },
+                data: { nextDeltaToken: deltaToken }
+            });
+            
+            console.log(`Successfully synced ${emails.length} emails for account ${account.id}`);
+            
+            return { 
+                success: true, 
+                emailsSynced: emails.length,
+                message: `Successfully synced ${emails.length} emails`
+            };
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            console.error('Error syncing account:', errorMessage);
+            throw new Error(`Failed to sync account: ${errorMessage}`);
+        }
     })
 })

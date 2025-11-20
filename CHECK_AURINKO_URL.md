@@ -3,7 +3,17 @@
 ## Current Error
 You're getting: `{"code":"returnurl.invalid","message":"returnurl.invalid: returnUrl doesn't match the configured urls for the app."}`
 
-## How to Fix
+## Quick Fix: Use Environment Variable (Recommended)
+
+The easiest way to fix this is to set an explicit base URL in your `.env` file:
+
+```bash
+AURINKO_RETURN_URL_BASE=http://localhost:3000
+```
+
+This ensures the returnUrl is always `http://localhost:3000/api/aurinko/callback` regardless of how the request headers are set.
+
+## How to Fix (Manual Configuration)
 
 ### Step 1: Check Your Terminal/Console
 When you click "Add account", check your terminal where `npm run dev` is running. You should see output like:
@@ -16,6 +26,8 @@ When you click "Add account", check your terminal where `npm run dev` is running
 
    http://localhost:3000/api/aurinko/callback
 ```
+
+**Note:** If you see a different URL in the terminal, that's the one you need to add to Aurinko. The URL is constructed from your request headers, or you can set `AURINKO_RETURN_URL_BASE` in your `.env` file to use a fixed URL.
 
 ### Step 2: Add URL to Aurinko Dashboard
 
