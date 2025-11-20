@@ -27,12 +27,33 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
             },
         }),
         onError: (error: Error) => {
+            console.error('Chat error:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
             if (error.message.includes('Limit reached')) {
                 toast.error('You have reached the limit for today. Please upgrade to pro to ask as many questions as you want')
+            } else {
+                toast.error(`Failed to send message: ${error.message}`);
             }
+        },
+        onResponse: (response: Response) => {
+            console.log('Chat response received:', {
+                status: response.status,
+                statusText: response.statusText,
+                headers: Object.fromEntries(response.headers.entries())
+            });
         },
         messages: [],
     });
+    
+    // Debug: Log messages to see if assistant messages are being added
+    React.useEffect(() => {
+        console.log('Messages updated:', messages);
+        console.log('Status:', status);
+    }, [messages, status]);
     React.useEffect(() => {
         const messageContainer = document.getElementById("message-container");
         if (messageContainer) {
@@ -50,12 +71,21 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <motion.div className="flex flex-1 flex-col items-end justify-end pb-4 border p-4 rounded-lg bg-gray-100 shadow-inner dark:bg-gray-900">
                 <div className="max-h-[50vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container'>
                     <AnimatePresence mode="wait">
-                        {messages.map((message) => {
-                            const content = message.parts
-                                .filter((part) => part.type === 'text')
-                                .map((part) => (part as { text: string }).text)
-                                .join('');
+                        {messages.map((message: any) => {
+                            // Handle both parts format and content format
+                            let content = '';
+                            if (message.parts && Array.isArray(message.parts)) {
+                                content = message.parts
+                                    .filter((part: any) => part.type === 'text')
+                                    .map((part: any) => (part as { text: string }).text)
+                                    .join('');
+                            } else if (message.content && typeof message.content === 'string') {
+                                content = message.content;
+                            }
+                            
                             const role = message.role;
+                            console.log('Rendering message:', { id: message.id, role, content: content.substring(0, 50), hasParts: !!message.parts });
+                            
                             return (
                                 <motion.div
                                     key={message.id}
@@ -64,11 +94,11 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                                         'self-end text-gray-900 dark:text-gray-100': role === 'user',
                                         'self-start bg-blue-500 text-white': role === 'assistant',
                                     })}
-                                    layoutId={`container-[${messages.length - 1}]`}
+                                    layoutId={`container-[${message.id}]`}
                                     transition={transitionDebug}
                                 >
                                     <div className="px-3 py-2 text-[15px] leading-[15px]">
-                                        {content}
+                                        {content || (role === 'assistant' && status === 'streaming' ? '...' : '')}
                                     </div>
                                 </motion.div>
                             );
@@ -95,8 +125,12 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                     }
                     <form onSubmit={(e) => {
                         e.preventDefault();
+                        if (!accountId) {
+                            toast.error('Please select an account first');
+                            return;
+                        }
                         if (input.trim()) {
-                            sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] });
+                            sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] } as any);
                             setInput('');
                         }
                     }} className="flex w-full">

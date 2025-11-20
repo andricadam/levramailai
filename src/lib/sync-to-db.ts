@@ -2,7 +2,7 @@ import { db } from '@/server/db';
 import type { SyncUpdatedResponse, EmailMessage, EmailAddress, EmailAttachment, EmailHeader } from '@/types';
 import { OramaClient } from './orama';
 // TODO: Implement these modules
-// import { getEmbeddings } from './embeddings';
+import { getEmbeddings } from '@/lib/embedding';
 import { turndown } from './turndown';
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
