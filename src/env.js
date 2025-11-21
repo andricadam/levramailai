@@ -7,14 +7,19 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z.string().url().optional(),
+    DATABASE_URL: z.string().url(),
+    DIRECT_URL: z.string().url().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    WEBHOOK_SECRET: z.string().min(1).optional(),
-    CLERK_SECRET_KEY: z.string().min(1).optional(),
-    AURINKO_CLIENT_ID: z.string().min(1).optional(),
-    AURINKO_CLIENT_SECRET: z.string().min(1).optional(),
+    CLERK_SECRET_KEY: z.string().min(1),
+    WEBHOOK_SECRET: z.string().min(1),
+    AURINKO_CLIENT_ID: z.string().min(1),
+    AURINKO_CLIENT_SECRET: z.string().min(1),
+    OPENAI_API_KEY: z.string().min(1),
+    STRIPE_SECRET_KEY: z.string().min(1).optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+    STRIPE_PRICE_ID: z.string().min(1).optional(),
   },
 
   /**
@@ -24,6 +29,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+    NEXT_PUBLIC_URL: z.string().url().optional(),
   },
 
   /**
@@ -32,21 +38,13 @@ export const env = createEnv({
    */
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
+    DIRECT_URL: process.env.DIRECT_URL,
     NODE_ENV: process.env.NODE_ENV,
-    WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+    WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
     AURINKO_CLIENT_ID: process.env.AURINKO_CLIENT_ID,
     AURINKO_CLIENT_SECRET: process.env.AURINKO_CLIENT_SECRET,
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-  },
-  /**
-   * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
-   * useful for Docker builds.
-   */
-  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
-  /**
-   * Makes it so that empty strings are treated as undefined. `SOME_VAR: z.string()` and
-   * `SOME_VAR=''` will throw an error.
-   */
-  emptyStringAsUndefined: true,
-});
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+    STRIPE_PRICE
