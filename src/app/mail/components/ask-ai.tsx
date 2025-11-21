@@ -76,7 +76,7 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
             <div className="flex-shrink-0">
                 <PremiumBanner />
             </div>
-            <motion.div className="flex flex-col items-end justify-end pb-3 border rounded-lg bg-gray-100 shadow-inner dark:bg-gray-900 p-3 min-h-0 overflow-hidden flex-1">
+            <motion.div className="flex flex-col items-end justify-end pb-3 border rounded-lg bg-background shadow-inner p-3 min-h-0 overflow-hidden flex-1">
                 <div className="max-h-[180px] overflow-y-auto w-full flex flex-col gap-2 scrollbar-thin" id='message-container'>
                     <AnimatePresence mode="wait">
                         {messages.map((message: any) => {
@@ -98,9 +98,9 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                                 <motion.div
                                     key={message.id}
                                     layout="position"
-                                    className={cn("z-10 mt-2 max-w-[250px] break-words rounded-2xl bg-gray-200 dark:bg-gray-800", {
-                                        'self-end text-gray-900 dark:text-gray-100': role === 'user',
-                                        'self-start bg-blue-500 text-white': role === 'assistant',
+                                    className={cn("z-10 mt-2 max-w-[250px] break-words rounded-lg bg-muted", {
+                                        'self-end text-foreground': role === 'user',
+                                        'self-start bg-primary text-primary-foreground': role === 'assistant',
                                     })}
                                     layoutId={`container-[${message.id}]`}
                                     transition={transitionDebug}
@@ -117,16 +117,16 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                 <div className="w-full flex-shrink-0">
                     {messages.length === 0 && <div className="mb-3">
                         <div className='flex items-center gap-3 mb-2'>
-                            <SparklesIcon className='size-5 text-gray-500 flex-shrink-0' />
+                            <SparklesIcon className='size-5 text-muted-foreground flex-shrink-0' />
                             <div>
-                                <p className='text-gray-900 dark:text-gray-100 text-sm font-medium'>Ask AI anything about your emails</p>
-                                <p className='text-gray-500 text-xs dark:text-gray-400'>Get answers to your questions</p>
+                                <p className='text-foreground text-sm font-medium'>Ask AI anything about your emails</p>
+                                <p className='text-muted-foreground text-xs'>Get answers to your questions</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-1.5 flex-wrap">
-                            <span onClick={() => setInput('What can I ask?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer hover:bg-gray-700 transition-colors'>What can I ask?</span>
-                            <span onClick={() => setInput('When is my next flight?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer hover:bg-gray-700 transition-colors'>When is my next flight?</span>
-                            <span onClick={() => setInput('When is my next meeting?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer hover:bg-gray-700 transition-colors'>When is my next meeting?</span>
+                            <span onClick={() => setInput('What can I ask?')} className='px-2 py-1 bg-primary text-primary-foreground rounded-lg text-xs cursor-pointer hover:bg-primary/90 transition-colors'>What can I ask?</span>
+                            <span onClick={() => setInput('When is my next flight?')} className='px-2 py-1 bg-primary text-primary-foreground rounded-lg text-xs cursor-pointer hover:bg-primary/90 transition-colors'>When is my next flight?</span>
+                            <span onClick={() => setInput('When is my next meeting?')} className='px-2 py-1 bg-primary text-primary-foreground rounded-lg text-xs cursor-pointer hover:bg-primary/90 transition-colors'>When is my next meeting?</span>
                         </div>
                     </div>
                     }
@@ -145,32 +145,29 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                             type="text"
                             onChange={(e) => setInput(e.target.value)}
                             value={input}
-                            className="py- relative h-9 placeholder:text-[13px] flex-grow rounded-full border border-gray-200 bg-white px-3 text-[15px] outline-none placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1
-            dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:focus-visible:ring-blue-500/20 dark:focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-700
-            "
+                            className="py- relative h-9 placeholder:text-[13px] flex-grow rounded-lg border border-border bg-card px-3 text-[15px] outline-none placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-ring/50 focus-visible:ring-offset-1"
                             placeholder="Ask AI anything about your emails"
                             disabled={status === 'streaming' || status === 'submitted'}
                         />
                         <motion.div
                             key={messages.length}
                             layout="position"
-                            className="pointer-events-none absolute z-10 flex h-9 w-[250px] items-center overflow-hidden break-words rounded-full bg-gray-200 [word-break:break-word] dark:bg-gray-800"
+                            className="pointer-events-none absolute z-10 flex h-9 w-[250px] items-center overflow-hidden break-words rounded-lg bg-muted [word-break:break-word]"
                             layoutId={`container-[${messages.length}]`}
                             transition={transitionDebug}
                             initial={{ opacity: 0.6, zIndex: -1 }}
                             animate={{ opacity: 0.6, zIndex: -1 }}
                             exit={{ opacity: 1, zIndex: 1 }}
                         >
-                            <div className="px-3 py-2 text-[15px] leading-[15px] text-gray-900 dark:text-gray-100">
+                            <div className="px-3 py-2 text-[15px] leading-[15px] text-foreground">
                                 {input}
                             </div>
                         </motion.div>
                         <button
                             type="submit"
-                            className="ml-2 flex h-9 w-9 items-center justify-center rounded-full bg-gray-200
-            dark:bg-gray-800"
+                            className="ml-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                            <Send className="size-4 text-gray-500 dark:text-gray-300" />
+                            <Send className="size-4" />
                         </button>
                     </form>
                 </div>

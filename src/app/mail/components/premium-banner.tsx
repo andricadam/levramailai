@@ -19,11 +19,11 @@ const PremiumBanner = () => {
     const remainingCredits = chatbotInteraction?.remainingCredits || 0
 
     if (isSubscribed) return (
-        <motion.div layout className="bg-gray-900 p-2.5 rounded-lg border overflow-hidden">
+        <motion.div layout className="bg-primary p-2.5 rounded-lg border overflow-hidden">
             <div className="flex items-center justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                    <h2 className='text-white text-sm font-semibold truncate'>Premium Plan</h2>
-                    <p className='text-gray-400 text-xs mt-0.5 line-clamp-1'>Ask as many questions as you want</p>
+                    <h2 className='text-primary-foreground text-sm font-semibold truncate'>Premium Plan</h2>
+                    <p className='text-primary-foreground/80 text-xs mt-0.5 line-clamp-1'>Ask as many questions as you want</p>
                 </div>
                 <StripeButton size="sm" />
             </div>
@@ -31,13 +31,13 @@ const PremiumBanner = () => {
     )
 
     return (
-        <motion.div layout className="bg-gray-900 p-2.5 rounded-lg border overflow-hidden">
+        <motion.div layout className="bg-primary p-2.5 rounded-lg border overflow-hidden">
             <div className="space-y-1.5">
                 <div className="flex items-center justify-between gap-2">
-                    <h2 className='text-white text-sm font-semibold'>Basic Plan</h2>
-                    <p className='text-gray-400 text-xs whitespace-nowrap'>{remainingCredits} / {FREE_CREDITS_PER_DAY} remaining</p>
+                    <h2 className='text-primary-foreground text-sm font-semibold'>Basic Plan</h2>
+                    <p className='text-primary-foreground/80 text-xs whitespace-nowrap'>{remainingCredits} / {FREE_CREDITS_PER_DAY} remaining</p>
                 </div>
-                <p className='text-gray-400 text-xs line-clamp-1'>Upgrade to pro for unlimited questions</p>
+                <p className='text-primary-foreground/80 text-xs line-clamp-1'>Upgrade to pro for unlimited questions</p>
                 <StripeButton size="sm" />
             </div>
         </motion.div>
