@@ -7,18 +7,12 @@ import { UserButton } from '@clerk/nextjs'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { AppNav } from '@/components/app-nav'
-const ComposeButton = dynamic(() => {
-  return import('./components/compose-button')
-}, {
-  ssr: false
-})
-// import Mail from './mail'
 
-const Mail = dynamic(() => import('./components/mail'), {
+const CalendarView = dynamic(() => import('./components/calendar'), {
   ssr: false,
 })
 
-function MailDashboardContent() {
+function CalendarDashboardContent() {
   const searchParams = useSearchParams()
   
   React.useEffect(() => {
@@ -43,11 +37,10 @@ function MailDashboardContent() {
           <div className="flex items-center gap-2">
             <UserButton />
             <ThemeToggle />
-            <ComposeButton />
           </div>
         </div>
-        <Mail 
-          defaultLayout={[20, 32, 48]}
+        <CalendarView 
+          defaultLayout={[20, 80]}
           defaultCollapsed={false}
           navCollapsedSize={4}
         />
@@ -56,12 +49,13 @@ function MailDashboardContent() {
   )
 }
 
-const MailDashboard = () => {
+const CalendarDashboard = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <MailDashboardContent />
+      <CalendarDashboardContent />
     </Suspense>
   )
 }
 
-export default MailDashboard
+export default CalendarDashboard
+

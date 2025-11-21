@@ -1,6 +1,6 @@
 import {
-  Archive,
-  ArchiveX,
+  Inbox,
+  X,
   Clock,
   Forward,
   MoreVertical,
@@ -75,7 +75,7 @@ export function ThreadDisplay() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" disabled={!thread}>
-                <Archive className="w-4 h-4" />
+                <Inbox className="w-4 h-4" />
                 <span className="sr-only">Archive</span>
               </Button>
             </TooltipTrigger>
@@ -84,7 +84,7 @@ export function ThreadDisplay() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon" disabled={!thread}>
-                <ArchiveX className="w-4 h-4" />
+                <X className="w-4 h-4" />
                 <span className="sr-only">Move to junk</span>
               </Button>
             </TooltipTrigger>

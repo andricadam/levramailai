@@ -2,21 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import type { Editor } from "@tiptap/react";
 import {
-    Bold,
+    Type,
     Code,
-    CodepenIcon,
-    Heading1,
-    Heading2,
-    Heading3,
-    Heading4,
-    Heading5,
-    Heading6,
+    Hash,
     Italic,
     List,
     ListOrdered,
     Quote,
     Redo,
-    Strikethrough,
+    Minus,
     Undo,
 } from "lucide-react";
 
@@ -28,7 +22,7 @@ const TipTapMenuBar = ({ editor }: { editor: Editor }) => {
                 disabled={!editor.can().chain().focus().toggleBold().run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("bold") ? "is-active" : ""}`}
             >
-                <Bold className="size-4 text-secondary-foreground" />
+                <Type className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -42,7 +36,7 @@ const TipTapMenuBar = ({ editor }: { editor: Editor }) => {
                 disabled={!editor.can().chain().focus().toggleStrike().run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("strike") ? "is-active" : ""}`}
             >
-                <Strikethrough className="size-4 text-secondary-foreground" />
+                <Minus className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleCode().run()}
@@ -55,37 +49,37 @@ const TipTapMenuBar = ({ editor }: { editor: Editor }) => {
                 onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("heading", { level: 1 }) ? "is-active" : ""}`}
             >
-                <Heading1 className="size-4 text-secondary-foreground" />
+                <Hash className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("heading", { level: 2 }) ? "is-active" : ""}`}
             >
-                <Heading2 className="size-4 text-secondary-foreground" />
+                <Hash className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("heading", { level: 3 }) ? "is-active" : ""}`}
             >
-                <Heading3 className="size-4 text-secondary-foreground" />
+                <Hash className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleHeading({ level: 4 }).run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("heading", { level: 4 }) ? "is-active" : ""}`}
             >
-                <Heading4 className="size-4 text-secondary-foreground" />
+                <Hash className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("heading", { level: 5 }) ? "is-active" : ""}`}
             >
-                <Heading5 className="size-4 text-secondary-foreground" />
+                <Hash className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleHeading({ level: 6 }).run()}
                 className={`p-1 rounded hover:bg-accent ${editor.isActive("heading", { level: 6 }) ? "is-active" : ""}`}
             >
-                <Heading6 className="size-4 text-secondary-foreground" />
+                <Hash className="size-4 text-secondary-foreground" />
             </button>
             <button
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
