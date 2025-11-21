@@ -5,6 +5,7 @@ import { emailAddressSchema } from "@/types";
 import { Account } from "@/lib/acount";
 import { syncEmailsToDatabase } from "@/lib/sync-emails";
 import { OramaClient } from "@/lib/orama";
+import { FREE_CREDITS_PER_DAY } from "@/constants";
 
 export const authoriseAccess = async (accountId: string, userId: string) => {
     const account = await db.account.findFirst({
@@ -329,5 +330,21 @@ export const accountRouter = createTRPCRouter({
         await orama.initialize()
         const results = await orama.search({ term: input.query })
         return results
+    }),
+    getChatbotInteractions: privateProcedure.input(z.object({
+        accountId: z.string(),
+    })).query(async ({ctx, input})=>{
+        const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        const today = new Date().toDateString()
+        const chatbotInteraction = await db.chatbotInteraction.findUnique({
+            where: {
+                day_userId: {
+                    day: today,
+                    userId: ctx.auth.userId
+                }
+            }
+        })
+        const remainingCredits = FREE_CREDITS_PER_DAY - (chatbotInteraction?.count ?? 0)
+        return { remainingCredits }
     })
 })

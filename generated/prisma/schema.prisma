@@ -160,3 +160,16 @@ model ChatbotInteraction {
   @@unique([day, userId])
   @@index([userId])
 }
+
+model StripeSubscription {
+  userId           String   @id @unique
+  subscriptionId   String   @unique
+  customerId       String
+  productId        String
+  priceId          String
+  currentPeriodEnd DateTime
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+  @@index([subscriptionId])
+}

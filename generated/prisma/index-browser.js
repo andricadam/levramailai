@@ -205,6 +205,16 @@ exports.Prisma.ChatbotInteractionScalarFieldEnum = {
   count: 'count'
 };
 
+exports.Prisma.StripeSubscriptionScalarFieldEnum = {
+  userId: 'userId',
+  subscriptionId: 'subscriptionId',
+  customerId: 'customerId',
+  productId: 'productId',
+  priceId: 'priceId',
+  currentPeriodEnd: 'currentPeriodEnd',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -258,7 +268,8 @@ exports.Prisma.ModelName = {
   Email: 'Email',
   EmailAddress: 'EmailAddress',
   EmailAttachment: 'EmailAttachment',
-  ChatbotInteraction: 'ChatbotInteraction'
+  ChatbotInteraction: 'ChatbotInteraction',
+  StripeSubscription: 'StripeSubscription'
 };
 
 /**
