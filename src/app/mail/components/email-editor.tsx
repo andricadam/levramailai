@@ -92,62 +92,65 @@ const EmailEditor = ({ subject, setSubject, toValues, setToValues, ccValues, set
     if (!editor) return null
 
     return (
-        <div>
-
-            <div className='flex p-4 py-2 border-b'>
-                <TipTapMenuBar editor={editor} />
-            </div>
-
-            <div className='p-4 pb-0 space-y-2'>
-                {expanded && (
-                    <>
-                        <TagInput
-                            label='To'
-                            onChange={setToValues}
-                            placeholder='Add Recipients'
-                            value={toValues}
-                        />
-                        <TagInput
-                            label='Cc'
-                            onChange={setCcValues}
-                            placeholder='Add Recipients'
-                            value={toValues}
-                        />
-                        <Input id='subject' placeholder='Subject' value={subject} onChange={(e) => setSubject(e.target.value)} />
-                    </>
-                )}
-
-                <div className='flex items-center gap-2'>
-                    <div className='cursor-pointer' onClick={() => setExpanded(!expanded)}>
-                        <span className='text-green-600 font-medium'>
-                            Draft {" "}
+        <div className="flex flex-col border-t bg-background m-0">
+            {/* Compact Header */}
+            <div className='flex items-center justify-between px-2.5 py-1.5 border-b bg-muted/30 flex-shrink-0'>
+                <div className='flex items-center gap-2 flex-1 min-w-0'>
+                    <div className='cursor-pointer flex items-center gap-1.5' onClick={() => setExpanded(!expanded)}>
+                        <span className='text-green-600 dark:text-green-500 font-medium text-xs'>
+                            Draft
                         </span>
-                        <span>
+                        <span className='text-xs text-muted-foreground truncate'>
                             to {to.join(', ')}
                         </span>
                     </div>
-                    <AIComposeButton isComposing={defaultToolbarExpanded} onGenerate={onGenerate} />
                 </div>
-
+                <AIComposeButton isComposing={defaultToolbarExpanded} onGenerate={onGenerate} />
             </div>
 
-            <div className='prose w-full px-4 min-h-[150px]'>
+            {/* Expandable Fields */}
+            {expanded && (
+                <div className='px-2.5 py-1.5 space-y-1.5 border-b bg-muted/20 flex-shrink-0'>
+                    <TagInput
+                        label='To'
+                        onChange={setToValues}
+                        placeholder='Add Recipients'
+                        value={toValues}
+                    />
+                    <TagInput
+                        label='Cc'
+                        onChange={setCcValues}
+                        placeholder='Add Recipients'
+                        value={ccValues}
+                    />
+                    <Input id='subject' placeholder='Subject' value={subject} onChange={(e) => setSubject(e.target.value)} className="h-7 text-sm" />
+                </div>
+            )}
+
+            {/* Compact Toolbar */}
+            <div className='flex px-2 py-1 border-b bg-muted/10 flex-shrink-0'>
+                <TipTapMenuBar editor={editor} />
+            </div>
+
+            {/* Compact Editor */}
+            <div className='prose prose-sm w-full px-2.5 py-1.5 min-h-[80px] overflow-y-auto'>
                 <EditorContent editor={editor} />
             </div>
 
-            <Separator />
-            <div className='py-3 px-4 flex items-center justify-between'>
-                <span className='text-sm'>
-                    Tip: Press {" "}
-                    <kbd className='px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-300 rounded'>
-                        Cmd + J
-                    </kbd> {" "}
-                    for AI autocomplete
+            {/* Compact Footer - Flush Bottom */}
+            <div className='px-2.5 py-1 flex items-center justify-between border-t bg-muted/30 flex-shrink-0 m-0'>
+                <span className='text-[10px] text-muted-foreground'>
+                    Tip: Press <kbd className='px-1 py-0.5 text-[10px] font-semibold text-muted-foreground bg-muted border rounded'>Cmd + J</kbd> for AI
                 </span>
-                <Button onClick={async () => {
-                    editor?.commands?.clearContent()
-                    await handleSend(value)
-                }} disabled={isSending}>
+                <Button 
+                    size="sm"
+                    className="h-7 px-3 text-xs"
+                    onClick={async () => {
+                        editor?.commands?.clearContent()
+                        await handleSend(value)
+                    }} 
+                    disabled={isSending}
+                >
                     Send
                 </Button>
             </div>

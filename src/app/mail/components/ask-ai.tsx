@@ -72,11 +72,12 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
 
     if (isCollapsed) return null;
     return (
-        <div className='p-4 mb-14'>
-            <PremiumBanner />
-            <div className="h-4"></div>
-            <motion.div className="flex flex-1 flex-col items-end justify-end pb-4 border p-4 rounded-lg bg-gray-100 shadow-inner dark:bg-gray-900">
-                <div className="max-h-[50vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container'>
+        <div className='p-3 space-y-3 overflow-hidden flex flex-col max-h-[450px]'>
+            <div className="flex-shrink-0">
+                <PremiumBanner />
+            </div>
+            <motion.div className="flex flex-col items-end justify-end pb-3 border rounded-lg bg-gray-100 shadow-inner dark:bg-gray-900 p-3 min-h-0 overflow-hidden flex-1">
+                <div className="max-h-[180px] overflow-y-auto w-full flex flex-col gap-2 scrollbar-thin" id='message-container'>
                     <AnimatePresence mode="wait">
                         {messages.map((message: any) => {
                             // Handle both parts format and content format
@@ -112,21 +113,20 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
                         })}
                     </AnimatePresence>
                 </div>
-                {messages.length > 0 && <div className="h-4"></div>}
-                <div className="w-full">
-                    {messages.length === 0 && <div className="mb-4">
-                        <div className='flex items-center gap-4'>
-                            <SparklesIcon className='size-6 text-gray-500' />
+                {messages.length > 0 && <div className="h-3 flex-shrink-0"></div>}
+                <div className="w-full flex-shrink-0">
+                    {messages.length === 0 && <div className="mb-3">
+                        <div className='flex items-center gap-3 mb-2'>
+                            <SparklesIcon className='size-5 text-gray-500 flex-shrink-0' />
                             <div>
-                                <p className='text-gray-900 dark:text-gray-100'>Ask AI anything about your emails</p>
-                                <p className='text-gray-500 text-xs dark:text-gray-400'>Get answers to your questions about your emails</p>
+                                <p className='text-gray-900 dark:text-gray-100 text-sm font-medium'>Ask AI anything about your emails</p>
+                                <p className='text-gray-500 text-xs dark:text-gray-400'>Get answers to your questions</p>
                             </div>
                         </div>
-                        <div className="h-2"></div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <span onClick={() => setInput('What can I ask?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer'>What can I ask?</span>
-                            <span onClick={() => setInput('When is my next flight?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer'>When is my next flight?</span>
-                            <span onClick={() => setInput('When is my next meeting?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer'>When is my next meeting?</span>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                            <span onClick={() => setInput('What can I ask?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer hover:bg-gray-700 transition-colors'>What can I ask?</span>
+                            <span onClick={() => setInput('When is my next flight?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer hover:bg-gray-700 transition-colors'>When is my next flight?</span>
+                            <span onClick={() => setInput('When is my next meeting?')} className='px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-xs cursor-pointer hover:bg-gray-700 transition-colors'>When is my next meeting?</span>
                         </div>
                     </div>
                     }

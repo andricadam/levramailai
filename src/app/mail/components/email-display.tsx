@@ -26,7 +26,7 @@ export default function EmailDisplay({ email }: Props) {
         <div className="text-sm font-medium">{email.subject}</div>
       )}
       {email.body && (
-        <div className="h-4">
+        <div className="w-full">
           <Letter html={email?.body ?? ''} className='bg-white rounded-d text-black'/>
         </div>
       )}

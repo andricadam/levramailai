@@ -44,6 +44,7 @@ import SearchDisplay from "./search-display";
 import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
 import { useId } from "react";
+import React from "react";
 
 
 export function ThreadDisplay() {
@@ -53,6 +54,7 @@ export function ThreadDisplay() {
   const dropdownMenuId = useId()
   const _thread = threads?.find(t => t.id === threadId)
   const [isSearching] = useAtom(isSearchingAtom)
+  const [showReplyBox, setShowReplyBox] = React.useState(false)
 
   const [accountId] = useLocalStorage('accountId', '')
   const { data: foundThread } = api.mail.getThreadById.useQuery({
@@ -61,8 +63,13 @@ export function ThreadDisplay() {
   }, { enabled: !_thread && !!threadId })
   const thread = _thread ?? foundThread
 
+  // Reset reply box when thread changes
+  React.useEffect(() => {
+    setShowReplyBox(false)
+  }, [threadId])
+
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center p-2">
         <div className="flex items-center gap-2">
           <Tooltip>
@@ -156,12 +163,17 @@ export function ThreadDisplay() {
         <div className="flex items-center gap-2 ml-auto">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!thread}>
+              <Button 
+                variant={showReplyBox ? "secondary" : "ghost"}
+                size="icon" 
+                disabled={!thread}
+                onClick={() => setShowReplyBox(!showReplyBox)}
+              >
                 <Reply className="w-4 h-4" />
                 <span className="sr-only">Reply</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Reply</TooltipContent>
+            <TooltipContent>{showReplyBox ? "Hide reply" : "Reply"}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -201,7 +213,7 @@ export function ThreadDisplay() {
       <Separator />
       {isSearching ? <SearchDisplay /> : (
         thread ? (
-          <div className="flex flex-col flex-1 min-h-0">
+          <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
             <div className="flex items-start p-4 flex-shrink-0">
               <div className="flex items-start gap-4 text-sm">
                 <Avatar>
@@ -227,17 +239,21 @@ export function ThreadDisplay() {
               )}
             </div>
             <Separator />
-            <div className="flex-1 overflow-auto">
-              <div className="p-6 flex flex-col gap-4">
+            <div className="flex-1 overflow-y-auto min-h-0">
+              <div className="p-4 flex flex-col gap-4">
                 {thread?.emails?.map((email) => {
                   return <EmailDisplay key={email.id} email={email} />
                 })}
               </div>
             </div>
-            <Separator className="flex-shrink-0" />
-            <div className="flex-shrink-0">
-              <ReplyBox />
-            </div>
+            {showReplyBox && (
+              <>
+                <Separator className="flex-shrink-0" />
+                <div className="flex-shrink-0 max-h-[300px]">
+                  <ReplyBox onSent={() => setShowReplyBox(false)} />
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div className="p-8 text-center text-muted-foreground">

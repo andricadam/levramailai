@@ -7,7 +7,7 @@ import React from 'react'
 import type { EmailAddress } from '@/types'
 import { toast } from 'sonner'
 
-const ReplyBox = () => {
+const ReplyBox = ({ onSent }: { onSent?: () => void }) => {
     const { threadId, accountId } = useThreads()
     const { data: replyDetails } = api.account.getReplyDetails.useQuery({
         threadId: threadId ?? "",
@@ -16,10 +16,10 @@ const ReplyBox = () => {
 
     if (!replyDetails) return null
 
-    return <Component replyDetails={replyDetails} />
+    return <Component replyDetails={replyDetails} onSent={onSent} />
 }
 
-const Component = ({ replyDetails }: { replyDetails: RouterOutputs['account']['getReplyDetails'] }) => {
+const Component = ({ replyDetails, onSent }: { replyDetails: RouterOutputs['account']['getReplyDetails'], onSent?: () => void }) => {
     const { threadId, accountId } = useThreads()
     const [subject, setSubject] = React.useState(replyDetails.subject || '')
     const [toValues, setToValues] = useState<{ label: string, value: string }[]>(
@@ -74,6 +74,7 @@ const Component = ({ replyDetails }: { replyDetails: RouterOutputs['account']['g
         }, {
             onSuccess: () => {
                 toast.success('Email sent successfully')
+                onSent?.()
             },
             onError: (error) => {
                 console.log(error)
@@ -85,18 +86,20 @@ const Component = ({ replyDetails }: { replyDetails: RouterOutputs['account']['g
     const to = toValues.map(v => v.value)
 
     return (
-        <EmailEditor
-            subject={subject}
-            setSubject={setSubject}
-            toValues={toValues}
-            setToValues={setToValues}
-            ccValues={ccValues}
-            setCcValues={setCcValues}
-            to={replyDetails.to.map(to => to.address)}
-            handleSend={handleSend}
-            isSending={isSending}
-            defaultToolbarExpanded={true}
-        />
+        <div className="max-h-[300px] flex flex-col w-full m-0">
+            <EmailEditor
+                subject={subject}
+                setSubject={setSubject}
+                toValues={toValues}
+                setToValues={setToValues}
+                ccValues={ccValues}
+                setCcValues={setCcValues}
+                to={replyDetails.to.map(to => to.address)}
+                handleSend={handleSend}
+                isSending={isSending}
+                defaultToolbarExpanded={false}
+            />
+        </div>
     )
 }
 

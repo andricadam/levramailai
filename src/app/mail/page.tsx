@@ -32,8 +32,8 @@ function MailDashboardContent() {
   }, [searchParams])
 
   return (
-    <>
-      <div className="absolute bottom-4 left-4">
+    <div className="h-screen w-screen overflow-hidden relative">
+      <div className="absolute bottom-4 left-4 z-10">
         <div className="flex items-center gap-2">
             <UserButton />
             <ThemeToggle />
@@ -45,7 +45,7 @@ function MailDashboardContent() {
         defaultCollapsed={false}
         navCollapsedSize={4}
       />
-    </>
+    </div>
   )
 }
 

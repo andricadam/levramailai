@@ -19,30 +19,26 @@ const PremiumBanner = () => {
     const remainingCredits = chatbotInteraction?.remainingCredits || 0
 
     if (isSubscribed) return (
-        <motion.div layout className="bg-gray-900 relative p-4 rounded-lg border overflow-hidden flex flex-col md:flex-row gap-4">
-            <img src='/bot.webp' className='md:absolute md:-bottom-6 md:-right-10 h-[180px] w-auto' />
-            <div>
-                <h1 className='text-white text-xl font-semibold'>Premium Plan</h1>
-                <div className="h-2"></div>
-                <p className='text-gray-400 text-sm md:max-w-[calc(100%-70px)]'>Ask as many questions as you want</p>
-                <div className="h-4"></div>
-                <StripeButton />
+        <motion.div layout className="bg-gray-900 p-2.5 rounded-lg border overflow-hidden">
+            <div className="flex items-center justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                    <h2 className='text-white text-sm font-semibold truncate'>Premium Plan</h2>
+                    <p className='text-gray-400 text-xs mt-0.5 line-clamp-1'>Ask as many questions as you want</p>
+                </div>
+                <StripeButton size="sm" />
             </div>
         </motion.div>
     )
 
     return (
-        <motion.div layout className="bg-gray-900 relative p-4 rounded-lg border overflow-hidden flex flex-col md:flex-row gap-4">
-            <img src='/bot.webp' className='md:absolute md:-bottom-6 md:-right-10 h-[180px] w-auto' />
-            <div>
-                <div className="flex items-center gap-2">
-                    <h1 className='text-white text-xl font-semibold'>Basic Plan</h1>
-                    <p className='text-gray-400 text-sm md:max-w-[calc(100%-0px)]'>{remainingCredits} / {FREE_CREDITS_PER_DAY} messages remaining</p>
+        <motion.div layout className="bg-gray-900 p-2.5 rounded-lg border overflow-hidden">
+            <div className="space-y-1.5">
+                <div className="flex items-center justify-between gap-2">
+                    <h2 className='text-white text-sm font-semibold'>Basic Plan</h2>
+                    <p className='text-gray-400 text-xs whitespace-nowrap'>{remainingCredits} / {FREE_CREDITS_PER_DAY} remaining</p>
                 </div>
-                <div className="h-4"></div>
-                <p className='text-gray-400 text-sm md:max-w-[calc(100%-150px)]'>Upgrade to pro to ask as many questions as you want</p>
-                <div className="h-4"></div>
-                <StripeButton />
+                <p className='text-gray-400 text-xs line-clamp-1'>Upgrade to pro for unlimited questions</p>
+                <StripeButton size="sm" />
             </div>
         </motion.div>
     )

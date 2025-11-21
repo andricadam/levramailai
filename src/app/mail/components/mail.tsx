@@ -1,7 +1,6 @@
 "use client"
 
 import React from 'react'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { Separator } from '@/components/ui/separator'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -22,44 +21,43 @@ type Props = {
 const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }: Props) => {
 
     const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed ?? false)
-    const panelGroupId = React.useId()
     const tabsId = React.useId()
 
     return (
         <TooltipProvider delayDuration={0}>
-        <ResizablePanelGroup id={panelGroupId} direction="horizontal" onLayout={(sizes: number []) => {
-            console.log(sizes)
-        }} className='items-stretch h-full min-h-screen'>
-            <ResizablePanel 
-                defaultSize={defaultLayout[0]} 
-                collapsedSize={navCollapsedSize}
-                collapsible={true}
-                minSize={15}
-                maxSize={40}
-                onCollapse={() => {
-                    setIsCollapsed(true)
-                }}
-                onResize={() => {
-                    setIsCollapsed(false)
-                }}
-                className={cn(isCollapsed && 'min-w-[50px] transition-all duration-300 ease-in-out')}
+        <div className='flex h-screen items-stretch overflow-hidden'>
+            {/* Sidebar Panel - Fixed Width */}
+            <div 
+                className={cn(
+                    'flex flex-col h-full flex-shrink-0 transition-all duration-300 ease-in-out border-r bg-sidebar overflow-hidden'
+                )}
+                style={{ width: isCollapsed ? '48px' : `${defaultLayout[0]}%` }}
             >
-                <div className='flex flex-col h-full flex-1'>
-                    <div className={cn('flex h-[52px] items-center justify-between', isCollapsed ? 'h-[52px]' : 'px-2')}>
-                        {/* Account Switcher */}
-                        <AccountSwitcher isCollapsed={isCollapsed} />
-                    </div>
-                    <Separator />
-                    {/* Sidebar */}
+                {/* Account Switcher Section */}
+                <div className={cn('flex h-[52px] items-center justify-between border-b flex-shrink-0', isCollapsed ? 'h-[52px] px-2' : 'px-3')}>
+                    <AccountSwitcher isCollapsed={isCollapsed} />
+                </div>
+                
+                {/* Navigation Section */}
+                <div className="flex-1 overflow-y-auto min-h-0">
                     <Sidebar isCollapsed={isCollapsed} />
-                    <div className="flex-1"></div>
-                    {/* AI */}
+                </div>
+                
+                {/* AI Section */}
+                <div className="border-t flex-shrink-0 overflow-hidden pb-16">
                     <AskAI isCollapsed={isCollapsed} />
                 </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
-                <Tabs id={tabsId} defaultValue="inbox">
+            </div>
+
+            {/* Fixed Separator */}
+            <div className='w-px bg-border flex-shrink-0' />
+
+            {/* Thread List Panel - Fixed Width */}
+            <div 
+                className='flex flex-col h-full flex-shrink-0'
+                style={{ width: `${defaultLayout[1]}%` }}
+            >
+                <Tabs id={tabsId} defaultValue="inbox" className='flex flex-col h-full'>
                     <div className='flex items-center px-4 py-2'>
                         <h1 className='text-xl font-bold'>Inbox</h1>
                         <TabsList className='ml-auto'>
@@ -73,19 +71,26 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                     </div>
                     <Separator />
                     <SearchBar />
-                    <TabsContent value="inbox">
+                    <TabsContent value="inbox" className='flex-1 overflow-y-auto min-h-0'>
                         <ThreadList />
                     </TabsContent>
-                    <TabsContent value="done">
+                    <TabsContent value="done" className='flex-1 overflow-y-auto min-h-0'>
                         <ThreadList />
                     </TabsContent>
                 </Tabs>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
+            </div>
+
+            {/* Fixed Separator */}
+            <div className='w-px bg-border flex-shrink-0' />
+
+            {/* Thread Display Panel - Fixed Width */}
+            <div 
+                className='flex flex-col h-full flex-shrink-0'
+                style={{ width: `${defaultLayout[2]}%` }}
+            >
                 <ThreadDisplay />
-            </ResizablePanel>
-        </ResizablePanelGroup>
+            </div>
+        </div>
     </TooltipProvider>
     )
 }

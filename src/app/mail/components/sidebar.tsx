@@ -41,7 +41,7 @@ const SideBar = ({ isCollapsed = false }: Props) => {
     const currentTab = mounted ? tab : "inbox"
 
     return (
-        <>
+        <div className="py-2 w-full">
             <Nav
                 isCollapsed={isCollapsed}
                 links={[
@@ -65,7 +65,7 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                     },
                 ]}
             />
-        </>
+        </div>
     )
 }
 

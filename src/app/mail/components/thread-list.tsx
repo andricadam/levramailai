@@ -21,7 +21,7 @@ const ThreadList = () => {
     // During SSR and initial hydration, show a consistent state
     if (!mounted) {
         return (
-            <div className='max-w-full overflow-y-scroll max-h-[calc(100vh-120px)]'>
+            <div className='w-full h-full'>
                 <div className='flex flex-col gap-2 p-4 pt-0'>
                     <div className='text-sm text-muted-foreground'>Loading...</div>
                 </div>
@@ -31,7 +31,7 @@ const ThreadList = () => {
 
     if (isFetching && (!threads || threads.length === 0)) {
         return (
-            <div className='max-w-full overflow-y-scroll max-h-[calc(100vh-120px)]'>
+            <div className='w-full h-full'>
                 <div className='flex flex-col gap-2 p-4 pt-0'>
                     <div className='text-sm text-muted-foreground'>Loading...</div>
                 </div>
@@ -41,7 +41,7 @@ const ThreadList = () => {
 
     if (!threads || threads.length === 0) {
         return (
-            <div className='max-w-full overflow-y-scroll max-h-[calc(100vh-120px)]'>
+            <div className='w-full h-full'>
                 <div className='flex flex-col gap-2 p-4 pt-0'>
                     <div className='text-sm text-muted-foreground'>No threads found</div>
                 </div>
@@ -59,7 +59,7 @@ const ThreadList = () => {
     }, {} as Record<string, Thread[]>)
 
     return (
-        <div className='max-w-full overflow-y-scroll max-h-[calc(100vh-120px)]'>
+        <div className='w-full h-full'>
             <div className='flex flex-col gap-2 p-4 pt-0'>
                 {Object.entries(groupedThreads).map(([date, threads]) => (
                     <React.Fragment key={date}>
