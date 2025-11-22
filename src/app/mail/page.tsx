@@ -7,6 +7,7 @@ import { UserButton } from '@clerk/nextjs'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { AppNav } from '@/components/app-nav'
+import AskAIButton from './components/ask-ai-button'
 const ComposeButton = dynamic(() => {
   return import('./components/compose-button')
 }, {
@@ -53,6 +54,7 @@ function MailDashboardContent() {
           defaultCollapsed={false}
           navCollapsedSize={4}
         />
+        <AskAIButton />
       </div>
     </div>
   )

@@ -9,7 +9,6 @@ import { useLocalStorage } from 'usehooks-ts';
 import { cn } from '@/lib/utils';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import { toast } from 'sonner';
-import PremiumBanner from './premium-banner';
 import { api } from '@/trpc/react';
 
 
@@ -18,7 +17,7 @@ const transitionDebug = {
     ease: "easeOut" as const,
     duration: 0.2,
 };
-const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
+const AskAI = () => {
     const [accountId] = useLocalStorage('accountId', '')
     const utils = api.useUtils()
     const [input, setInput] = useState('')
@@ -69,14 +68,9 @@ const AskAI = ({ isCollapsed }: { isCollapsed: boolean }) => {
         }
     }, [messages]);
 
-
-    if (isCollapsed) return null;
     return (
-        <div className='p-3 space-y-3 overflow-hidden flex flex-col max-h-[450px]'>
-            <div className="flex-shrink-0">
-                <PremiumBanner />
-            </div>
-            <motion.div className="flex flex-col items-end justify-end pb-3 border rounded-lg bg-background shadow-inner p-3 min-h-0 overflow-hidden flex-1">
+        <div className='p-4 overflow-hidden flex flex-col h-full max-h-[600px]'>
+            <motion.div className="flex flex-col items-end justify-end pb-3 border rounded-lg bg-card shadow-inner p-3 min-h-0 overflow-hidden flex-1">
                 <div className="max-h-[180px] overflow-y-auto w-full flex flex-col gap-2 scrollbar-thin" id='message-container'>
                     <AnimatePresence mode="wait">
                         {messages.map((message: any) => {
