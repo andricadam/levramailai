@@ -200,6 +200,7 @@ exports.Prisma.EmailAttachmentScalarFieldEnum = {
 };
 
 exports.Prisma.ChatbotInteractionScalarFieldEnum = {
+  id: 'id',
   day: 'day',
   userId: 'userId',
   count: 'count'

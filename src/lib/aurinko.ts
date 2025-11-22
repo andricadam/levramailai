@@ -10,96 +10,102 @@ import { PRO_ACCOUNTS_PER_USER } from "@/constants"
 import { FREE_ACCOUNTS_PER_USER } from "@/constants"
 
 export const getAurinkoAuthUrl = async (serviceType: 'Google' | 'Office365') => {
-    const { userId } = await auth()
-    if (!userId) throw new Error("Unauthorized")
+    try {
+        const { userId } = await auth()
+        if (!userId) throw new Error("Unauthorized")
 
-    const isSubscribed = await getSubscriptionStatus()
-    const accounts = await db.account.count({ where: { userId }})
-    if (isSubscribed) {
-        if (accounts >= PRO_ACCOUNTS_PER_USER) {
-            throw new Error("You have reached the maximum number of accounts for your subscription")
-        }
-    } else {
-        if (accounts >= FREE_ACCOUNTS_PER_USER) {
-            throw new Error("You have reached the maximum number of accounts for your subscription")
-        }
-    }
-
-    const clientId = env.AURINKO_CLIENT_ID
-    
-    // Validate clientId
-    if (!clientId || clientId.trim() === '') {
-        throw new Error("AURINKO_CLIENT_ID is not set or is empty")
-    }
-
-    // Get the base URL - prefer environment variable, then headers, then fallback
-    let baseUrl: string
-    let host: string | null = null
-    let protocol: string = 'http'
-    
-    if (process.env.AURINKO_RETURN_URL_BASE) {
-        // Use explicit base URL from environment variable
-        baseUrl = process.env.AURINKO_RETURN_URL_BASE.replace(/\/+$/, '')
-    } else {
-        // Try to get from headers
-        const headersList = await headers()
-        host = headersList.get('host')
-        protocol = headersList.get('x-forwarded-proto') || 
-                   (host?.includes('localhost') ? 'http' : 'https')
-        
-        if (host) {
-            baseUrl = `${protocol}://${host}`
+        const isSubscribed = await getSubscriptionStatus()
+        const accounts = await db.account.count({ where: { userId }})
+        if (isSubscribed) {
+            if (accounts >= PRO_ACCOUNTS_PER_USER) {
+                throw new Error("You have reached the maximum number of accounts for your subscription")
+            }
         } else {
-            // Fallback for localhost development
-            const port = process.env.PORT || '3000'
-            baseUrl = `http://localhost:${port}`
+            if (accounts >= FREE_ACCOUNTS_PER_USER) {
+                throw new Error("You have reached the maximum number of accounts for your subscription")
+            }
         }
+
+        const clientId = env.AURINKO_CLIENT_ID
+        
+        // Validate clientId
+        if (!clientId || clientId.trim() === '') {
+            throw new Error("AURINKO_CLIENT_ID is not set or is empty")
+        }
+
+        // Get the base URL - prefer environment variable, then headers, then fallback
+        let baseUrl: string
+        let host: string | null = null
+        let protocol: string = 'http'
+        
+        if (process.env.AURINKO_RETURN_URL_BASE) {
+            // Use explicit base URL from environment variable
+            baseUrl = process.env.AURINKO_RETURN_URL_BASE.replace(/\/+$/, '')
+        } else {
+            // Try to get from headers
+            const headersList = await headers()
+            host = headersList.get('host')
+            protocol = headersList.get('x-forwarded-proto') || 
+                       (host?.includes('localhost') ? 'http' : 'https')
+            
+            if (host) {
+                baseUrl = `${protocol}://${host}`
+            } else {
+                // Fallback for localhost development
+                const port = process.env.PORT || '3000'
+                baseUrl = `http://localhost:${port}`
+            }
+        }
+        
+        // Ensure no trailing slash and exact path
+        const returnUrl = `${baseUrl}/api/aurinko/callback`.replace(/\/+$/, '')
+
+        // Set scopes - Aurinko uses its own scope identifiers (space-separated)
+        // Valid scopes include: Mail.Read, Mail.ReadWrite, Mail.Send, Mail.Drafts, Mail.All
+        // Both Google and Office365 use the same scope names in Aurinko
+        const scopes = 'Mail.Read Mail.ReadWrite Mail.Send Mail.Drafts Mail.All'
+
+        const params = new URLSearchParams({
+            clientId,
+            serviceType,
+            scopes,
+            responseType: 'code',
+            returnUrl,
+        })
+
+        const authUrl = `https://api.aurinko.io/v1/auth/authorize?${params.toString()}`
+        
+        // Debug logging - IMPORTANT: The returnUrl below must be added to your Aurinko app settings!
+        console.log('\n' + '='.repeat(60))
+        console.log('🔴 AURINKO CALLBACK URL CONFIGURATION REQUIRED')
+        console.log('='.repeat(60))
+        console.log('⚠️  You MUST add this EXACT URL to your Aurinko app settings:')
+        console.log('')
+        console.log(`   ${returnUrl}`)
+        console.log('')
+        console.log('📋 Steps to fix:')
+        console.log('   1. Go to https://developer.aurinko.io/ (or your Aurinko dashboard)')
+        console.log('   2. Find your app with Client ID:', clientId.substring(0, 10) + '...')
+        console.log('   3. Go to OAuth/Callback URL settings')
+        console.log('   4. Add the URL above EXACTLY as shown (no trailing slash)')
+        console.log('   5. Save the settings')
+        console.log('='.repeat(60) + '\n')
+        
+        console.log('Aurinko Auth URL details:', {
+            returnUrl,
+            baseUrl,
+            host,
+            protocol,
+            serviceType,
+            usingEnvVar: !!process.env.AURINKO_RETURN_URL_BASE,
+        })
+
+        return authUrl
+    } catch (error) {
+        console.error('Error in getAurinkoAuthUrl:', error)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        throw new Error(`Failed to get Aurinko auth URL: ${errorMessage}`)
     }
-    
-    // Ensure no trailing slash and exact path
-    const returnUrl = `${baseUrl}/api/aurinko/callback`.replace(/\/+$/, '')
-
-    // Set scopes - Aurinko uses its own scope identifiers (space-separated)
-    // Valid scopes include: Mail.Read, Mail.ReadWrite, Mail.Send, Mail.Drafts, Mail.All
-    // Both Google and Office365 use the same scope names in Aurinko
-    const scopes = 'Mail.Read Mail.ReadWrite Mail.Send Mail.Drafts Mail.All'
-
-    const params = new URLSearchParams({
-        clientId,
-        serviceType,
-        scopes,
-        responseType: 'code',
-        returnUrl,
-    })
-
-    const authUrl = `https://api.aurinko.io/v1/auth/authorize?${params.toString()}`
-    
-    // Debug logging - IMPORTANT: The returnUrl below must be added to your Aurinko app settings!
-    console.log('\n' + '='.repeat(60))
-    console.log('🔴 AURINKO CALLBACK URL CONFIGURATION REQUIRED')
-    console.log('='.repeat(60))
-    console.log('⚠️  You MUST add this EXACT URL to your Aurinko app settings:')
-    console.log('')
-    console.log(`   ${returnUrl}`)
-    console.log('')
-    console.log('📋 Steps to fix:')
-    console.log('   1. Go to https://developer.aurinko.io/ (or your Aurinko dashboard)')
-    console.log('   2. Find your app with Client ID:', clientId.substring(0, 10) + '...')
-    console.log('   3. Go to OAuth/Callback URL settings')
-    console.log('   4. Add the URL above EXACTLY as shown (no trailing slash)')
-    console.log('   5. Save the settings')
-    console.log('='.repeat(60) + '\n')
-    
-    console.log('Aurinko Auth URL details:', {
-        returnUrl,
-        baseUrl,
-        host,
-        protocol,
-        serviceType,
-        usingEnvVar: !!process.env.AURINKO_RETURN_URL_BASE,
-    })
-
-    return authUrl
 }
 
 export const exchangeCodeForAccessToken = async (code: string) => {

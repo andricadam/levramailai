@@ -10,12 +10,14 @@ import { AppNav } from '@/components/app-nav'
 const ComposeButton = dynamic(() => {
   return import('./components/compose-button')
 }, {
-  ssr: false
+  ssr: false,
+  loading: () => <div className="w-10 h-10" />
 })
 // import Mail from './mail'
 
 const Mail = dynamic(() => import('./components/mail'), {
   ssr: false,
+  loading: () => <div>Loading mail...</div>,
 })
 
 function MailDashboardContent() {

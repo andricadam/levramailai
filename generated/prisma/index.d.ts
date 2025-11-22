@@ -1546,10 +1546,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     accounts: number
+    chatbotInteractions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+    chatbotInteractions?: boolean | UserCountOutputTypeCountChatbotInteractionsArgs
   }
 
   // Custom InputTypes
@@ -1568,6 +1570,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccountWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChatbotInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatbotInteractionWhereInput
   }
 
 
@@ -1945,6 +1954,8 @@ export namespace Prisma {
     lastName?: boolean
     imageUrl?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    stripeSubscription?: boolean | User$stripeSubscriptionArgs<ExtArgs>
+    chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1975,6 +1986,8 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "emailAddress" | "firstName" | "lastName" | "imageUrl", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
+    stripeSubscription?: boolean | User$stripeSubscriptionArgs<ExtArgs>
+    chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1984,6 +1997,8 @@ export namespace Prisma {
     name: "User"
     objects: {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
+      stripeSubscription: Prisma.$StripeSubscriptionPayload<ExtArgs> | null
+      chatbotInteractions: Prisma.$ChatbotInteractionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2386,6 +2401,8 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stripeSubscription<T extends User$stripeSubscriptionArgs<ExtArgs> = {}>(args?: Subset<T, User$stripeSubscriptionArgs<ExtArgs>>): Prisma__StripeSubscriptionClient<$Result.GetResult<Prisma.$StripeSubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    chatbotInteractions<T extends User$chatbotInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatbotInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2829,6 +2846,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccountScalarFieldEnum | AccountScalarFieldEnum[]
+  }
+
+  /**
+   * User.stripeSubscription
+   */
+  export type User$stripeSubscriptionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StripeSubscription
+     */
+    select?: StripeSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StripeSubscription
+     */
+    omit?: StripeSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
+    where?: StripeSubscriptionWhereInput
+  }
+
+  /**
+   * User.chatbotInteractions
+   */
+  export type User$chatbotInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatbotInteraction
+     */
+    select?: ChatbotInteractionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatbotInteraction
+     */
+    omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
+    where?: ChatbotInteractionWhereInput
+    orderBy?: ChatbotInteractionOrderByWithRelationInput | ChatbotInteractionOrderByWithRelationInput[]
+    cursor?: ChatbotInteractionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatbotInteractionScalarFieldEnum | ChatbotInteractionScalarFieldEnum[]
   }
 
   /**
@@ -8937,18 +8997,21 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionMinAggregateOutputType = {
+    id: string | null
     day: string | null
     userId: string | null
     count: number | null
   }
 
   export type ChatbotInteractionMaxAggregateOutputType = {
+    id: string | null
     day: string | null
     userId: string | null
     count: number | null
   }
 
   export type ChatbotInteractionCountAggregateOutputType = {
+    id: number
     day: number
     userId: number
     count: number
@@ -8965,18 +9028,21 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionMinAggregateInputType = {
+    id?: true
     day?: true
     userId?: true
     count?: true
   }
 
   export type ChatbotInteractionMaxAggregateInputType = {
+    id?: true
     day?: true
     userId?: true
     count?: true
   }
 
   export type ChatbotInteractionCountAggregateInputType = {
+    id?: true
     day?: true
     userId?: true
     count?: true
@@ -9070,6 +9136,7 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionGroupByOutputType = {
+    id: string
     day: string
     userId: string
     count: number
@@ -9095,35 +9162,54 @@ export namespace Prisma {
 
 
   export type ChatbotInteractionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     day?: boolean
     userId?: boolean
     count?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatbotInteraction"]>
 
   export type ChatbotInteractionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     day?: boolean
     userId?: boolean
     count?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatbotInteraction"]>
 
   export type ChatbotInteractionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     day?: boolean
     userId?: boolean
     count?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chatbotInteraction"]>
 
   export type ChatbotInteractionSelectScalar = {
+    id?: boolean
     day?: boolean
     userId?: boolean
     count?: boolean
   }
 
-  export type ChatbotInteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"day" | "userId" | "count", ExtArgs["result"]["chatbotInteraction"]>
+  export type ChatbotInteractionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "day" | "userId" | "count", ExtArgs["result"]["chatbotInteraction"]>
+  export type ChatbotInteractionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChatbotInteractionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChatbotInteractionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $ChatbotInteractionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ChatbotInteraction"
-    objects: {}
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
+      id: string
       day: string
       userId: string
       count: number
@@ -9210,8 +9296,8 @@ export namespace Prisma {
      * // Get first 10 ChatbotInteractions
      * const chatbotInteractions = await prisma.chatbotInteraction.findMany({ take: 10 })
      * 
-     * // Only select the `day`
-     * const chatbotInteractionWithDayOnly = await prisma.chatbotInteraction.findMany({ select: { day: true } })
+     * // Only select the `id`
+     * const chatbotInteractionWithIdOnly = await prisma.chatbotInteraction.findMany({ select: { id: true } })
      * 
      */
     findMany<T extends ChatbotInteractionFindManyArgs>(args?: SelectSubset<T, ChatbotInteractionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -9255,9 +9341,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many ChatbotInteractions and only return the `day`
-     * const chatbotInteractionWithDayOnly = await prisma.chatbotInteraction.createManyAndReturn({
-     *   select: { day: true },
+     * // Create many ChatbotInteractions and only return the `id`
+     * const chatbotInteractionWithIdOnly = await prisma.chatbotInteraction.createManyAndReturn({
+     *   select: { id: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -9346,9 +9432,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more ChatbotInteractions and only return the `day`
-     * const chatbotInteractionWithDayOnly = await prisma.chatbotInteraction.updateManyAndReturn({
-     *   select: { day: true },
+     * // Update zero or more ChatbotInteractions and only return the `id`
+     * const chatbotInteractionWithIdOnly = await prisma.chatbotInteraction.updateManyAndReturn({
+     *   select: { id: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -9521,6 +9607,7 @@ export namespace Prisma {
    */
   export interface Prisma__ChatbotInteractionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9550,6 +9637,7 @@ export namespace Prisma {
    * Fields of the ChatbotInteraction model
    */
   interface ChatbotInteractionFieldRefs {
+    readonly id: FieldRef<"ChatbotInteraction", 'String'>
     readonly day: FieldRef<"ChatbotInteraction", 'String'>
     readonly userId: FieldRef<"ChatbotInteraction", 'String'>
     readonly count: FieldRef<"ChatbotInteraction", 'Int'>
@@ -9570,6 +9658,10 @@ export namespace Prisma {
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
+    /**
      * Filter, which ChatbotInteraction to fetch.
      */
     where: ChatbotInteractionWhereUniqueInput
@@ -9588,6 +9680,10 @@ export namespace Prisma {
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
+    /**
      * Filter, which ChatbotInteraction to fetch.
      */
     where: ChatbotInteractionWhereUniqueInput
@@ -9605,6 +9701,10 @@ export namespace Prisma {
      * Omit specific fields from the ChatbotInteraction
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
     /**
      * Filter, which ChatbotInteraction to fetch.
      */
@@ -9654,6 +9754,10 @@ export namespace Prisma {
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
+    /**
      * Filter, which ChatbotInteraction to fetch.
      */
     where?: ChatbotInteractionWhereInput
@@ -9702,6 +9806,10 @@ export namespace Prisma {
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
+    /**
      * Filter, which ChatbotInteractions to fetch.
      */
     where?: ChatbotInteractionWhereInput
@@ -9745,6 +9853,10 @@ export namespace Prisma {
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
+    /**
      * The data needed to create a ChatbotInteraction.
      */
     data: XOR<ChatbotInteractionCreateInput, ChatbotInteractionUncheckedCreateInput>
@@ -9778,6 +9890,10 @@ export namespace Prisma {
      */
     data: ChatbotInteractionCreateManyInput | ChatbotInteractionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9792,6 +9908,10 @@ export namespace Prisma {
      * Omit specific fields from the ChatbotInteraction
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
     /**
      * The data needed to update a ChatbotInteraction.
      */
@@ -9844,6 +9964,10 @@ export namespace Prisma {
      * Limit how many ChatbotInteractions to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9858,6 +9982,10 @@ export namespace Prisma {
      * Omit specific fields from the ChatbotInteraction
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
     /**
      * The filter to search for the ChatbotInteraction to update in case it exists.
      */
@@ -9884,6 +10012,10 @@ export namespace Prisma {
      * Omit specific fields from the ChatbotInteraction
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
     /**
      * Filter which ChatbotInteraction to delete.
      */
@@ -9916,6 +10048,10 @@ export namespace Prisma {
      * Omit specific fields from the ChatbotInteraction
      */
     omit?: ChatbotInteractionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatbotInteractionInclude<ExtArgs> | null
   }
 
 
@@ -10099,6 +10235,7 @@ export namespace Prisma {
     priceId?: boolean
     currentPeriodEnd?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stripeSubscription"]>
 
   export type StripeSubscriptionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10109,6 +10246,7 @@ export namespace Prisma {
     priceId?: boolean
     currentPeriodEnd?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stripeSubscription"]>
 
   export type StripeSubscriptionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10119,6 +10257,7 @@ export namespace Prisma {
     priceId?: boolean
     currentPeriodEnd?: boolean
     updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["stripeSubscription"]>
 
   export type StripeSubscriptionSelectScalar = {
@@ -10132,10 +10271,21 @@ export namespace Prisma {
   }
 
   export type StripeSubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "subscriptionId" | "customerId" | "productId" | "priceId" | "currentPeriodEnd" | "updatedAt", ExtArgs["result"]["stripeSubscription"]>
+  export type StripeSubscriptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StripeSubscriptionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type StripeSubscriptionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $StripeSubscriptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "StripeSubscription"
-    objects: {}
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
       userId: string
       subscriptionId: string
@@ -10538,6 +10688,7 @@ export namespace Prisma {
    */
   export interface Prisma__StripeSubscriptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10591,6 +10742,10 @@ export namespace Prisma {
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which StripeSubscription to fetch.
      */
     where: StripeSubscriptionWhereUniqueInput
@@ -10609,6 +10764,10 @@ export namespace Prisma {
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which StripeSubscription to fetch.
      */
     where: StripeSubscriptionWhereUniqueInput
@@ -10626,6 +10785,10 @@ export namespace Prisma {
      * Omit specific fields from the StripeSubscription
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
     /**
      * Filter, which StripeSubscription to fetch.
      */
@@ -10675,6 +10838,10 @@ export namespace Prisma {
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which StripeSubscription to fetch.
      */
     where?: StripeSubscriptionWhereInput
@@ -10723,6 +10890,10 @@ export namespace Prisma {
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which StripeSubscriptions to fetch.
      */
     where?: StripeSubscriptionWhereInput
@@ -10766,6 +10937,10 @@ export namespace Prisma {
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
+    /**
      * The data needed to create a StripeSubscription.
      */
     data: XOR<StripeSubscriptionCreateInput, StripeSubscriptionUncheckedCreateInput>
@@ -10799,6 +10974,10 @@ export namespace Prisma {
      */
     data: StripeSubscriptionCreateManyInput | StripeSubscriptionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -10813,6 +10992,10 @@ export namespace Prisma {
      * Omit specific fields from the StripeSubscription
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
     /**
      * The data needed to update a StripeSubscription.
      */
@@ -10865,6 +11048,10 @@ export namespace Prisma {
      * Limit how many StripeSubscriptions to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -10879,6 +11066,10 @@ export namespace Prisma {
      * Omit specific fields from the StripeSubscription
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
     /**
      * The filter to search for the StripeSubscription to update in case it exists.
      */
@@ -10905,6 +11096,10 @@ export namespace Prisma {
      * Omit specific fields from the StripeSubscription
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
     /**
      * Filter which StripeSubscription to delete.
      */
@@ -10937,6 +11132,10 @@ export namespace Prisma {
      * Omit specific fields from the StripeSubscription
      */
     omit?: StripeSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StripeSubscriptionInclude<ExtArgs> | null
   }
 
 
@@ -11051,6 +11250,7 @@ export namespace Prisma {
 
 
   export const ChatbotInteractionScalarFieldEnum: {
+    id: 'id',
     day: 'day',
     userId: 'userId',
     count: 'count'
@@ -11257,6 +11457,8 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     imageUrl?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
+    stripeSubscription?: XOR<StripeSubscriptionNullableScalarRelationFilter, StripeSubscriptionWhereInput> | null
+    chatbotInteractions?: ChatbotInteractionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -11266,6 +11468,8 @@ export namespace Prisma {
     lastName?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     accounts?: AccountOrderByRelationAggregateInput
+    stripeSubscription?: StripeSubscriptionOrderByWithRelationInput
+    chatbotInteractions?: ChatbotInteractionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -11278,6 +11482,8 @@ export namespace Prisma {
     lastName?: StringFilter<"User"> | string
     imageUrl?: StringNullableFilter<"User"> | string | null
     accounts?: AccountListRelationFilter
+    stripeSubscription?: XOR<StripeSubscriptionNullableScalarRelationFilter, StripeSubscriptionWhereInput> | null
+    chatbotInteractions?: ChatbotInteractionListRelationFilter
   }, "id" | "emailAddress">
 
   export type UserOrderByWithAggregationInput = {
@@ -11776,18 +11982,23 @@ export namespace Prisma {
     AND?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
     OR?: ChatbotInteractionWhereInput[]
     NOT?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
+    id?: StringFilter<"ChatbotInteraction"> | string
     day?: StringFilter<"ChatbotInteraction"> | string
     userId?: StringFilter<"ChatbotInteraction"> | string
     count?: IntFilter<"ChatbotInteraction"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type ChatbotInteractionOrderByWithRelationInput = {
+    id?: SortOrder
     day?: SortOrder
     userId?: SortOrder
     count?: SortOrder
+    user?: UserOrderByWithRelationInput
   }
 
   export type ChatbotInteractionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
     day_userId?: ChatbotInteractionDayUserIdCompoundUniqueInput
     AND?: ChatbotInteractionWhereInput | ChatbotInteractionWhereInput[]
     OR?: ChatbotInteractionWhereInput[]
@@ -11795,9 +12006,11 @@ export namespace Prisma {
     day?: StringFilter<"ChatbotInteraction"> | string
     userId?: StringFilter<"ChatbotInteraction"> | string
     count?: IntFilter<"ChatbotInteraction"> | number
-  }, "day_userId">
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "day_userId">
 
   export type ChatbotInteractionOrderByWithAggregationInput = {
+    id?: SortOrder
     day?: SortOrder
     userId?: SortOrder
     count?: SortOrder
@@ -11812,6 +12025,7 @@ export namespace Prisma {
     AND?: ChatbotInteractionScalarWhereWithAggregatesInput | ChatbotInteractionScalarWhereWithAggregatesInput[]
     OR?: ChatbotInteractionScalarWhereWithAggregatesInput[]
     NOT?: ChatbotInteractionScalarWhereWithAggregatesInput | ChatbotInteractionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatbotInteraction"> | string
     day?: StringWithAggregatesFilter<"ChatbotInteraction"> | string
     userId?: StringWithAggregatesFilter<"ChatbotInteraction"> | string
     count?: IntWithAggregatesFilter<"ChatbotInteraction"> | number
@@ -11828,6 +12042,7 @@ export namespace Prisma {
     priceId?: StringFilter<"StripeSubscription"> | string
     currentPeriodEnd?: DateTimeFilter<"StripeSubscription"> | Date | string
     updatedAt?: DateTimeFilter<"StripeSubscription"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type StripeSubscriptionOrderByWithRelationInput = {
@@ -11838,6 +12053,7 @@ export namespace Prisma {
     priceId?: SortOrder
     currentPeriodEnd?: SortOrder
     updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
   }
 
   export type StripeSubscriptionWhereUniqueInput = Prisma.AtLeast<{
@@ -11851,6 +12067,7 @@ export namespace Prisma {
     priceId?: StringFilter<"StripeSubscription"> | string
     currentPeriodEnd?: DateTimeFilter<"StripeSubscription"> | Date | string
     updatedAt?: DateTimeFilter<"StripeSubscription"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "userId" | "userId" | "subscriptionId">
 
   export type StripeSubscriptionOrderByWithAggregationInput = {
@@ -11886,6 +12103,8 @@ export namespace Prisma {
     lastName: string
     imageUrl?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -11895,6 +12114,8 @@ export namespace Prisma {
     lastName: string
     imageUrl?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -11904,6 +12125,8 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -11913,6 +12136,8 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -12476,55 +12701,61 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionCreateInput = {
+    id?: string
     day: string
-    userId: string
     count?: number
+    user: UserCreateNestedOneWithoutChatbotInteractionsInput
   }
 
   export type ChatbotInteractionUncheckedCreateInput = {
+    id?: string
     day: string
     userId: string
     count?: number
   }
 
   export type ChatbotInteractionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     day?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     count?: IntFieldUpdateOperationsInput | number
+    user?: UserUpdateOneRequiredWithoutChatbotInteractionsNestedInput
   }
 
   export type ChatbotInteractionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     day?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     count?: IntFieldUpdateOperationsInput | number
   }
 
   export type ChatbotInteractionCreateManyInput = {
+    id?: string
     day: string
     userId: string
     count?: number
   }
 
   export type ChatbotInteractionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     day?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
     count?: IntFieldUpdateOperationsInput | number
   }
 
   export type ChatbotInteractionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
     day?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     count?: IntFieldUpdateOperationsInput | number
   }
 
   export type StripeSubscriptionCreateInput = {
-    userId: string
     subscriptionId: string
     customerId: string
     productId: string
     priceId: string
     currentPeriodEnd: Date | string
     updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutStripeSubscriptionInput
   }
 
   export type StripeSubscriptionUncheckedCreateInput = {
@@ -12538,13 +12769,13 @@ export namespace Prisma {
   }
 
   export type StripeSubscriptionUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
     subscriptionId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     priceId?: StringFieldUpdateOperationsInput | string
     currentPeriodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutStripeSubscriptionNestedInput
   }
 
   export type StripeSubscriptionUncheckedUpdateInput = {
@@ -12568,7 +12799,6 @@ export namespace Prisma {
   }
 
   export type StripeSubscriptionUpdateManyMutationInput = {
-    userId?: StringFieldUpdateOperationsInput | string
     subscriptionId?: StringFieldUpdateOperationsInput | string
     customerId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
@@ -12623,12 +12853,27 @@ export namespace Prisma {
     none?: AccountWhereInput
   }
 
+  export type StripeSubscriptionNullableScalarRelationFilter = {
+    is?: StripeSubscriptionWhereInput | null
+    isNot?: StripeSubscriptionWhereInput | null
+  }
+
+  export type ChatbotInteractionListRelationFilter = {
+    every?: ChatbotInteractionWhereInput
+    some?: ChatbotInteractionWhereInput
+    none?: ChatbotInteractionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type AccountOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChatbotInteractionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -13159,6 +13404,7 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionCountOrderByAggregateInput = {
+    id?: SortOrder
     day?: SortOrder
     userId?: SortOrder
     count?: SortOrder
@@ -13169,12 +13415,14 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionMaxOrderByAggregateInput = {
+    id?: SortOrder
     day?: SortOrder
     userId?: SortOrder
     count?: SortOrder
   }
 
   export type ChatbotInteractionMinOrderByAggregateInput = {
+    id?: SortOrder
     day?: SortOrder
     userId?: SortOrder
     count?: SortOrder
@@ -13221,11 +13469,37 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
   }
 
+  export type StripeSubscriptionCreateNestedOneWithoutUserInput = {
+    create?: XOR<StripeSubscriptionCreateWithoutUserInput, StripeSubscriptionUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StripeSubscriptionCreateOrConnectWithoutUserInput
+    connect?: StripeSubscriptionWhereUniqueInput
+  }
+
+  export type ChatbotInteractionCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatbotInteractionCreateWithoutUserInput, ChatbotInteractionUncheckedCreateWithoutUserInput> | ChatbotInteractionCreateWithoutUserInput[] | ChatbotInteractionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatbotInteractionCreateOrConnectWithoutUserInput | ChatbotInteractionCreateOrConnectWithoutUserInput[]
+    createMany?: ChatbotInteractionCreateManyUserInputEnvelope
+    connect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
     createMany?: AccountCreateManyUserInputEnvelope
     connect?: AccountWhereUniqueInput | AccountWhereUniqueInput[]
+  }
+
+  export type StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<StripeSubscriptionCreateWithoutUserInput, StripeSubscriptionUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StripeSubscriptionCreateOrConnectWithoutUserInput
+    connect?: StripeSubscriptionWhereUniqueInput
+  }
+
+  export type ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatbotInteractionCreateWithoutUserInput, ChatbotInteractionUncheckedCreateWithoutUserInput> | ChatbotInteractionCreateWithoutUserInput[] | ChatbotInteractionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatbotInteractionCreateOrConnectWithoutUserInput | ChatbotInteractionCreateOrConnectWithoutUserInput[]
+    createMany?: ChatbotInteractionCreateManyUserInputEnvelope
+    connect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -13250,6 +13524,30 @@ export namespace Prisma {
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
   }
 
+  export type StripeSubscriptionUpdateOneWithoutUserNestedInput = {
+    create?: XOR<StripeSubscriptionCreateWithoutUserInput, StripeSubscriptionUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StripeSubscriptionCreateOrConnectWithoutUserInput
+    upsert?: StripeSubscriptionUpsertWithoutUserInput
+    disconnect?: StripeSubscriptionWhereInput | boolean
+    delete?: StripeSubscriptionWhereInput | boolean
+    connect?: StripeSubscriptionWhereUniqueInput
+    update?: XOR<XOR<StripeSubscriptionUpdateToOneWithWhereWithoutUserInput, StripeSubscriptionUpdateWithoutUserInput>, StripeSubscriptionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChatbotInteractionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatbotInteractionCreateWithoutUserInput, ChatbotInteractionUncheckedCreateWithoutUserInput> | ChatbotInteractionCreateWithoutUserInput[] | ChatbotInteractionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatbotInteractionCreateOrConnectWithoutUserInput | ChatbotInteractionCreateOrConnectWithoutUserInput[]
+    upsert?: ChatbotInteractionUpsertWithWhereUniqueWithoutUserInput | ChatbotInteractionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatbotInteractionCreateManyUserInputEnvelope
+    set?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    disconnect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    delete?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    connect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    update?: ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput | ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatbotInteractionUpdateManyWithWhereWithoutUserInput | ChatbotInteractionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatbotInteractionScalarWhereInput | ChatbotInteractionScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -13262,6 +13560,30 @@ export namespace Prisma {
     update?: AccountUpdateWithWhereUniqueWithoutUserInput | AccountUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AccountUpdateManyWithWhereWithoutUserInput | AccountUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AccountScalarWhereInput | AccountScalarWhereInput[]
+  }
+
+  export type StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<StripeSubscriptionCreateWithoutUserInput, StripeSubscriptionUncheckedCreateWithoutUserInput>
+    connectOrCreate?: StripeSubscriptionCreateOrConnectWithoutUserInput
+    upsert?: StripeSubscriptionUpsertWithoutUserInput
+    disconnect?: StripeSubscriptionWhereInput | boolean
+    delete?: StripeSubscriptionWhereInput | boolean
+    connect?: StripeSubscriptionWhereUniqueInput
+    update?: XOR<XOR<StripeSubscriptionUpdateToOneWithWhereWithoutUserInput, StripeSubscriptionUpdateWithoutUserInput>, StripeSubscriptionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatbotInteractionCreateWithoutUserInput, ChatbotInteractionUncheckedCreateWithoutUserInput> | ChatbotInteractionCreateWithoutUserInput[] | ChatbotInteractionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatbotInteractionCreateOrConnectWithoutUserInput | ChatbotInteractionCreateOrConnectWithoutUserInput[]
+    upsert?: ChatbotInteractionUpsertWithWhereUniqueWithoutUserInput | ChatbotInteractionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatbotInteractionCreateManyUserInputEnvelope
+    set?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    disconnect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    delete?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    connect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+    update?: ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput | ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatbotInteractionUpdateManyWithWhereWithoutUserInput | ChatbotInteractionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatbotInteractionScalarWhereInput | ChatbotInteractionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -13944,6 +14266,34 @@ export namespace Prisma {
     update?: XOR<XOR<EmailUpdateToOneWithWhereWithoutAttachmentsInput, EmailUpdateWithoutAttachmentsInput>, EmailUncheckedUpdateWithoutAttachmentsInput>
   }
 
+  export type UserCreateNestedOneWithoutChatbotInteractionsInput = {
+    create?: XOR<UserCreateWithoutChatbotInteractionsInput, UserUncheckedCreateWithoutChatbotInteractionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatbotInteractionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutChatbotInteractionsNestedInput = {
+    create?: XOR<UserCreateWithoutChatbotInteractionsInput, UserUncheckedCreateWithoutChatbotInteractionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatbotInteractionsInput
+    upsert?: UserUpsertWithoutChatbotInteractionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatbotInteractionsInput, UserUpdateWithoutChatbotInteractionsInput>, UserUncheckedUpdateWithoutChatbotInteractionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutStripeSubscriptionInput = {
+    create?: XOR<UserCreateWithoutStripeSubscriptionInput, UserUncheckedCreateWithoutStripeSubscriptionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStripeSubscriptionInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutStripeSubscriptionNestedInput = {
+    create?: XOR<UserCreateWithoutStripeSubscriptionInput, UserUncheckedCreateWithoutStripeSubscriptionInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStripeSubscriptionInput
+    upsert?: UserUpsertWithoutStripeSubscriptionInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStripeSubscriptionInput, UserUpdateWithoutStripeSubscriptionInput>, UserUncheckedUpdateWithoutStripeSubscriptionInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14199,6 +14549,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StripeSubscriptionCreateWithoutUserInput = {
+    subscriptionId: string
+    customerId: string
+    productId: string
+    priceId: string
+    currentPeriodEnd: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StripeSubscriptionUncheckedCreateWithoutUserInput = {
+    subscriptionId: string
+    customerId: string
+    productId: string
+    priceId: string
+    currentPeriodEnd: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StripeSubscriptionCreateOrConnectWithoutUserInput = {
+    where: StripeSubscriptionWhereUniqueInput
+    create: XOR<StripeSubscriptionCreateWithoutUserInput, StripeSubscriptionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatbotInteractionCreateWithoutUserInput = {
+    id?: string
+    day: string
+    count?: number
+  }
+
+  export type ChatbotInteractionUncheckedCreateWithoutUserInput = {
+    id?: string
+    day: string
+    count?: number
+  }
+
+  export type ChatbotInteractionCreateOrConnectWithoutUserInput = {
+    where: ChatbotInteractionWhereUniqueInput
+    create: XOR<ChatbotInteractionCreateWithoutUserInput, ChatbotInteractionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatbotInteractionCreateManyUserInputEnvelope = {
+    data: ChatbotInteractionCreateManyUserInput | ChatbotInteractionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -14228,12 +14623,69 @@ export namespace Prisma {
     oramaIndex?: StringNullableFilter<"Account"> | string | null
   }
 
+  export type StripeSubscriptionUpsertWithoutUserInput = {
+    update: XOR<StripeSubscriptionUpdateWithoutUserInput, StripeSubscriptionUncheckedUpdateWithoutUserInput>
+    create: XOR<StripeSubscriptionCreateWithoutUserInput, StripeSubscriptionUncheckedCreateWithoutUserInput>
+    where?: StripeSubscriptionWhereInput
+  }
+
+  export type StripeSubscriptionUpdateToOneWithWhereWithoutUserInput = {
+    where?: StripeSubscriptionWhereInput
+    data: XOR<StripeSubscriptionUpdateWithoutUserInput, StripeSubscriptionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type StripeSubscriptionUpdateWithoutUserInput = {
+    subscriptionId?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    priceId?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StripeSubscriptionUncheckedUpdateWithoutUserInput = {
+    subscriptionId?: StringFieldUpdateOperationsInput | string
+    customerId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    priceId?: StringFieldUpdateOperationsInput | string
+    currentPeriodEnd?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatbotInteractionUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChatbotInteractionWhereUniqueInput
+    update: XOR<ChatbotInteractionUpdateWithoutUserInput, ChatbotInteractionUncheckedUpdateWithoutUserInput>
+    create: XOR<ChatbotInteractionCreateWithoutUserInput, ChatbotInteractionUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChatbotInteractionWhereUniqueInput
+    data: XOR<ChatbotInteractionUpdateWithoutUserInput, ChatbotInteractionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChatbotInteractionUpdateManyWithWhereWithoutUserInput = {
+    where: ChatbotInteractionScalarWhereInput
+    data: XOR<ChatbotInteractionUpdateManyMutationInput, ChatbotInteractionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChatbotInteractionScalarWhereInput = {
+    AND?: ChatbotInteractionScalarWhereInput | ChatbotInteractionScalarWhereInput[]
+    OR?: ChatbotInteractionScalarWhereInput[]
+    NOT?: ChatbotInteractionScalarWhereInput | ChatbotInteractionScalarWhereInput[]
+    id?: StringFilter<"ChatbotInteraction"> | string
+    day?: StringFilter<"ChatbotInteraction"> | string
+    userId?: StringFilter<"ChatbotInteraction"> | string
+    count?: IntFilter<"ChatbotInteraction"> | number
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id: string
     emailAddress: string
     firstName: string
     lastName: string
     imageUrl?: string | null
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -14242,6 +14694,8 @@ export namespace Prisma {
     firstName: string
     lastName: string
     imageUrl?: string | null
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -14334,6 +14788,8 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -14342,6 +14798,8 @@ export namespace Prisma {
     firstName?: StringFieldUpdateOperationsInput | string
     lastName?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithWhereUniqueWithoutAccountInput = {
@@ -15588,6 +16046,118 @@ export namespace Prisma {
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
   }
 
+  export type UserCreateWithoutChatbotInteractionsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChatbotInteractionsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChatbotInteractionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChatbotInteractionsInput, UserUncheckedCreateWithoutChatbotInteractionsInput>
+  }
+
+  export type UserUpsertWithoutChatbotInteractionsInput = {
+    update: XOR<UserUpdateWithoutChatbotInteractionsInput, UserUncheckedUpdateWithoutChatbotInteractionsInput>
+    create: XOR<UserCreateWithoutChatbotInteractionsInput, UserUncheckedCreateWithoutChatbotInteractionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChatbotInteractionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChatbotInteractionsInput, UserUncheckedUpdateWithoutChatbotInteractionsInput>
+  }
+
+  export type UserUpdateWithoutChatbotInteractionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChatbotInteractionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutStripeSubscriptionInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutStripeSubscriptionInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutStripeSubscriptionInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStripeSubscriptionInput, UserUncheckedCreateWithoutStripeSubscriptionInput>
+  }
+
+  export type UserUpsertWithoutStripeSubscriptionInput = {
+    update: XOR<UserUpdateWithoutStripeSubscriptionInput, UserUncheckedUpdateWithoutStripeSubscriptionInput>
+    create: XOR<UserCreateWithoutStripeSubscriptionInput, UserUncheckedCreateWithoutStripeSubscriptionInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStripeSubscriptionInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStripeSubscriptionInput, UserUncheckedUpdateWithoutStripeSubscriptionInput>
+  }
+
+  export type UserUpdateWithoutStripeSubscriptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStripeSubscriptionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type AccountCreateManyUserInput = {
     id?: string
     accessToken: string
@@ -15595,6 +16165,12 @@ export namespace Prisma {
     name: string
     nextDeltaToken?: string | null
     oramaIndex?: string | null
+  }
+
+  export type ChatbotInteractionCreateManyUserInput = {
+    id?: string
+    day: string
+    count?: number
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -15626,6 +16202,24 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
     oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ChatbotInteractionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChatbotInteractionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ChatbotInteractionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: StringFieldUpdateOperationsInput | string
+    count?: IntFieldUpdateOperationsInput | number
   }
 
   export type ThreadCreateManyAccountInput = {

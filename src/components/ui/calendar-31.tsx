@@ -1,11 +1,15 @@
 "use client"
 
 import * as React from "react"
+
 import { formatDateRange } from "little-date"
-import { Plus } from "lucide-react"
+
+import { PlusIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+
 import { Calendar } from "@/components/ui/calendar"
+
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 const events = [
@@ -26,7 +30,7 @@ const events = [
   },
 ]
 
-export default function Calendar31() {
+export function Calendar31() {
   const [date, setDate] = React.useState<Date | undefined>(
     new Date(2025, 5, 12)
   )
@@ -57,7 +61,7 @@ export default function Calendar31() {
             className="size-6"
             title="Add Event"
           >
-            <Plus />
+            <PlusIcon />
             <span className="sr-only">Add Event</span>
           </Button>
         </div>
