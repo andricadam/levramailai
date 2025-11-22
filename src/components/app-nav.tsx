@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Mail, Clock } from 'lucide-react'
+import { Mail, Clock, CheckSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 
@@ -21,6 +21,12 @@ export function AppNav() {
       title: 'Calendar',
       href: '/calendar',
       icon: Clock,
+      badge: null,
+    },
+    {
+      title: 'Tasks',
+      href: '/task-manager',
+      icon: CheckSquare,
       badge: null,
     },
   ]
