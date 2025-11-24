@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { Nav } from './nav'
+import LabelsSection from './labels-section'
 
 import {
     File,
@@ -41,7 +42,7 @@ const SideBar = ({ isCollapsed = false }: Props) => {
     const currentTab = mounted ? tab : "inbox"
 
     return (
-        <div className="py-2 w-full">
+        <div className="py-2 w-full space-y-6">
             <Nav
                 isCollapsed={isCollapsed}
                 links={[
@@ -65,6 +66,7 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                     },
                 ]}
             />
+            <LabelsSection isCollapsed={isCollapsed} />
         </div>
     )
 }
