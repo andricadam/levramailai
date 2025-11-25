@@ -16,6 +16,7 @@ import TagInput from "./tag-input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useLocalStorage } from "usehooks-ts";
 import AIComposeButton from "./ai/compose/ai-compose-button";
+import { InstantReplyButton } from "../ai/instant-reply";
 import { Loader2 } from "lucide-react";
 
 type EmailEditorProps = {
@@ -72,6 +73,7 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
 
     const editor = useEditor({
         autofocus: false,
+        immediatelyRender: false,
         extensions: [StarterKit, customText, GhostExtension],
         editorProps: {
             attributes: {
@@ -134,6 +136,10 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
                             to {to.join(', ')}
                         </span>
                     </div>
+                    <InstantReplyButton
+                        isComposing={false}
+                        onGenerate={setGeneration}
+                    />
                     <AIComposeButton
                         isComposing={defaultToolbarExpand}
                         onGenerate={setGeneration}

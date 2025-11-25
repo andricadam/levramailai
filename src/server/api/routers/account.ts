@@ -144,6 +144,38 @@ export const accountRouter = createTRPCRouter({
             }
         })
     }),
+    getThread: privateProcedure.input(z.object({
+        accountId: z.string(),
+        threadId: z.string()
+    })).query(async ({ctx, input})=>{
+        const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        
+        const thread = await ctx.db.thread.findFirst({
+            where: {
+                id: input.threadId,
+                accountId: account.id,
+            },
+            include: {
+                emails: {
+                    orderBy: {
+                        sentAt: 'asc'
+                    },
+                    select: {
+                        from: true,
+                        body: true,
+                        bodySnippet: true,
+                        emailLabel: true,
+                        subject: true,
+                        sysLabels: true,
+                        id: true,
+                        sentAt: true,
+                    }
+                }
+            }
+        })
+        
+        return thread
+    }),
     getSuggestions: privateProcedure.input(z.object({
         accountId: z.string(),
         query: z.string()

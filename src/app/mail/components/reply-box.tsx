@@ -1,5 +1,5 @@
 'use client'
-import EmailEditor from './email-editor'
+import EmailEditor from './email-editor/index'
 import { api, type RouterOutputs } from '@/trpc/react'
 import useThreads from '@/hooks/use-threads'
 import { useState } from 'react'

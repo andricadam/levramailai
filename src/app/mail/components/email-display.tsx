@@ -25,9 +25,9 @@ export default function EmailDisplay({ email }: Props) {
       {email.subject && (
         <div className="text-sm font-medium">{email.subject}</div>
       )}
-      {email.body && (
+      {(email.body || email.bodySnippet) && (
         <div className="w-full">
-          <Letter html={email?.body ?? ''} className='bg-white rounded-d text-black'/>
+          <Letter html={email.body ?? email.bodySnippet ?? ''} className='rounded-d'/>
         </div>
       )}
     </div>

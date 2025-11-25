@@ -105,7 +105,9 @@ const EmailEditor = ({ subject, setSubject, toValues, setToValues, ccValues, set
                         </span>
                     </div>
                 </div>
-                <AIComposeButton isComposing={defaultToolbarExpanded} onGenerate={onGenerate} />
+                <div className="flex items-center gap-2">
+                    <AIComposeButton isComposing={defaultToolbarExpanded} onGenerate={onGenerate} />
+                </div>
             </div>
 
             {/* Expandable Fields */}
