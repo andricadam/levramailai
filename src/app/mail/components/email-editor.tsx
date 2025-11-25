@@ -8,8 +8,8 @@ import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 import TagInput from './tag-input'
 import { Input } from '@/components/ui/input'
-import AIComposeButton from './ai-compose-button'
-import { generate } from './action'
+import AIComposeButton from './ai/compose/ai-compose-button'
+import { generate } from './ai/autocomplete/action'
 import { readStreamableValue } from '@ai-sdk/rsc'
 
 type Props = {

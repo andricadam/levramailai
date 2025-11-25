@@ -14,8 +14,8 @@ import { generateEmail } from "./action"
 import { readStreamableValue } from "@ai-sdk/rsc"
 import { Bot, Loader2 } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
-import useThreads from "../../use-Threads"
-import { useThread } from "../../use-thread"
+import useThreads from "../../../../use-Threads"
+import { useThread } from "../../../../use-thread"
 import { turndown } from '@/lib/turndown'
 import { toast } from 'sonner'
 

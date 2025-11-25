@@ -1,5 +1,5 @@
 'use client'
-import TurndownService from 'turndown'
+import { turndown } from '@/lib/turndown'
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -13,12 +13,11 @@ import {
 import React from 'react'
 import { generateEmail } from "./action"
 import { readStreamableValue } from "@ai-sdk/rsc"
-import { Bot } from "lucide-react"
+import { Sparkles } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import useThreads from "../../use-Threads"
-import { useThread } from "../../use-thread"
-import { turndown } from '@/lib/turndown'
+import useThreads from "../../../use-Threads"
+import { useThread } from "../../../use-thread"
 
 type Props = {
     onGenerate: (value: string) => void
@@ -34,14 +33,28 @@ const AIComposeButton = (props: Props) => {
     const aiGenerate = async (prompt: string) => {
         let context: string | undefined = ''
         if (!props.isComposing) {
-            context = thread?.emails.map(m => `Subject: ${m.subject}\nFrom: ${m.from.address}\n\n${turndown.turndown(m.body ?? m.bodySnippet ?? '')}`).join('\n')
+            for (const email of thread?.emails ?? []) {
+                const content = `
+Subject: ${email.subject}
+From: ${email.from?.address || email.from || 'Unknown'}
+Sent: ${new Date(email.sentAt).toLocaleString()}
+Body: ${turndown.turndown(email.body ?? email.bodySnippet ?? "")}
+
+`
+                context += content
+            }
         }
+        context += `
+My name is ${account?.name} and my email is ${account?.emailAddress}.
+`
 
-        const { output } = await generateEmail(context + `\n\nMy name is: ${account?.name}`, prompt)
+        const { output } = await generateEmail(context, prompt)
 
+        let accumulatedText = ''
         for await (const delta of readStreamableValue(output)) {
             if (delta) {
-                props.onGenerate(delta);
+                accumulatedText += delta
+                props.onGenerate(accumulatedText);
             }
         }
 
@@ -50,7 +63,7 @@ const AIComposeButton = (props: Props) => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
                 <Button onClick={() => setOpen(true)} size='icon' variant={'outline'}>
-                    <Bot className="size-5" />
+                    <Sparkles className="size-5" />
                 </Button>
             </DialogTrigger>
             <DialogContent>

@@ -7,7 +7,7 @@ import { UserButton } from '@clerk/nextjs'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { AppNav } from '@/components/app-nav'
-import AskAIButton from './components/ask-ai-button'
+import AskAIButton from './components/ai/ask-ai/ask-ai-button'
 const ComposeButton = dynamic(() => {
   return import('./components/compose-button')
 }, {

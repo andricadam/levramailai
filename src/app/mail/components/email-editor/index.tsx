@@ -7,7 +7,7 @@ import TipTapMenuBar from "./menu-bar";
 import Text from "@tiptap/extension-text";
 import { Button } from "@/components/ui/button";
 
-import { generate } from './action';
+import { generate } from './ai/autocomplete/action';
 import { readStreamableValue } from '@ai-sdk/rsc';
 import { Separator } from "@/components/ui/separator";
 import { api } from "@/trpc/react";
@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import TagInput from "./tag-input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useLocalStorage } from "usehooks-ts";
-import AIComposeButton from "./ai-compose-button";
+import AIComposeButton from "./ai/compose/ai-compose-button";
 import { Loader2 } from "lucide-react";
 
 type EmailEditorProps = {
