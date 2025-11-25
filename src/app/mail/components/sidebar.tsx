@@ -7,6 +7,8 @@ import {
     File,
     Inbox,
     Send,
+    Ban,
+    Trash2,
 } from "lucide-react"
 import { useLocalStorage } from 'usehooks-ts'
 import { api } from '@/trpc/react'
@@ -38,6 +40,16 @@ const SideBar = ({ isCollapsed = false }: Props) => {
         tab: "sent"
     }, { enabled: !!accountId && !!tab, refetchInterval })
 
+    const { data: spamThreads } = api.mail.getNumThreads.useQuery({
+        accountId,
+        tab: "spam"
+    }, { enabled: !!accountId && !!tab, refetchInterval })
+
+    const { data: junkThreads } = api.mail.getNumThreads.useQuery({
+        accountId,
+        tab: "junk"
+    }, { enabled: !!accountId && !!tab, refetchInterval })
+
     // Use default "inbox" on server to match initial client render
     const currentTab = mounted ? tab : "inbox"
 
@@ -63,6 +75,18 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                         label: sentThreads?.toString() || "0",
                         icon: Send,
                         variant: currentTab === "sent" ? "default" : "ghost",
+                    },
+                    {
+                        title: "Spam",
+                        label: spamThreads?.toString() || "0",
+                        icon: Ban,
+                        variant: currentTab === "spam" ? "default" : "ghost",
+                    },
+                    {
+                        title: "Junk",
+                        label: junkThreads?.toString() || "0",
+                        icon: Trash2,
+                        variant: currentTab === "junk" ? "default" : "ghost",
                     },
                 ]}
             />

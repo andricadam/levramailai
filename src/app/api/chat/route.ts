@@ -114,6 +114,11 @@ export async function POST(req: Request) {
         const limitedHits = context.hits.slice(0, MAX_CONTEXT_HITS);
         console.log(`Using ${limitedHits.length} context hits (limited from ${context.hits.length})`);
         
+        // Extract retrieved email identifiers for feedback tracking
+        const retrievedEmailIds = limitedHits.map((hit: any) => 
+            hit.document?.threadId || hit.document?.subject || ''
+        ).filter(Boolean);
+        
         // Truncate context documents to prevent exceeding token limits
         const formatContextDocument = (doc: any) => {
             const truncated = {
@@ -170,7 +175,8 @@ GUIDELINES:
                     prompt,
                     ...formattedMessages,
                 ],
-                onFinish: async () => {
+                onFinish: async (result) => {
+                    // Update subscription count for free users
                     if (!isSubscribed) {
                         try {
                             await db.chatbotInteraction.update({
@@ -189,6 +195,24 @@ GUIDELINES:
                         } catch (error) {
                             console.error("Failed to update chatbot interaction count:", error);
                         }
+                    }
+                    
+                    // Log interaction for feedback loop (async, don't block)
+                    try {
+                        await db.chatFeedback.create({
+                            data: {
+                                userId,
+                                accountId,
+                                query: lastMessageContent,
+                                response: result.text || '',
+                                retrievedEmails: retrievedEmailIds,
+                                helpful: null, // Will be updated when user gives explicit feedback
+                                interactionType: 'implicit'
+                            }
+                        });
+                    } catch (feedbackError) {
+                        // Don't fail the request if feedback logging fails
+                        console.error("Failed to log feedback:", feedbackError);
                     }
                 },
             });

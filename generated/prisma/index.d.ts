@@ -53,6 +53,11 @@ export type ChatbotInteraction = $Result.DefaultSelection<Prisma.$ChatbotInterac
  * 
  */
 export type StripeSubscription = $Result.DefaultSelection<Prisma.$StripeSubscriptionPayload>
+/**
+ * Model ChatFeedback
+ * 
+ */
+export type ChatFeedback = $Result.DefaultSelection<Prisma.$ChatFeedbackPayload>
 
 /**
  * Enums
@@ -61,7 +66,9 @@ export namespace $Enums {
   export const EmailLabel: {
   inbox: 'inbox',
   sent: 'sent',
-  draft: 'draft'
+  draft: 'draft',
+  spam: 'spam',
+  junk: 'junk'
 };
 
 export type EmailLabel = (typeof EmailLabel)[keyof typeof EmailLabel]
@@ -311,6 +318,16 @@ export class PrismaClient<
     * ```
     */
   get stripeSubscription(): Prisma.StripeSubscriptionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chatFeedback`: Exposes CRUD operations for the **ChatFeedback** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatFeedbacks
+    * const chatFeedbacks = await prisma.chatFeedback.findMany()
+    * ```
+    */
+  get chatFeedback(): Prisma.ChatFeedbackDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -759,7 +776,8 @@ export namespace Prisma {
     EmailAddress: 'EmailAddress',
     EmailAttachment: 'EmailAttachment',
     ChatbotInteraction: 'ChatbotInteraction',
-    StripeSubscription: 'StripeSubscription'
+    StripeSubscription: 'StripeSubscription',
+    ChatFeedback: 'ChatFeedback'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -778,7 +796,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription"
+      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1374,6 +1392,80 @@ export namespace Prisma {
           }
         }
       }
+      ChatFeedback: {
+        payload: Prisma.$ChatFeedbackPayload<ExtArgs>
+        fields: Prisma.ChatFeedbackFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatFeedbackFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatFeedbackFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>
+          }
+          findFirst: {
+            args: Prisma.ChatFeedbackFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatFeedbackFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>
+          }
+          findMany: {
+            args: Prisma.ChatFeedbackFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>[]
+          }
+          create: {
+            args: Prisma.ChatFeedbackCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>
+          }
+          createMany: {
+            args: Prisma.ChatFeedbackCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatFeedbackCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>[]
+          }
+          delete: {
+            args: Prisma.ChatFeedbackDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>
+          }
+          update: {
+            args: Prisma.ChatFeedbackUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatFeedbackDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatFeedbackUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChatFeedbackUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChatFeedbackUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatFeedbackPayload>
+          }
+          aggregate: {
+            args: Prisma.ChatFeedbackAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatFeedback>
+          }
+          groupBy: {
+            args: Prisma.ChatFeedbackGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatFeedbackGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatFeedbackCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatFeedbackCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1478,6 +1570,7 @@ export namespace Prisma {
     emailAttachment?: EmailAttachmentOmit
     chatbotInteraction?: ChatbotInteractionOmit
     stripeSubscription?: StripeSubscriptionOmit
+    chatFeedback?: ChatFeedbackOmit
   }
 
   /* Types for Logging */
@@ -1560,11 +1653,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     accounts: number
     chatbotInteractions: number
+    chatFeedback: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     chatbotInteractions?: boolean | UserCountOutputTypeCountChatbotInteractionsArgs
+    chatFeedback?: boolean | UserCountOutputTypeCountChatFeedbackArgs
   }
 
   // Custom InputTypes
@@ -1590,6 +1685,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountChatbotInteractionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatbotInteractionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChatFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatFeedbackWhereInput
   }
 
 
@@ -1969,6 +2071,7 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     stripeSubscription?: boolean | User$stripeSubscriptionArgs<ExtArgs>
     chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
+    chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2001,6 +2104,7 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     stripeSubscription?: boolean | User$stripeSubscriptionArgs<ExtArgs>
     chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
+    chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2012,6 +2116,7 @@ export namespace Prisma {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       stripeSubscription: Prisma.$StripeSubscriptionPayload<ExtArgs> | null
       chatbotInteractions: Prisma.$ChatbotInteractionPayload<ExtArgs>[]
+      chatFeedback: Prisma.$ChatFeedbackPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2416,6 +2521,7 @@ export namespace Prisma {
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     stripeSubscription<T extends User$stripeSubscriptionArgs<ExtArgs> = {}>(args?: Subset<T, User$stripeSubscriptionArgs<ExtArgs>>): Prisma__StripeSubscriptionClient<$Result.GetResult<Prisma.$StripeSubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     chatbotInteractions<T extends User$chatbotInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatbotInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chatFeedback<T extends User$chatFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$chatFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2902,6 +3008,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChatbotInteractionScalarFieldEnum | ChatbotInteractionScalarFieldEnum[]
+  }
+
+  /**
+   * User.chatFeedback
+   */
+  export type User$chatFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    where?: ChatFeedbackWhereInput
+    orderBy?: ChatFeedbackOrderByWithRelationInput | ChatFeedbackOrderByWithRelationInput[]
+    cursor?: ChatFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatFeedbackScalarFieldEnum | ChatFeedbackScalarFieldEnum[]
   }
 
   /**
@@ -4084,6 +4214,8 @@ export namespace Prisma {
     inboxStatus: boolean | null
     draftStatus: boolean | null
     sentStatus: boolean | null
+    spamStatus: boolean | null
+    junkStatus: boolean | null
   }
 
   export type ThreadMaxAggregateOutputType = {
@@ -4095,6 +4227,8 @@ export namespace Prisma {
     inboxStatus: boolean | null
     draftStatus: boolean | null
     sentStatus: boolean | null
+    spamStatus: boolean | null
+    junkStatus: boolean | null
   }
 
   export type ThreadCountAggregateOutputType = {
@@ -4107,6 +4241,8 @@ export namespace Prisma {
     inboxStatus: number
     draftStatus: number
     sentStatus: number
+    spamStatus: number
+    junkStatus: number
     _all: number
   }
 
@@ -4120,6 +4256,8 @@ export namespace Prisma {
     inboxStatus?: true
     draftStatus?: true
     sentStatus?: true
+    spamStatus?: true
+    junkStatus?: true
   }
 
   export type ThreadMaxAggregateInputType = {
@@ -4131,6 +4269,8 @@ export namespace Prisma {
     inboxStatus?: true
     draftStatus?: true
     sentStatus?: true
+    spamStatus?: true
+    junkStatus?: true
   }
 
   export type ThreadCountAggregateInputType = {
@@ -4143,6 +4283,8 @@ export namespace Prisma {
     inboxStatus?: true
     draftStatus?: true
     sentStatus?: true
+    spamStatus?: true
+    junkStatus?: true
     _all?: true
   }
 
@@ -4228,6 +4370,8 @@ export namespace Prisma {
     inboxStatus: boolean
     draftStatus: boolean
     sentStatus: boolean
+    spamStatus: boolean
+    junkStatus: boolean
     _count: ThreadCountAggregateOutputType | null
     _min: ThreadMinAggregateOutputType | null
     _max: ThreadMaxAggregateOutputType | null
@@ -4257,6 +4401,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
     emails?: boolean | Thread$emailsArgs<ExtArgs>
     _count?: boolean | ThreadCountOutputTypeDefaultArgs<ExtArgs>
@@ -4272,6 +4418,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["thread"]>
 
@@ -4285,6 +4433,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["thread"]>
 
@@ -4298,9 +4448,11 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
   }
 
-  export type ThreadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "lastMessageDate" | "participantIds" | "accountId" | "done" | "inboxStatus" | "draftStatus" | "sentStatus", ExtArgs["result"]["thread"]>
+  export type ThreadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subject" | "lastMessageDate" | "participantIds" | "accountId" | "done" | "inboxStatus" | "draftStatus" | "sentStatus" | "spamStatus" | "junkStatus", ExtArgs["result"]["thread"]>
   export type ThreadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | AccountDefaultArgs<ExtArgs>
     emails?: boolean | Thread$emailsArgs<ExtArgs>
@@ -4329,6 +4481,8 @@ export namespace Prisma {
       inboxStatus: boolean
       draftStatus: boolean
       sentStatus: boolean
+      spamStatus: boolean
+      junkStatus: boolean
     }, ExtArgs["result"]["thread"]>
     composites: {}
   }
@@ -4763,6 +4917,8 @@ export namespace Prisma {
     readonly inboxStatus: FieldRef<"Thread", 'Boolean'>
     readonly draftStatus: FieldRef<"Thread", 'Boolean'>
     readonly sentStatus: FieldRef<"Thread", 'Boolean'>
+    readonly spamStatus: FieldRef<"Thread", 'Boolean'>
+    readonly junkStatus: FieldRef<"Thread", 'Boolean'>
   }
     
 
@@ -5232,6 +5388,7 @@ export namespace Prisma {
     folderId: string | null
     emailLabel: $Enums.EmailLabel | null
     priority: $Enums.EmailPriority | null
+    autoReplyDraft: string | null
   }
 
   export type EmailMaxAggregateOutputType = {
@@ -5255,6 +5412,7 @@ export namespace Prisma {
     folderId: string | null
     emailLabel: $Enums.EmailLabel | null
     priority: $Enums.EmailPriority | null
+    autoReplyDraft: string | null
   }
 
   export type EmailCountAggregateOutputType = {
@@ -5284,6 +5442,7 @@ export namespace Prisma {
     omitted: number
     emailLabel: number
     priority: number
+    autoReplyDraft: number
     _all: number
   }
 
@@ -5309,6 +5468,7 @@ export namespace Prisma {
     folderId?: true
     emailLabel?: true
     priority?: true
+    autoReplyDraft?: true
   }
 
   export type EmailMaxAggregateInputType = {
@@ -5332,6 +5492,7 @@ export namespace Prisma {
     folderId?: true
     emailLabel?: true
     priority?: true
+    autoReplyDraft?: true
   }
 
   export type EmailCountAggregateInputType = {
@@ -5361,6 +5522,7 @@ export namespace Prisma {
     omitted?: true
     emailLabel?: true
     priority?: true
+    autoReplyDraft?: true
     _all?: true
   }
 
@@ -5463,6 +5625,7 @@ export namespace Prisma {
     omitted: string[]
     emailLabel: $Enums.EmailLabel
     priority: $Enums.EmailPriority
+    autoReplyDraft: string | null
     _count: EmailCountAggregateOutputType | null
     _min: EmailMinAggregateOutputType | null
     _max: EmailMaxAggregateOutputType | null
@@ -5509,6 +5672,7 @@ export namespace Prisma {
     omitted?: boolean
     emailLabel?: boolean
     priority?: boolean
+    autoReplyDraft?: boolean
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
     to?: boolean | Email$toArgs<ExtArgs>
@@ -5546,6 +5710,7 @@ export namespace Prisma {
     omitted?: boolean
     emailLabel?: boolean
     priority?: boolean
+    autoReplyDraft?: boolean
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
@@ -5577,6 +5742,7 @@ export namespace Prisma {
     omitted?: boolean
     emailLabel?: boolean
     priority?: boolean
+    autoReplyDraft?: boolean
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
@@ -5608,9 +5774,10 @@ export namespace Prisma {
     omitted?: boolean
     emailLabel?: boolean
     priority?: boolean
+    autoReplyDraft?: boolean
   }
 
-  export type EmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "createdTime" | "lastModifiedTime" | "sentAt" | "receivedAt" | "internetMessageId" | "subject" | "sysLabels" | "keywords" | "sysClassifications" | "sensitivity" | "meetingMessageMethod" | "fromId" | "hasAttachments" | "body" | "bodySnippet" | "inReplyTo" | "references" | "threadIndex" | "internetHeaders" | "nativeProperties" | "folderId" | "omitted" | "emailLabel" | "priority", ExtArgs["result"]["email"]>
+  export type EmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "createdTime" | "lastModifiedTime" | "sentAt" | "receivedAt" | "internetMessageId" | "subject" | "sysLabels" | "keywords" | "sysClassifications" | "sensitivity" | "meetingMessageMethod" | "fromId" | "hasAttachments" | "body" | "bodySnippet" | "inReplyTo" | "references" | "threadIndex" | "internetHeaders" | "nativeProperties" | "folderId" | "omitted" | "emailLabel" | "priority" | "autoReplyDraft", ExtArgs["result"]["email"]>
   export type EmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
@@ -5668,6 +5835,7 @@ export namespace Prisma {
       omitted: string[]
       emailLabel: $Enums.EmailLabel
       priority: $Enums.EmailPriority
+      autoReplyDraft: string | null
     }, ExtArgs["result"]["email"]>
     composites: {}
   }
@@ -6124,6 +6292,7 @@ export namespace Prisma {
     readonly omitted: FieldRef<"Email", 'String[]'>
     readonly emailLabel: FieldRef<"Email", 'EmailLabel'>
     readonly priority: FieldRef<"Email", 'EmailPriority'>
+    readonly autoReplyDraft: FieldRef<"Email", 'String'>
   }
     
 
@@ -11166,6 +11335,1125 @@ export namespace Prisma {
 
 
   /**
+   * Model ChatFeedback
+   */
+
+  export type AggregateChatFeedback = {
+    _count: ChatFeedbackCountAggregateOutputType | null
+    _min: ChatFeedbackMinAggregateOutputType | null
+    _max: ChatFeedbackMaxAggregateOutputType | null
+  }
+
+  export type ChatFeedbackMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    query: string | null
+    response: string | null
+    helpful: boolean | null
+    correctedQuery: string | null
+    interactionType: string | null
+    createdAt: Date | null
+  }
+
+  export type ChatFeedbackMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    query: string | null
+    response: string | null
+    helpful: boolean | null
+    correctedQuery: string | null
+    interactionType: string | null
+    createdAt: Date | null
+  }
+
+  export type ChatFeedbackCountAggregateOutputType = {
+    id: number
+    userId: number
+    accountId: number
+    query: number
+    response: number
+    retrievedEmails: number
+    helpful: number
+    correctedQuery: number
+    interactionType: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ChatFeedbackMinAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    query?: true
+    response?: true
+    helpful?: true
+    correctedQuery?: true
+    interactionType?: true
+    createdAt?: true
+  }
+
+  export type ChatFeedbackMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    query?: true
+    response?: true
+    helpful?: true
+    correctedQuery?: true
+    interactionType?: true
+    createdAt?: true
+  }
+
+  export type ChatFeedbackCountAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    query?: true
+    response?: true
+    retrievedEmails?: true
+    helpful?: true
+    correctedQuery?: true
+    interactionType?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ChatFeedbackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatFeedback to aggregate.
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatFeedbacks to fetch.
+     */
+    orderBy?: ChatFeedbackOrderByWithRelationInput | ChatFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatFeedbacks
+    **/
+    _count?: true | ChatFeedbackCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatFeedbackMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatFeedbackMaxAggregateInputType
+  }
+
+  export type GetChatFeedbackAggregateType<T extends ChatFeedbackAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatFeedback]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatFeedback[P]>
+      : GetScalarType<T[P], AggregateChatFeedback[P]>
+  }
+
+
+
+
+  export type ChatFeedbackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatFeedbackWhereInput
+    orderBy?: ChatFeedbackOrderByWithAggregationInput | ChatFeedbackOrderByWithAggregationInput[]
+    by: ChatFeedbackScalarFieldEnum[] | ChatFeedbackScalarFieldEnum
+    having?: ChatFeedbackScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatFeedbackCountAggregateInputType | true
+    _min?: ChatFeedbackMinAggregateInputType
+    _max?: ChatFeedbackMaxAggregateInputType
+  }
+
+  export type ChatFeedbackGroupByOutputType = {
+    id: string
+    userId: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails: string[]
+    helpful: boolean | null
+    correctedQuery: string | null
+    interactionType: string
+    createdAt: Date
+    _count: ChatFeedbackCountAggregateOutputType | null
+    _min: ChatFeedbackMinAggregateOutputType | null
+    _max: ChatFeedbackMaxAggregateOutputType | null
+  }
+
+  type GetChatFeedbackGroupByPayload<T extends ChatFeedbackGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatFeedbackGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatFeedbackGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatFeedbackGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatFeedbackGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatFeedbackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    query?: boolean
+    response?: boolean
+    retrievedEmails?: boolean
+    helpful?: boolean
+    correctedQuery?: boolean
+    interactionType?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatFeedback"]>
+
+  export type ChatFeedbackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    query?: boolean
+    response?: boolean
+    retrievedEmails?: boolean
+    helpful?: boolean
+    correctedQuery?: boolean
+    interactionType?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatFeedback"]>
+
+  export type ChatFeedbackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    query?: boolean
+    response?: boolean
+    retrievedEmails?: boolean
+    helpful?: boolean
+    correctedQuery?: boolean
+    interactionType?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatFeedback"]>
+
+  export type ChatFeedbackSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    query?: boolean
+    response?: boolean
+    retrievedEmails?: boolean
+    helpful?: boolean
+    correctedQuery?: boolean
+    interactionType?: boolean
+    createdAt?: boolean
+  }
+
+  export type ChatFeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accountId" | "query" | "response" | "retrievedEmails" | "helpful" | "correctedQuery" | "interactionType" | "createdAt", ExtArgs["result"]["chatFeedback"]>
+  export type ChatFeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChatFeedbackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ChatFeedbackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ChatFeedbackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatFeedback"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      accountId: string
+      query: string
+      response: string
+      retrievedEmails: string[]
+      helpful: boolean | null
+      correctedQuery: string | null
+      interactionType: string
+      createdAt: Date
+    }, ExtArgs["result"]["chatFeedback"]>
+    composites: {}
+  }
+
+  type ChatFeedbackGetPayload<S extends boolean | null | undefined | ChatFeedbackDefaultArgs> = $Result.GetResult<Prisma.$ChatFeedbackPayload, S>
+
+  type ChatFeedbackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChatFeedbackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChatFeedbackCountAggregateInputType | true
+    }
+
+  export interface ChatFeedbackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatFeedback'], meta: { name: 'ChatFeedback' } }
+    /**
+     * Find zero or one ChatFeedback that matches the filter.
+     * @param {ChatFeedbackFindUniqueArgs} args - Arguments to find a ChatFeedback
+     * @example
+     * // Get one ChatFeedback
+     * const chatFeedback = await prisma.chatFeedback.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatFeedbackFindUniqueArgs>(args: SelectSubset<T, ChatFeedbackFindUniqueArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChatFeedback that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChatFeedbackFindUniqueOrThrowArgs} args - Arguments to find a ChatFeedback
+     * @example
+     * // Get one ChatFeedback
+     * const chatFeedback = await prisma.chatFeedback.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatFeedbackFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatFeedbackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatFeedback that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackFindFirstArgs} args - Arguments to find a ChatFeedback
+     * @example
+     * // Get one ChatFeedback
+     * const chatFeedback = await prisma.chatFeedback.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatFeedbackFindFirstArgs>(args?: SelectSubset<T, ChatFeedbackFindFirstArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatFeedback that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackFindFirstOrThrowArgs} args - Arguments to find a ChatFeedback
+     * @example
+     * // Get one ChatFeedback
+     * const chatFeedback = await prisma.chatFeedback.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatFeedbackFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatFeedbackFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChatFeedbacks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatFeedbacks
+     * const chatFeedbacks = await prisma.chatFeedback.findMany()
+     * 
+     * // Get first 10 ChatFeedbacks
+     * const chatFeedbacks = await prisma.chatFeedback.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatFeedbackWithIdOnly = await prisma.chatFeedback.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChatFeedbackFindManyArgs>(args?: SelectSubset<T, ChatFeedbackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChatFeedback.
+     * @param {ChatFeedbackCreateArgs} args - Arguments to create a ChatFeedback.
+     * @example
+     * // Create one ChatFeedback
+     * const ChatFeedback = await prisma.chatFeedback.create({
+     *   data: {
+     *     // ... data to create a ChatFeedback
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatFeedbackCreateArgs>(args: SelectSubset<T, ChatFeedbackCreateArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChatFeedbacks.
+     * @param {ChatFeedbackCreateManyArgs} args - Arguments to create many ChatFeedbacks.
+     * @example
+     * // Create many ChatFeedbacks
+     * const chatFeedback = await prisma.chatFeedback.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatFeedbackCreateManyArgs>(args?: SelectSubset<T, ChatFeedbackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatFeedbacks and returns the data saved in the database.
+     * @param {ChatFeedbackCreateManyAndReturnArgs} args - Arguments to create many ChatFeedbacks.
+     * @example
+     * // Create many ChatFeedbacks
+     * const chatFeedback = await prisma.chatFeedback.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatFeedbacks and only return the `id`
+     * const chatFeedbackWithIdOnly = await prisma.chatFeedback.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatFeedbackCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatFeedbackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChatFeedback.
+     * @param {ChatFeedbackDeleteArgs} args - Arguments to delete one ChatFeedback.
+     * @example
+     * // Delete one ChatFeedback
+     * const ChatFeedback = await prisma.chatFeedback.delete({
+     *   where: {
+     *     // ... filter to delete one ChatFeedback
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatFeedbackDeleteArgs>(args: SelectSubset<T, ChatFeedbackDeleteArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChatFeedback.
+     * @param {ChatFeedbackUpdateArgs} args - Arguments to update one ChatFeedback.
+     * @example
+     * // Update one ChatFeedback
+     * const chatFeedback = await prisma.chatFeedback.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatFeedbackUpdateArgs>(args: SelectSubset<T, ChatFeedbackUpdateArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChatFeedbacks.
+     * @param {ChatFeedbackDeleteManyArgs} args - Arguments to filter ChatFeedbacks to delete.
+     * @example
+     * // Delete a few ChatFeedbacks
+     * const { count } = await prisma.chatFeedback.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatFeedbackDeleteManyArgs>(args?: SelectSubset<T, ChatFeedbackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatFeedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatFeedbacks
+     * const chatFeedback = await prisma.chatFeedback.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatFeedbackUpdateManyArgs>(args: SelectSubset<T, ChatFeedbackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatFeedbacks and returns the data updated in the database.
+     * @param {ChatFeedbackUpdateManyAndReturnArgs} args - Arguments to update many ChatFeedbacks.
+     * @example
+     * // Update many ChatFeedbacks
+     * const chatFeedback = await prisma.chatFeedback.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChatFeedbacks and only return the `id`
+     * const chatFeedbackWithIdOnly = await prisma.chatFeedback.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChatFeedbackUpdateManyAndReturnArgs>(args: SelectSubset<T, ChatFeedbackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChatFeedback.
+     * @param {ChatFeedbackUpsertArgs} args - Arguments to update or create a ChatFeedback.
+     * @example
+     * // Update or create a ChatFeedback
+     * const chatFeedback = await prisma.chatFeedback.upsert({
+     *   create: {
+     *     // ... data to create a ChatFeedback
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatFeedback we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatFeedbackUpsertArgs>(args: SelectSubset<T, ChatFeedbackUpsertArgs<ExtArgs>>): Prisma__ChatFeedbackClient<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChatFeedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackCountArgs} args - Arguments to filter ChatFeedbacks to count.
+     * @example
+     * // Count the number of ChatFeedbacks
+     * const count = await prisma.chatFeedback.count({
+     *   where: {
+     *     // ... the filter for the ChatFeedbacks we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatFeedbackCountArgs>(
+      args?: Subset<T, ChatFeedbackCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatFeedbackCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatFeedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatFeedbackAggregateArgs>(args: Subset<T, ChatFeedbackAggregateArgs>): Prisma.PrismaPromise<GetChatFeedbackAggregateType<T>>
+
+    /**
+     * Group by ChatFeedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatFeedbackGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatFeedbackGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatFeedbackGroupByArgs['orderBy'] }
+        : { orderBy?: ChatFeedbackGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatFeedbackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatFeedbackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatFeedback model
+   */
+  readonly fields: ChatFeedbackFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatFeedback.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatFeedbackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatFeedback model
+   */
+  interface ChatFeedbackFieldRefs {
+    readonly id: FieldRef<"ChatFeedback", 'String'>
+    readonly userId: FieldRef<"ChatFeedback", 'String'>
+    readonly accountId: FieldRef<"ChatFeedback", 'String'>
+    readonly query: FieldRef<"ChatFeedback", 'String'>
+    readonly response: FieldRef<"ChatFeedback", 'String'>
+    readonly retrievedEmails: FieldRef<"ChatFeedback", 'String[]'>
+    readonly helpful: FieldRef<"ChatFeedback", 'Boolean'>
+    readonly correctedQuery: FieldRef<"ChatFeedback", 'String'>
+    readonly interactionType: FieldRef<"ChatFeedback", 'String'>
+    readonly createdAt: FieldRef<"ChatFeedback", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatFeedback findUnique
+   */
+  export type ChatFeedbackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatFeedback to fetch.
+     */
+    where: ChatFeedbackWhereUniqueInput
+  }
+
+  /**
+   * ChatFeedback findUniqueOrThrow
+   */
+  export type ChatFeedbackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatFeedback to fetch.
+     */
+    where: ChatFeedbackWhereUniqueInput
+  }
+
+  /**
+   * ChatFeedback findFirst
+   */
+  export type ChatFeedbackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatFeedback to fetch.
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatFeedbacks to fetch.
+     */
+    orderBy?: ChatFeedbackOrderByWithRelationInput | ChatFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatFeedbacks.
+     */
+    cursor?: ChatFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatFeedbacks.
+     */
+    distinct?: ChatFeedbackScalarFieldEnum | ChatFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * ChatFeedback findFirstOrThrow
+   */
+  export type ChatFeedbackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatFeedback to fetch.
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatFeedbacks to fetch.
+     */
+    orderBy?: ChatFeedbackOrderByWithRelationInput | ChatFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatFeedbacks.
+     */
+    cursor?: ChatFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatFeedbacks.
+     */
+    distinct?: ChatFeedbackScalarFieldEnum | ChatFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * ChatFeedback findMany
+   */
+  export type ChatFeedbackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatFeedbacks to fetch.
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatFeedbacks to fetch.
+     */
+    orderBy?: ChatFeedbackOrderByWithRelationInput | ChatFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatFeedbacks.
+     */
+    cursor?: ChatFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatFeedbacks.
+     */
+    skip?: number
+    distinct?: ChatFeedbackScalarFieldEnum | ChatFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * ChatFeedback create
+   */
+  export type ChatFeedbackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChatFeedback.
+     */
+    data: XOR<ChatFeedbackCreateInput, ChatFeedbackUncheckedCreateInput>
+  }
+
+  /**
+   * ChatFeedback createMany
+   */
+  export type ChatFeedbackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatFeedbacks.
+     */
+    data: ChatFeedbackCreateManyInput | ChatFeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatFeedback createManyAndReturn
+   */
+  export type ChatFeedbackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChatFeedbacks.
+     */
+    data: ChatFeedbackCreateManyInput | ChatFeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChatFeedback update
+   */
+  export type ChatFeedbackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChatFeedback.
+     */
+    data: XOR<ChatFeedbackUpdateInput, ChatFeedbackUncheckedUpdateInput>
+    /**
+     * Choose, which ChatFeedback to update.
+     */
+    where: ChatFeedbackWhereUniqueInput
+  }
+
+  /**
+   * ChatFeedback updateMany
+   */
+  export type ChatFeedbackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatFeedbacks.
+     */
+    data: XOR<ChatFeedbackUpdateManyMutationInput, ChatFeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatFeedbacks to update
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * Limit how many ChatFeedbacks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatFeedback updateManyAndReturn
+   */
+  export type ChatFeedbackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to update ChatFeedbacks.
+     */
+    data: XOR<ChatFeedbackUpdateManyMutationInput, ChatFeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatFeedbacks to update
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * Limit how many ChatFeedbacks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChatFeedback upsert
+   */
+  export type ChatFeedbackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChatFeedback to update in case it exists.
+     */
+    where: ChatFeedbackWhereUniqueInput
+    /**
+     * In case the ChatFeedback found by the `where` argument doesn't exist, create a new ChatFeedback with this data.
+     */
+    create: XOR<ChatFeedbackCreateInput, ChatFeedbackUncheckedCreateInput>
+    /**
+     * In case the ChatFeedback was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatFeedbackUpdateInput, ChatFeedbackUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatFeedback delete
+   */
+  export type ChatFeedbackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter which ChatFeedback to delete.
+     */
+    where: ChatFeedbackWhereUniqueInput
+  }
+
+  /**
+   * ChatFeedback deleteMany
+   */
+  export type ChatFeedbackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatFeedbacks to delete
+     */
+    where?: ChatFeedbackWhereInput
+    /**
+     * Limit how many ChatFeedbacks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatFeedback without action
+   */
+  export type ChatFeedbackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatFeedback
+     */
+    select?: ChatFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatFeedback
+     */
+    omit?: ChatFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatFeedbackInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -11212,7 +12500,9 @@ export namespace Prisma {
     done: 'done',
     inboxStatus: 'inboxStatus',
     draftStatus: 'draftStatus',
-    sentStatus: 'sentStatus'
+    sentStatus: 'sentStatus',
+    spamStatus: 'spamStatus',
+    junkStatus: 'junkStatus'
   };
 
   export type ThreadScalarFieldEnum = (typeof ThreadScalarFieldEnum)[keyof typeof ThreadScalarFieldEnum]
@@ -11244,7 +12534,8 @@ export namespace Prisma {
     folderId: 'folderId',
     omitted: 'omitted',
     emailLabel: 'emailLabel',
-    priority: 'priority'
+    priority: 'priority',
+    autoReplyDraft: 'autoReplyDraft'
   };
 
   export type EmailScalarFieldEnum = (typeof EmailScalarFieldEnum)[keyof typeof EmailScalarFieldEnum]
@@ -11297,6 +12588,22 @@ export namespace Prisma {
   };
 
   export type StripeSubscriptionScalarFieldEnum = (typeof StripeSubscriptionScalarFieldEnum)[keyof typeof StripeSubscriptionScalarFieldEnum]
+
+
+  export const ChatFeedbackScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    accountId: 'accountId',
+    query: 'query',
+    response: 'response',
+    retrievedEmails: 'retrievedEmails',
+    helpful: 'helpful',
+    correctedQuery: 'correctedQuery',
+    interactionType: 'interactionType',
+    createdAt: 'createdAt'
+  };
+
+  export type ChatFeedbackScalarFieldEnum = (typeof ChatFeedbackScalarFieldEnum)[keyof typeof ChatFeedbackScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -11500,6 +12807,7 @@ export namespace Prisma {
     accounts?: AccountListRelationFilter
     stripeSubscription?: XOR<StripeSubscriptionNullableScalarRelationFilter, StripeSubscriptionWhereInput> | null
     chatbotInteractions?: ChatbotInteractionListRelationFilter
+    chatFeedback?: ChatFeedbackListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -11511,6 +12819,7 @@ export namespace Prisma {
     accounts?: AccountOrderByRelationAggregateInput
     stripeSubscription?: StripeSubscriptionOrderByWithRelationInput
     chatbotInteractions?: ChatbotInteractionOrderByRelationAggregateInput
+    chatFeedback?: ChatFeedbackOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -11525,6 +12834,7 @@ export namespace Prisma {
     accounts?: AccountListRelationFilter
     stripeSubscription?: XOR<StripeSubscriptionNullableScalarRelationFilter, StripeSubscriptionWhereInput> | null
     chatbotInteractions?: ChatbotInteractionListRelationFilter
+    chatFeedback?: ChatFeedbackListRelationFilter
   }, "id" | "emailAddress">
 
   export type UserOrderByWithAggregationInput = {
@@ -11633,6 +12943,8 @@ export namespace Prisma {
     inboxStatus?: BoolFilter<"Thread"> | boolean
     draftStatus?: BoolFilter<"Thread"> | boolean
     sentStatus?: BoolFilter<"Thread"> | boolean
+    spamStatus?: BoolFilter<"Thread"> | boolean
+    junkStatus?: BoolFilter<"Thread"> | boolean
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     emails?: EmailListRelationFilter
   }
@@ -11647,6 +12959,8 @@ export namespace Prisma {
     inboxStatus?: SortOrder
     draftStatus?: SortOrder
     sentStatus?: SortOrder
+    spamStatus?: SortOrder
+    junkStatus?: SortOrder
     account?: AccountOrderByWithRelationInput
     emails?: EmailOrderByRelationAggregateInput
   }
@@ -11664,6 +12978,8 @@ export namespace Prisma {
     inboxStatus?: BoolFilter<"Thread"> | boolean
     draftStatus?: BoolFilter<"Thread"> | boolean
     sentStatus?: BoolFilter<"Thread"> | boolean
+    spamStatus?: BoolFilter<"Thread"> | boolean
+    junkStatus?: BoolFilter<"Thread"> | boolean
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     emails?: EmailListRelationFilter
   }, "id">
@@ -11678,6 +12994,8 @@ export namespace Prisma {
     inboxStatus?: SortOrder
     draftStatus?: SortOrder
     sentStatus?: SortOrder
+    spamStatus?: SortOrder
+    junkStatus?: SortOrder
     _count?: ThreadCountOrderByAggregateInput
     _max?: ThreadMaxOrderByAggregateInput
     _min?: ThreadMinOrderByAggregateInput
@@ -11696,6 +13014,8 @@ export namespace Prisma {
     inboxStatus?: BoolWithAggregatesFilter<"Thread"> | boolean
     draftStatus?: BoolWithAggregatesFilter<"Thread"> | boolean
     sentStatus?: BoolWithAggregatesFilter<"Thread"> | boolean
+    spamStatus?: BoolWithAggregatesFilter<"Thread"> | boolean
+    junkStatus?: BoolWithAggregatesFilter<"Thread"> | boolean
   }
 
   export type EmailWhereInput = {
@@ -11728,6 +13048,7 @@ export namespace Prisma {
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelFilter<"Email"> | $Enums.EmailLabel
     priority?: EnumEmailPriorityFilter<"Email"> | $Enums.EmailPriority
+    autoReplyDraft?: StringNullableFilter<"Email"> | string | null
     thread?: XOR<ThreadScalarRelationFilter, ThreadWhereInput>
     from?: XOR<EmailAddressScalarRelationFilter, EmailAddressWhereInput>
     to?: EmailAddressListRelationFilter
@@ -11764,6 +13085,7 @@ export namespace Prisma {
     omitted?: SortOrder
     emailLabel?: SortOrder
     priority?: SortOrder
+    autoReplyDraft?: SortOrderInput | SortOrder
     thread?: ThreadOrderByWithRelationInput
     from?: EmailAddressOrderByWithRelationInput
     to?: EmailAddressOrderByRelationAggregateInput
@@ -11803,6 +13125,7 @@ export namespace Prisma {
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelFilter<"Email"> | $Enums.EmailLabel
     priority?: EnumEmailPriorityFilter<"Email"> | $Enums.EmailPriority
+    autoReplyDraft?: StringNullableFilter<"Email"> | string | null
     thread?: XOR<ThreadScalarRelationFilter, ThreadWhereInput>
     from?: XOR<EmailAddressScalarRelationFilter, EmailAddressWhereInput>
     to?: EmailAddressListRelationFilter
@@ -11839,6 +13162,7 @@ export namespace Prisma {
     omitted?: SortOrder
     emailLabel?: SortOrder
     priority?: SortOrder
+    autoReplyDraft?: SortOrderInput | SortOrder
     _count?: EmailCountOrderByAggregateInput
     _max?: EmailMaxOrderByAggregateInput
     _min?: EmailMinOrderByAggregateInput
@@ -11874,6 +13198,7 @@ export namespace Prisma {
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelWithAggregatesFilter<"Email"> | $Enums.EmailLabel
     priority?: EnumEmailPriorityWithAggregatesFilter<"Email"> | $Enums.EmailPriority
+    autoReplyDraft?: StringNullableWithAggregatesFilter<"Email"> | string | null
   }
 
   export type EmailAddressWhereInput = {
@@ -12142,6 +13467,86 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"StripeSubscription"> | Date | string
   }
 
+  export type ChatFeedbackWhereInput = {
+    AND?: ChatFeedbackWhereInput | ChatFeedbackWhereInput[]
+    OR?: ChatFeedbackWhereInput[]
+    NOT?: ChatFeedbackWhereInput | ChatFeedbackWhereInput[]
+    id?: StringFilter<"ChatFeedback"> | string
+    userId?: StringFilter<"ChatFeedback"> | string
+    accountId?: StringFilter<"ChatFeedback"> | string
+    query?: StringFilter<"ChatFeedback"> | string
+    response?: StringFilter<"ChatFeedback"> | string
+    retrievedEmails?: StringNullableListFilter<"ChatFeedback">
+    helpful?: BoolNullableFilter<"ChatFeedback"> | boolean | null
+    correctedQuery?: StringNullableFilter<"ChatFeedback"> | string | null
+    interactionType?: StringFilter<"ChatFeedback"> | string
+    createdAt?: DateTimeFilter<"ChatFeedback"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ChatFeedbackOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    query?: SortOrder
+    response?: SortOrder
+    retrievedEmails?: SortOrder
+    helpful?: SortOrderInput | SortOrder
+    correctedQuery?: SortOrderInput | SortOrder
+    interactionType?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type ChatFeedbackWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChatFeedbackWhereInput | ChatFeedbackWhereInput[]
+    OR?: ChatFeedbackWhereInput[]
+    NOT?: ChatFeedbackWhereInput | ChatFeedbackWhereInput[]
+    userId?: StringFilter<"ChatFeedback"> | string
+    accountId?: StringFilter<"ChatFeedback"> | string
+    query?: StringFilter<"ChatFeedback"> | string
+    response?: StringFilter<"ChatFeedback"> | string
+    retrievedEmails?: StringNullableListFilter<"ChatFeedback">
+    helpful?: BoolNullableFilter<"ChatFeedback"> | boolean | null
+    correctedQuery?: StringNullableFilter<"ChatFeedback"> | string | null
+    interactionType?: StringFilter<"ChatFeedback"> | string
+    createdAt?: DateTimeFilter<"ChatFeedback"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type ChatFeedbackOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    query?: SortOrder
+    response?: SortOrder
+    retrievedEmails?: SortOrder
+    helpful?: SortOrderInput | SortOrder
+    correctedQuery?: SortOrderInput | SortOrder
+    interactionType?: SortOrder
+    createdAt?: SortOrder
+    _count?: ChatFeedbackCountOrderByAggregateInput
+    _max?: ChatFeedbackMaxOrderByAggregateInput
+    _min?: ChatFeedbackMinOrderByAggregateInput
+  }
+
+  export type ChatFeedbackScalarWhereWithAggregatesInput = {
+    AND?: ChatFeedbackScalarWhereWithAggregatesInput | ChatFeedbackScalarWhereWithAggregatesInput[]
+    OR?: ChatFeedbackScalarWhereWithAggregatesInput[]
+    NOT?: ChatFeedbackScalarWhereWithAggregatesInput | ChatFeedbackScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatFeedback"> | string
+    userId?: StringWithAggregatesFilter<"ChatFeedback"> | string
+    accountId?: StringWithAggregatesFilter<"ChatFeedback"> | string
+    query?: StringWithAggregatesFilter<"ChatFeedback"> | string
+    response?: StringWithAggregatesFilter<"ChatFeedback"> | string
+    retrievedEmails?: StringNullableListFilter<"ChatFeedback">
+    helpful?: BoolNullableWithAggregatesFilter<"ChatFeedback"> | boolean | null
+    correctedQuery?: StringNullableWithAggregatesFilter<"ChatFeedback"> | string | null
+    interactionType?: StringWithAggregatesFilter<"ChatFeedback"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ChatFeedback"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     emailAddress: string
@@ -12151,6 +13556,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -12162,6 +13568,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -12173,6 +13580,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -12184,6 +13592,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -12296,6 +13705,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     account: AccountCreateNestedOneWithoutThreadsInput
     emails?: EmailCreateNestedManyWithoutThreadInput
   }
@@ -12310,6 +13721,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     emails?: EmailUncheckedCreateNestedManyWithoutThreadInput
   }
 
@@ -12322,6 +13735,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
     account?: AccountUpdateOneRequiredWithoutThreadsNestedInput
     emails?: EmailUpdateManyWithoutThreadNestedInput
   }
@@ -12336,6 +13751,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
     emails?: EmailUncheckedUpdateManyWithoutThreadNestedInput
   }
 
@@ -12349,6 +13766,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
   }
 
   export type ThreadUpdateManyMutationInput = {
@@ -12360,6 +13779,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ThreadUncheckedUpdateManyInput = {
@@ -12372,6 +13793,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type EmailCreateInput = {
@@ -12399,6 +13822,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -12435,6 +13859,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -12467,6 +13892,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -12503,6 +13929,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -12537,6 +13964,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
   }
 
   export type EmailUpdateManyMutationInput = {
@@ -12564,6 +13992,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailUncheckedUpdateManyInput = {
@@ -12593,6 +14022,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailAddressCreateInput = {
@@ -12870,6 +14300,96 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChatFeedbackCreateInput = {
+    id?: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails?: ChatFeedbackCreateretrievedEmailsInput | string[]
+    helpful?: boolean | null
+    correctedQuery?: string | null
+    interactionType?: string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutChatFeedbackInput
+  }
+
+  export type ChatFeedbackUncheckedCreateInput = {
+    id?: string
+    userId: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails?: ChatFeedbackCreateretrievedEmailsInput | string[]
+    helpful?: boolean | null
+    correctedQuery?: string | null
+    interactionType?: string
+    createdAt?: Date | string
+  }
+
+  export type ChatFeedbackUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutChatFeedbackNestedInput
+  }
+
+  export type ChatFeedbackUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatFeedbackCreateManyInput = {
+    id?: string
+    userId: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails?: ChatFeedbackCreateretrievedEmailsInput | string[]
+    helpful?: boolean | null
+    correctedQuery?: string | null
+    interactionType?: string
+    createdAt?: Date | string
+  }
+
+  export type ChatFeedbackUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatFeedbackUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -12917,6 +14437,12 @@ export namespace Prisma {
     none?: ChatbotInteractionWhereInput
   }
 
+  export type ChatFeedbackListRelationFilter = {
+    every?: ChatFeedbackWhereInput
+    some?: ChatFeedbackWhereInput
+    none?: ChatFeedbackWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -12927,6 +14453,10 @@ export namespace Prisma {
   }
 
   export type ChatbotInteractionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChatFeedbackOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -13094,6 +14624,8 @@ export namespace Prisma {
     inboxStatus?: SortOrder
     draftStatus?: SortOrder
     sentStatus?: SortOrder
+    spamStatus?: SortOrder
+    junkStatus?: SortOrder
   }
 
   export type ThreadMaxOrderByAggregateInput = {
@@ -13105,6 +14637,8 @@ export namespace Prisma {
     inboxStatus?: SortOrder
     draftStatus?: SortOrder
     sentStatus?: SortOrder
+    spamStatus?: SortOrder
+    junkStatus?: SortOrder
   }
 
   export type ThreadMinOrderByAggregateInput = {
@@ -13116,6 +14650,8 @@ export namespace Prisma {
     inboxStatus?: SortOrder
     draftStatus?: SortOrder
     sentStatus?: SortOrder
+    spamStatus?: SortOrder
+    junkStatus?: SortOrder
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -13252,6 +14788,7 @@ export namespace Prisma {
     omitted?: SortOrder
     emailLabel?: SortOrder
     priority?: SortOrder
+    autoReplyDraft?: SortOrder
   }
 
   export type EmailMaxOrderByAggregateInput = {
@@ -13275,6 +14812,7 @@ export namespace Prisma {
     folderId?: SortOrder
     emailLabel?: SortOrder
     priority?: SortOrder
+    autoReplyDraft?: SortOrder
   }
 
   export type EmailMinOrderByAggregateInput = {
@@ -13298,6 +14836,7 @@ export namespace Prisma {
     folderId?: SortOrder
     emailLabel?: SortOrder
     priority?: SortOrder
+    autoReplyDraft?: SortOrder
   }
 
   export type EnumSensitivityWithAggregatesFilter<$PrismaModel = never> = {
@@ -13535,6 +15074,56 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type ChatFeedbackCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    query?: SortOrder
+    response?: SortOrder
+    retrievedEmails?: SortOrder
+    helpful?: SortOrder
+    correctedQuery?: SortOrder
+    interactionType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatFeedbackMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    query?: SortOrder
+    response?: SortOrder
+    helpful?: SortOrder
+    correctedQuery?: SortOrder
+    interactionType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ChatFeedbackMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    query?: SortOrder
+    response?: SortOrder
+    helpful?: SortOrder
+    correctedQuery?: SortOrder
+    interactionType?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -13555,6 +15144,13 @@ export namespace Prisma {
     connect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
   }
 
+  export type ChatFeedbackCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatFeedbackCreateWithoutUserInput, ChatFeedbackUncheckedCreateWithoutUserInput> | ChatFeedbackCreateWithoutUserInput[] | ChatFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatFeedbackCreateOrConnectWithoutUserInput | ChatFeedbackCreateOrConnectWithoutUserInput[]
+    createMany?: ChatFeedbackCreateManyUserInputEnvelope
+    connect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -13573,6 +15169,13 @@ export namespace Prisma {
     connectOrCreate?: ChatbotInteractionCreateOrConnectWithoutUserInput | ChatbotInteractionCreateOrConnectWithoutUserInput[]
     createMany?: ChatbotInteractionCreateManyUserInputEnvelope
     connect?: ChatbotInteractionWhereUniqueInput | ChatbotInteractionWhereUniqueInput[]
+  }
+
+  export type ChatFeedbackUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatFeedbackCreateWithoutUserInput, ChatFeedbackUncheckedCreateWithoutUserInput> | ChatFeedbackCreateWithoutUserInput[] | ChatFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatFeedbackCreateOrConnectWithoutUserInput | ChatFeedbackCreateOrConnectWithoutUserInput[]
+    createMany?: ChatFeedbackCreateManyUserInputEnvelope
+    connect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -13621,6 +15224,20 @@ export namespace Prisma {
     deleteMany?: ChatbotInteractionScalarWhereInput | ChatbotInteractionScalarWhereInput[]
   }
 
+  export type ChatFeedbackUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatFeedbackCreateWithoutUserInput, ChatFeedbackUncheckedCreateWithoutUserInput> | ChatFeedbackCreateWithoutUserInput[] | ChatFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatFeedbackCreateOrConnectWithoutUserInput | ChatFeedbackCreateOrConnectWithoutUserInput[]
+    upsert?: ChatFeedbackUpsertWithWhereUniqueWithoutUserInput | ChatFeedbackUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatFeedbackCreateManyUserInputEnvelope
+    set?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    disconnect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    delete?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    connect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    update?: ChatFeedbackUpdateWithWhereUniqueWithoutUserInput | ChatFeedbackUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatFeedbackUpdateManyWithWhereWithoutUserInput | ChatFeedbackUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatFeedbackScalarWhereInput | ChatFeedbackScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -13657,6 +15274,20 @@ export namespace Prisma {
     update?: ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput | ChatbotInteractionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ChatbotInteractionUpdateManyWithWhereWithoutUserInput | ChatbotInteractionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ChatbotInteractionScalarWhereInput | ChatbotInteractionScalarWhereInput[]
+  }
+
+  export type ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatFeedbackCreateWithoutUserInput, ChatFeedbackUncheckedCreateWithoutUserInput> | ChatFeedbackCreateWithoutUserInput[] | ChatFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatFeedbackCreateOrConnectWithoutUserInput | ChatFeedbackCreateOrConnectWithoutUserInput[]
+    upsert?: ChatFeedbackUpsertWithWhereUniqueWithoutUserInput | ChatFeedbackUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatFeedbackCreateManyUserInputEnvelope
+    set?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    disconnect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    delete?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    connect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+    update?: ChatFeedbackUpdateWithWhereUniqueWithoutUserInput | ChatFeedbackUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatFeedbackUpdateManyWithWhereWithoutUserInput | ChatFeedbackUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatFeedbackScalarWhereInput | ChatFeedbackScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -14371,6 +16002,33 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStripeSubscriptionInput, UserUpdateWithoutStripeSubscriptionInput>, UserUncheckedUpdateWithoutStripeSubscriptionInput>
   }
 
+  export type ChatFeedbackCreateretrievedEmailsInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutChatFeedbackInput = {
+    create?: XOR<UserCreateWithoutChatFeedbackInput, UserUncheckedCreateWithoutChatFeedbackInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatFeedbackInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ChatFeedbackUpdateretrievedEmailsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
+  }
+
+  export type UserUpdateOneRequiredWithoutChatFeedbackNestedInput = {
+    create?: XOR<UserCreateWithoutChatFeedbackInput, UserUncheckedCreateWithoutChatFeedbackInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatFeedbackInput
+    upsert?: UserUpsertWithoutChatFeedbackInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatFeedbackInput, UserUpdateWithoutChatFeedbackInput>, UserUncheckedUpdateWithoutChatFeedbackInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14611,6 +16269,19 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateWithoutUserInput = {
     id?: string
     accessToken: string
@@ -14685,6 +16356,40 @@ export namespace Prisma {
 
   export type ChatbotInteractionCreateManyUserInputEnvelope = {
     data: ChatbotInteractionCreateManyUserInput | ChatbotInteractionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChatFeedbackCreateWithoutUserInput = {
+    id?: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails?: ChatFeedbackCreateretrievedEmailsInput | string[]
+    helpful?: boolean | null
+    correctedQuery?: string | null
+    interactionType?: string
+    createdAt?: Date | string
+  }
+
+  export type ChatFeedbackUncheckedCreateWithoutUserInput = {
+    id?: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails?: ChatFeedbackCreateretrievedEmailsInput | string[]
+    helpful?: boolean | null
+    correctedQuery?: string | null
+    interactionType?: string
+    createdAt?: Date | string
+  }
+
+  export type ChatFeedbackCreateOrConnectWithoutUserInput = {
+    where: ChatFeedbackWhereUniqueInput
+    create: XOR<ChatFeedbackCreateWithoutUserInput, ChatFeedbackUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatFeedbackCreateManyUserInputEnvelope = {
+    data: ChatFeedbackCreateManyUserInput | ChatFeedbackCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -14772,6 +16477,38 @@ export namespace Prisma {
     count?: IntFilter<"ChatbotInteraction"> | number
   }
 
+  export type ChatFeedbackUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChatFeedbackWhereUniqueInput
+    update: XOR<ChatFeedbackUpdateWithoutUserInput, ChatFeedbackUncheckedUpdateWithoutUserInput>
+    create: XOR<ChatFeedbackCreateWithoutUserInput, ChatFeedbackUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatFeedbackUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChatFeedbackWhereUniqueInput
+    data: XOR<ChatFeedbackUpdateWithoutUserInput, ChatFeedbackUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChatFeedbackUpdateManyWithWhereWithoutUserInput = {
+    where: ChatFeedbackScalarWhereInput
+    data: XOR<ChatFeedbackUpdateManyMutationInput, ChatFeedbackUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChatFeedbackScalarWhereInput = {
+    AND?: ChatFeedbackScalarWhereInput | ChatFeedbackScalarWhereInput[]
+    OR?: ChatFeedbackScalarWhereInput[]
+    NOT?: ChatFeedbackScalarWhereInput | ChatFeedbackScalarWhereInput[]
+    id?: StringFilter<"ChatFeedback"> | string
+    userId?: StringFilter<"ChatFeedback"> | string
+    accountId?: StringFilter<"ChatFeedback"> | string
+    query?: StringFilter<"ChatFeedback"> | string
+    response?: StringFilter<"ChatFeedback"> | string
+    retrievedEmails?: StringNullableListFilter<"ChatFeedback">
+    helpful?: BoolNullableFilter<"ChatFeedback"> | boolean | null
+    correctedQuery?: StringNullableFilter<"ChatFeedback"> | string | null
+    interactionType?: StringFilter<"ChatFeedback"> | string
+    createdAt?: DateTimeFilter<"ChatFeedback"> | Date | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id: string
     emailAddress: string
@@ -14780,6 +16517,7 @@ export namespace Prisma {
     imageUrl?: string | null
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -14790,6 +16528,7 @@ export namespace Prisma {
     imageUrl?: string | null
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -14806,6 +16545,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     emails?: EmailCreateNestedManyWithoutThreadInput
   }
 
@@ -14818,6 +16559,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     emails?: EmailUncheckedCreateNestedManyWithoutThreadInput
   }
 
@@ -14884,6 +16627,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -14894,6 +16638,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithWhereUniqueWithoutAccountInput = {
@@ -14925,6 +16670,8 @@ export namespace Prisma {
     inboxStatus?: BoolFilter<"Thread"> | boolean
     draftStatus?: BoolFilter<"Thread"> | boolean
     sentStatus?: BoolFilter<"Thread"> | boolean
+    spamStatus?: BoolFilter<"Thread"> | boolean
+    junkStatus?: BoolFilter<"Thread"> | boolean
   }
 
   export type EmailAddressUpsertWithWhereUniqueWithoutAccountInput = {
@@ -15006,6 +16753,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressCreateNestedManyWithoutReceivedCcInput
@@ -15040,6 +16788,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -15136,6 +16885,7 @@ export namespace Prisma {
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelFilter<"Email"> | $Enums.EmailLabel
     priority?: EnumEmailPriorityFilter<"Email"> | $Enums.EmailPriority
+    autoReplyDraft?: StringNullableFilter<"Email"> | string | null
   }
 
   export type ThreadCreateWithoutEmailsInput = {
@@ -15147,6 +16897,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
     account: AccountCreateNestedOneWithoutThreadsInput
   }
 
@@ -15160,6 +16912,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
   }
 
   export type ThreadCreateOrConnectWithoutEmailsInput = {
@@ -15364,6 +17118,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
     account?: AccountUpdateOneRequiredWithoutThreadsNestedInput
   }
 
@@ -15377,6 +17133,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type EmailAddressUpsertWithoutSentEmailsInput = {
@@ -15534,6 +17292,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressCreateNestedManyWithoutReceivedCcInput
@@ -15568,6 +17327,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -15610,6 +17370,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     cc?: EmailAddressCreateNestedManyWithoutReceivedCcInput
@@ -15645,6 +17406,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
     replyTo?: EmailAddressUncheckedCreateNestedManyWithoutReplyToEmailsInput
@@ -15681,6 +17443,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15716,6 +17479,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
     replyTo?: EmailAddressUncheckedCreateNestedManyWithoutReplyToEmailsInput
@@ -15752,6 +17516,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15787,6 +17552,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     replyTo?: EmailAddressUncheckedCreateNestedManyWithoutReplyToEmailsInput
@@ -15823,6 +17589,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15858,6 +17625,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -16034,6 +17802,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -16069,6 +17838,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -16116,6 +17886,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -16151,6 +17922,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -16165,6 +17937,7 @@ export namespace Prisma {
     imageUrl?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatbotInteractionsInput = {
@@ -16175,6 +17948,7 @@ export namespace Prisma {
     imageUrl?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatbotInteractionsInput = {
@@ -16201,6 +17975,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatbotInteractionsInput = {
@@ -16211,6 +17986,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStripeSubscriptionInput = {
@@ -16221,6 +17997,7 @@ export namespace Prisma {
     imageUrl?: string | null
     accounts?: AccountCreateNestedManyWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStripeSubscriptionInput = {
@@ -16231,6 +18008,7 @@ export namespace Prisma {
     imageUrl?: string | null
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStripeSubscriptionInput = {
@@ -16257,6 +18035,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUpdateManyWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStripeSubscriptionInput = {
@@ -16266,6 +18045,67 @@ export namespace Prisma {
     lastName?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutChatFeedbackInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChatFeedbackInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChatFeedbackInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChatFeedbackInput, UserUncheckedCreateWithoutChatFeedbackInput>
+  }
+
+  export type UserUpsertWithoutChatFeedbackInput = {
+    update: XOR<UserUpdateWithoutChatFeedbackInput, UserUncheckedUpdateWithoutChatFeedbackInput>
+    create: XOR<UserCreateWithoutChatFeedbackInput, UserUncheckedCreateWithoutChatFeedbackInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChatFeedbackInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChatFeedbackInput, UserUncheckedUpdateWithoutChatFeedbackInput>
+  }
+
+  export type UserUpdateWithoutChatFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChatFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -16282,6 +18122,18 @@ export namespace Prisma {
     id?: string
     day: string
     count?: number
+  }
+
+  export type ChatFeedbackCreateManyUserInput = {
+    id?: string
+    accountId: string
+    query: string
+    response: string
+    retrievedEmails?: ChatFeedbackCreateretrievedEmailsInput | string[]
+    helpful?: boolean | null
+    correctedQuery?: string | null
+    interactionType?: string
+    createdAt?: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -16333,6 +18185,42 @@ export namespace Prisma {
     count?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ChatFeedbackUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatFeedbackUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChatFeedbackUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    query?: StringFieldUpdateOperationsInput | string
+    response?: StringFieldUpdateOperationsInput | string
+    retrievedEmails?: ChatFeedbackUpdateretrievedEmailsInput | string[]
+    helpful?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
+    interactionType?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ThreadCreateManyAccountInput = {
     id?: string
     subject: string
@@ -16342,6 +18230,8 @@ export namespace Prisma {
     inboxStatus?: boolean
     draftStatus?: boolean
     sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
   }
 
   export type EmailAddressCreateManyAccountInput = {
@@ -16360,6 +18250,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
     emails?: EmailUpdateManyWithoutThreadNestedInput
   }
 
@@ -16372,6 +18264,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
     emails?: EmailUncheckedUpdateManyWithoutThreadNestedInput
   }
 
@@ -16384,6 +18278,8 @@ export namespace Prisma {
     inboxStatus?: BoolFieldUpdateOperationsInput | boolean
     draftStatus?: BoolFieldUpdateOperationsInput | boolean
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type EmailAddressUpdateWithoutAccountInput = {
@@ -16443,6 +18339,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
   }
 
   export type EmailUpdateWithoutThreadInput = {
@@ -16470,6 +18367,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUpdateManyWithoutReceivedCcNestedInput
@@ -16504,6 +18402,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -16537,6 +18436,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailAttachmentCreateManyEmailInput = {
@@ -16737,6 +18637,7 @@ export namespace Prisma {
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
     priority?: $Enums.EmailPriority
+    autoReplyDraft?: string | null
   }
 
   export type EmailUpdateWithoutFromInput = {
@@ -16764,6 +18665,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUpdateManyWithoutReceivedCcNestedInput
@@ -16798,6 +18700,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -16831,6 +18734,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailUpdateWithoutToInput = {
@@ -16858,6 +18762,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     cc?: EmailAddressUpdateManyWithoutReceivedCcNestedInput
@@ -16893,6 +18798,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
@@ -16926,6 +18832,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailUpdateWithoutCcInput = {
@@ -16953,6 +18860,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -16988,6 +18896,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
@@ -17021,6 +18930,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailUpdateWithoutBccInput = {
@@ -17048,6 +18958,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -17083,6 +18994,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
@@ -17116,6 +19028,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailUpdateWithoutReplyToInput = {
@@ -17143,6 +19056,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -17178,6 +19092,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -17211,6 +19126,7 @@ export namespace Prisma {
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
+    autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

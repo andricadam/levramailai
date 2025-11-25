@@ -5,6 +5,8 @@ import { OramaClient } from './orama';
 import { getEmbeddings } from '@/lib/embedding';
 import { turndown } from './turndown';
 import { determineEmailPriority } from '@/app/mail/components/ai/priority';
+import { shouldGenerateReply } from '@/app/mail/components/ai/instant-reply/should-reply';
+import { generateInstantReplyServer } from '@/app/mail/components/ai/instant-reply/generate-reply-server';
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
     console.log(`attempting to sync emails to database ${emails.length}`)
@@ -66,8 +68,15 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
     try {
 
         // determine email label type
-        let emailLabelType: 'inbox' | 'sent' | 'draft' = 'inbox'
-        if (email.sysLabels.includes('inbox') || email.sysLabels.includes('important')) {
+        // Check for spam/junk first (they take priority)
+        const sysLabelsLower = email.sysLabels.map(label => label.toLowerCase())
+        let emailLabelType: 'inbox' | 'sent' | 'draft' | 'spam' | 'junk' = 'inbox'
+        
+        if (sysLabelsLower.includes('spam')) {
+            emailLabelType = 'spam'
+        } else if (sysLabelsLower.includes('junk')) {
+            emailLabelType = 'junk'
+        } else if (email.sysLabels.includes('inbox') || email.sysLabels.includes('important')) {
             emailLabelType = 'inbox'
         } else if (email.sysLabels.includes('sent')) {
             emailLabelType = 'sent'
@@ -89,6 +98,77 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
                 console.error(`Error determining priority for email ${email.id}:`, error);
                 // Default to medium on error
                 emailPriority = 'medium';
+            }
+        }
+
+        // Determine if we should generate an auto-reply draft
+        let autoReplyDraft: string | null = null;
+
+        // Only generate for incoming inbox emails (not sent, drafts, spam, or junk)
+        if (emailLabelType === 'inbox') {
+            try {
+                const shouldReply = await shouldGenerateReply(
+                    email.body ?? email.bodySnippet ?? '',
+                    email.subject,
+                    email.from.name || email.from.address,
+                    new Date(email.sentAt).toLocaleString(),
+                    email.sysLabels,
+                    email.sysClassifications
+                );
+
+                // If eligible, generate the reply draft
+                if (shouldReply) {
+                    try {
+                        // Get account info for context
+                        const account = await db.account.findUnique({
+                            where: { id: accountId },
+                            select: { name: true, emailAddress: true }
+                        });
+
+                        // Build context from thread emails (existing ones in DB)
+                        const threadEmails = await db.email.findMany({
+                            where: { threadId: email.threadId },
+                            orderBy: { sentAt: 'asc' },
+                            include: { from: true }
+                        });
+
+                        let context = '';
+                        // Add existing thread emails
+                        for (const threadEmail of threadEmails) {
+                            context += `
+Subject: ${threadEmail.subject}
+From: ${threadEmail.from.address}
+Sent: ${new Date(threadEmail.sentAt).toLocaleString()}
+Body: ${turndown.turndown(threadEmail.body ?? threadEmail.bodySnippet ?? "")}
+
+`;
+                        }
+                        
+                        // Add the current email being processed
+                        context += `
+Subject: ${email.subject}
+From: ${email.from.address}
+Sent: ${new Date(email.sentAt).toLocaleString()}
+Body: ${turndown.turndown(email.body ?? email.bodySnippet ?? "")}
+
+`;
+                        
+                        if (account) {
+                            context += `
+My name is ${account.name} and my email is ${account.emailAddress}.
+`;
+                        }
+
+                        // Generate the reply (server-side, non-streaming)
+                        autoReplyDraft = await generateInstantReplyServer(context);
+                        console.log(`Generated auto-reply draft for email ${email.id}`);
+                    } catch (replyError) {
+                        console.error(`Error generating reply draft for email ${email.id}:`, replyError);
+                        // Continue without draft if generation fails
+                    }
+                }
+            } catch (error) {
+                console.error(`Error determining reply eligibility for email ${email.id}:`, error);
             }
         }
 
@@ -143,6 +223,8 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
                 draftStatus: emailLabelType === 'draft',
                 inboxStatus: emailLabelType === 'inbox',
                 sentStatus: emailLabelType === 'sent',
+                spamStatus: emailLabelType === 'spam',
+                junkStatus: emailLabelType === 'junk',
                 lastMessageDate: new Date(email.sentAt),
                 participantIds: [...new Set([
                     fromAddress.id,
@@ -186,11 +268,13 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
                 omitted: email.omitted,
                 emailLabel: emailLabelType,
                 priority: emailPriority,
+                autoReplyDraft: autoReplyDraft,
             },
             create: {
                 id: email.id,
                 emailLabel: emailLabelType,
                 priority: emailPriority,
+                autoReplyDraft: autoReplyDraft,
                 threadId: thread.id,
                 createdTime: new Date(email.createdTime),
                 lastModifiedTime: new Date(),
@@ -232,8 +316,14 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
             if (threadEmail.emailLabel === 'inbox') {
                 threadFolderType = 'inbox';
                 break; // If any email is in inbox, the whole thread is in inbox
+            } else if (threadEmail.emailLabel === 'spam') {
+                threadFolderType = 'spam';
+                break; // If any email is spam, the whole thread is spam
+            } else if (threadEmail.emailLabel === 'junk') {
+                threadFolderType = 'junk';
+                break; // If any email is junk, the whole thread is junk
             } else if (threadEmail.emailLabel === 'draft') {
-                threadFolderType = 'draft'; // Set to draft, but continue checking for inbox
+                threadFolderType = 'draft'; // Set to draft, but continue checking for inbox/spam/junk
             }
         }
         await db.thread.update({
@@ -242,6 +332,8 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
                 draftStatus: threadFolderType === 'draft',
                 inboxStatus: threadFolderType === 'inbox',
                 sentStatus: threadFolderType === 'sent',
+                spamStatus: threadFolderType === 'spam',
+                junkStatus: threadFolderType === 'junk',
             }
         });
 

@@ -73,6 +73,8 @@ export const accountRouter = createTRPCRouter({
             inboxStatus?: boolean;
             draftStatus?: boolean;
             sentStatus?: boolean;
+            spamStatus?: boolean;
+            junkStatus?: boolean;
         } = {
             accountId: account.id,
         };
@@ -83,6 +85,10 @@ export const accountRouter = createTRPCRouter({
             where.draftStatus = true;
         } else if (input.tab === "sent") {
             where.sentStatus = true;
+        } else if (input.tab === "spam") {
+            where.spamStatus = true;
+        } else if (input.tab === "junk") {
+            where.junkStatus = true;
         }
 
         return await ctx.db.thread.count({
@@ -103,6 +109,8 @@ export const accountRouter = createTRPCRouter({
             inboxStatus?: boolean;
             draftStatus?: boolean;
             sentStatus?: boolean;
+            spamStatus?: boolean;
+            junkStatus?: boolean;
             done?: { equals: boolean };
         } = {
             accountId: account.id,
@@ -113,6 +121,10 @@ export const accountRouter = createTRPCRouter({
             filter.draftStatus = true;
         } else if (input.tab === "sent") {
             filter.sentStatus = true;
+        } else if (input.tab === "spam") {
+            filter.spamStatus = true;
+        } else if (input.tab === "junk") {
+            filter.junkStatus = true;
         }
 
         filter.done = {
@@ -212,7 +224,9 @@ export const accountRouter = createTRPCRouter({
                         bcc: true,
                         sentAt: true,
                         subject: true,
-                        internetMessageId: true
+                        internetMessageId: true,
+                        autoReplyDraft: true,
+                        emailLabel: true
                     }
                 }
             }
@@ -222,12 +236,20 @@ export const accountRouter = createTRPCRouter({
         const lastExternalEmail = thread.emails.reverse().find(email => email.from.address !== account.emailAddress)
         if (!lastExternalEmail) throw new Error("No external email found")
 
+        // Find the most recent inbox email with a draft (if any)
+        const emailsWithDrafts = thread.emails
+            .filter(email => email.emailLabel === 'inbox' && email.autoReplyDraft)
+            .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime());
+        
+        const autoReplyDraft = emailsWithDrafts.length > 0 ? emailsWithDrafts[0].autoReplyDraft : null;
+
         return {
             subject: lastExternalEmail.subject,
             to: [lastExternalEmail.from, ...lastExternalEmail.to.filter(to => to.address !== account.emailAddress)],
             cc: lastExternalEmail.cc.filter(cc => cc.address !== account.emailAddress),
             from: { name: account.name, address: account.emailAddress },
-            id: lastExternalEmail.internetMessageId
+            id: lastExternalEmail.internetMessageId,
+            autoReplyDraft: autoReplyDraft
         }
     }),
     sendEmail: privateProcedure.input(z.object({

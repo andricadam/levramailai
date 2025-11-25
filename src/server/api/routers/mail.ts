@@ -6,7 +6,7 @@ export const mailRouter = createTRPCRouter({
     getNumThreads: privateProcedure
         .input(z.object({
             accountId: z.string(),
-            tab: z.enum(["inbox", "drafts", "sent"]),
+            tab: z.enum(["inbox", "drafts", "sent", "spam", "junk"]),
         }))
         .query(async ({ ctx, input }) => {
             const where: {
@@ -14,6 +14,8 @@ export const mailRouter = createTRPCRouter({
                 inboxStatus?: boolean;
                 draftStatus?: boolean;
                 sentStatus?: boolean;
+                spamStatus?: boolean;
+                junkStatus?: boolean;
             } = {
                 accountId: input.accountId,
             };
@@ -24,6 +26,10 @@ export const mailRouter = createTRPCRouter({
                 where.draftStatus = true;
             } else if (input.tab === "sent") {
                 where.sentStatus = true;
+            } else if (input.tab === "spam") {
+                where.spamStatus = true;
+            } else if (input.tab === "junk") {
+                where.junkStatus = true;
             }
 
             const count = await ctx.db.thread.count({

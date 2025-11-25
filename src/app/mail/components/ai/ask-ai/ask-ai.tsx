@@ -2,8 +2,8 @@
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { useState } from 'react'
-import { Send } from 'lucide-react';
+import React, { useState, useRef } from 'react'
+import { Send, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useLocalStorage } from 'usehooks-ts';
 import { cn } from '@/lib/utils';
 import { SparklesIcon } from '@heroicons/react/24/solid';
@@ -24,6 +24,9 @@ const AskAI = ({ onClose }: AskAIProps) => {
     const [accountId] = useLocalStorage('accountId', '')
     const utils = api.useUtils()
     const [input, setInput] = useState('')
+    const [feedbackGiven, setFeedbackGiven] = useState<Set<string>>(new Set())
+    const messageTimestamps = useRef<Map<string, number>>(new Map())
+    
     const { sendMessage, messages, status } = useChat({
         transport: new DefaultChatTransport({
             api: "/api/chat",
@@ -44,7 +47,7 @@ const AskAI = ({ onClose }: AskAIProps) => {
                 toast.error(`Failed to send message: ${error.message}`);
             }
         },
-        onFinish: (options) => {
+        onFinish: async (options) => {
             console.log('Chat response received:', {
                 message: options.message,
                 finishReason: options.finishReason,
@@ -52,9 +55,133 @@ const AskAI = ({ onClose }: AskAIProps) => {
                 isDisconnect: options.isDisconnect,
                 isError: options.isError,
             });
+            
+            // Track timestamp for query correction detection
+            if (options.message?.id) {
+                messageTimestamps.current.set(options.message.id, Date.now());
+            }
+            
+            // Implicit feedback: User saw the full response (didn't abort)
+            if (!options.isAbort && !options.isError && options.message) {
+                const assistantMessage = options.message;
+                const userMessage = messages[messages.length - 1];
+                
+                if (userMessage && assistantMessage) {
+                    const userQuery = userMessage.content || 
+                        (userMessage.parts?.find((p: any) => p.type === 'text')?.text || '');
+                    const assistantResponse = assistantMessage.content || 
+                        (assistantMessage.parts?.find((p: any) => p.type === 'text')?.text || '');
+                    
+                    // Submit implicit feedback (async, don't block)
+                    submitFeedback(assistantMessage.id, userQuery, assistantResponse, null, 'implicit')
+                        .catch(console.error);
+                }
+            }
         },
         messages: [],
     });
+    
+    const submitFeedback = async (
+        messageId: string,
+        query: string,
+        response: string,
+        helpful: boolean | null,
+        interactionType: 'explicit' | 'implicit' | 'correction' = 'explicit'
+    ) => {
+        if (!accountId) {
+            console.warn('Cannot submit feedback: no accountId');
+            return;
+        }
+        
+        try {
+            const res = await fetch('/api/chat/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    query,
+                    response,
+                    helpful,
+                    accountId,
+                    interactionType
+                })
+            });
+            
+            if (!res.ok) {
+                throw new Error('Failed to submit feedback');
+            }
+            
+            if (helpful !== null) {
+                setFeedbackGiven(prev => new Set(prev).add(messageId));
+            }
+        } catch (error) {
+            console.error('Failed to submit feedback:', error);
+            if (helpful !== null) {
+                // Only show error for explicit feedback
+                toast.error('Failed to submit feedback');
+            }
+        }
+    };
+    
+    const handleFeedback = async (messageId: string, helpful: boolean) => {
+        // Prevent duplicate feedback
+        if (feedbackGiven.has(messageId)) {
+            toast.info('You\'ve already provided feedback for this response');
+            return;
+        }
+        
+        // Find the user query that generated this response
+        const messageIndex = messages.findIndex((m: any) => m.id === messageId);
+        if (messageIndex === -1) return;
+        
+        const assistantMessage = messages[messageIndex];
+        const userMessage = messageIndex > 0 ? messages[messageIndex - 1] : null;
+        
+        if (!userMessage || !assistantMessage) return;
+        
+        const userQuery = userMessage.content || 
+            (userMessage.parts?.find((p: any) => p.type === 'text')?.text || '');
+        const assistantResponse = assistantMessage.content || 
+            (assistantMessage.parts?.find((p: any) => p.type === 'text')?.text || '');
+        
+        await submitFeedback(messageId, userQuery, assistantResponse, helpful, 'explicit');
+        toast.success(helpful ? 'Thanks for your feedback!' : 'We\'ll work to improve this');
+    };
+    
+    // Detect query corrections (user rephrases shortly after response)
+    React.useEffect(() => {
+        if (messages.length < 2) return;
+        
+        const lastMessage = messages[messages.length - 1];
+        const prevMessage = messages[messages.length - 2];
+        
+        // If user sends a new message shortly after assistant response, might be a correction
+        if (lastMessage.role === 'user' && 
+            prevMessage.role === 'assistant' &&
+            prevMessage.id) {
+            
+            const responseTime = messageTimestamps.current.get(prevMessage.id);
+            if (responseTime && Date.now() - responseTime < 30000) { // 30 seconds
+                // User rephrased within 30 seconds - likely correction
+                const originalQuery = messages.length >= 3 ? 
+                    (messages[messages.length - 3].content || 
+                     messages[messages.length - 3].parts?.find((p: any) => p.type === 'text')?.text || '') : '';
+                const correctedQuery = lastMessage.content || 
+                    (lastMessage.parts?.find((p: any) => p.type === 'text')?.text || '');
+                const originalResponse = prevMessage.content || 
+                    (prevMessage.parts?.find((p: any) => p.type === 'text')?.text || '');
+                
+                if (originalQuery && correctedQuery) {
+                    submitFeedback(
+                        prevMessage.id,
+                        originalQuery,
+                        originalResponse,
+                        false, // Implicitly not helpful if user rephrased
+                        'correction'
+                    ).catch(console.error);
+                }
+            }
+        }
+    }, [messages]);
     
     React.useEffect(() => {
         const messageContainer = document.getElementById("message-container");
@@ -129,6 +256,8 @@ const AskAI = ({ onClose }: AskAIProps) => {
                                 
                                 const role = message.role;
                                 
+                                const hasFeedback = feedbackGiven.has(message.id);
+                                
                                 return (
                                     <motion.div
                                         key={message.id}
@@ -146,6 +275,40 @@ const AskAI = ({ onClose }: AskAIProps) => {
                                         <div className="text-sm leading-relaxed whitespace-pre-wrap">
                                             {content || (role === 'assistant' && status === 'streaming' ? '...' : '')}
                                         </div>
+                                        
+                                        {/* Feedback buttons for assistant messages */}
+                                        {role === 'assistant' && status !== 'streaming' && status !== 'submitted' && (
+                                            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50">
+                                                <button
+                                                    onClick={() => handleFeedback(message.id, true)}
+                                                    disabled={hasFeedback}
+                                                    className={cn(
+                                                        "p-1.5 rounded hover:bg-muted/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+                                                        hasFeedback && "bg-green-500/20"
+                                                    )}
+                                                    title="Helpful"
+                                                >
+                                                    <ThumbsUp className={cn(
+                                                        "size-4",
+                                                        hasFeedback ? "text-green-500" : "text-muted-foreground hover:text-green-500"
+                                                    )} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleFeedback(message.id, false)}
+                                                    disabled={hasFeedback}
+                                                    className={cn(
+                                                        "p-1.5 rounded hover:bg-muted/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+                                                        hasFeedback && "bg-red-500/20"
+                                                    )}
+                                                    title="Not helpful"
+                                                >
+                                                    <ThumbsDown className={cn(
+                                                        "size-4",
+                                                        hasFeedback ? "text-red-500" : "text-muted-foreground hover:text-red-500"
+                                                    )} />
+                                                </button>
+                                            </div>
+                                        )}
                                     </motion.div>
                                 );
                             })}

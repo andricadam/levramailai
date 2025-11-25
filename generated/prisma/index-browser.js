@@ -148,7 +148,9 @@ exports.Prisma.ThreadScalarFieldEnum = {
   done: 'done',
   inboxStatus: 'inboxStatus',
   draftStatus: 'draftStatus',
-  sentStatus: 'sentStatus'
+  sentStatus: 'sentStatus',
+  spamStatus: 'spamStatus',
+  junkStatus: 'junkStatus'
 };
 
 exports.Prisma.EmailScalarFieldEnum = {
@@ -177,7 +179,8 @@ exports.Prisma.EmailScalarFieldEnum = {
   folderId: 'folderId',
   omitted: 'omitted',
   emailLabel: 'emailLabel',
-  priority: 'priority'
+  priority: 'priority',
+  autoReplyDraft: 'autoReplyDraft'
 };
 
 exports.Prisma.EmailAddressScalarFieldEnum = {
@@ -215,6 +218,19 @@ exports.Prisma.StripeSubscriptionScalarFieldEnum = {
   priceId: 'priceId',
   currentPeriodEnd: 'currentPeriodEnd',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChatFeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accountId: 'accountId',
+  query: 'query',
+  response: 'response',
+  retrievedEmails: 'retrievedEmails',
+  helpful: 'helpful',
+  correctedQuery: 'correctedQuery',
+  interactionType: 'interactionType',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -260,7 +276,9 @@ exports.MeetingMessageMethod = exports.$Enums.MeetingMessageMethod = {
 exports.EmailLabel = exports.$Enums.EmailLabel = {
   inbox: 'inbox',
   sent: 'sent',
-  draft: 'draft'
+  draft: 'draft',
+  spam: 'spam',
+  junk: 'junk'
 };
 
 exports.EmailPriority = exports.$Enums.EmailPriority = {
@@ -277,7 +295,8 @@ exports.Prisma.ModelName = {
   EmailAddress: 'EmailAddress',
   EmailAttachment: 'EmailAttachment',
   ChatbotInteraction: 'ChatbotInteraction',
-  StripeSubscription: 'StripeSubscription'
+  StripeSubscription: 'StripeSubscription',
+  ChatFeedback: 'ChatFeedback'
 };
 
 /**

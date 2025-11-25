@@ -33,7 +33,11 @@ function safeDateParse(dateString: string | null | undefined, fallback?: string)
 /**
  * Maps Aurinko sysLabels to emailLabel enum
  */
-function mapEmailLabel(sysLabels: EmailMessage["sysLabels"]): "inbox" | "sent" | "draft" {
+function mapEmailLabel(sysLabels: EmailMessage["sysLabels"]): "inbox" | "sent" | "draft" | "spam" | "junk" {
+    const sysLabelsLower = sysLabels.map(label => label.toLowerCase());
+    // Check for spam/junk first (they take priority)
+    if (sysLabelsLower.includes("spam")) return "spam";
+    if (sysLabelsLower.includes("junk")) return "junk";
     if (sysLabels.includes("draft")) return "draft";
     if (sysLabels.includes("sent")) return "sent";
     return "inbox";
@@ -43,14 +47,22 @@ function mapEmailLabel(sysLabels: EmailMessage["sysLabels"]): "inbox" | "sent" |
  * Determines thread status flags from emails in the thread
  */
 function determineThreadStatus(emails: EmailMessage[]) {
-    const hasInbox = emails.some(e => e.sysLabels.includes("inbox") && !e.sysLabels.includes("sent") && !e.sysLabels.includes("draft"));
-    const hasSent = emails.some(e => e.sysLabels.includes("sent"));
-    const hasDraft = emails.some(e => e.sysLabels.includes("draft"));
+    const sysLabelsLower = (labels: string[]) => labels.map(l => l.toLowerCase());
+    const hasInbox = emails.some(e => {
+        const labels = sysLabelsLower(e.sysLabels);
+        return labels.includes("inbox") && !labels.includes("sent") && !labels.includes("draft") && !labels.includes("spam") && !labels.includes("junk");
+    });
+    const hasSent = emails.some(e => sysLabelsLower(e.sysLabels).includes("sent"));
+    const hasDraft = emails.some(e => sysLabelsLower(e.sysLabels).includes("draft"));
+    const hasSpam = emails.some(e => sysLabelsLower(e.sysLabels).includes("spam"));
+    const hasJunk = emails.some(e => sysLabelsLower(e.sysLabels).includes("junk"));
     
     return {
-        inboxStatus: hasInbox,
-        draftStatus: hasDraft,
-        sentStatus: hasSent,
+        inboxStatus: hasInbox && !hasSpam && !hasJunk,
+        draftStatus: hasDraft && !hasSpam && !hasJunk,
+        sentStatus: hasSent && !hasSpam && !hasJunk,
+        spamStatus: hasSpam,
+        junkStatus: hasJunk,
     };
 }
 

@@ -98,6 +98,7 @@ const Component = ({ replyDetails, onSent }: { replyDetails: RouterOutputs['acco
                 handleSend={handleSend}
                 isSending={isSending}
                 defaultToolbarExpanded={false}
+                initialDraft={replyDetails.autoReplyDraft}
             />
         </div>
     )

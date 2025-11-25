@@ -21,6 +21,7 @@ model User {
   accounts            Account[]
   stripeSubscription  StripeSubscription?
   chatbotInteractions ChatbotInteraction[]
+  chatFeedback        ChatFeedback[]
 }
 
 model Account {
@@ -52,6 +53,8 @@ model Thread {
   inboxStatus Boolean @default(true)
   draftStatus Boolean @default(false)
   sentStatus  Boolean @default(false)
+  spamStatus  Boolean @default(false)
+  junkStatus  Boolean @default(false)
 
   emails Email[]
 
@@ -60,6 +63,8 @@ model Thread {
   @@index([inboxStatus])
   @@index([draftStatus])
   @@index([sentStatus])
+  @@index([spamStatus])
+  @@index([junkStatus])
   @@index([lastMessageDate])
 }
 
@@ -96,8 +101,9 @@ model Email {
   folderId             String?
   omitted              String[]
 
-  emailLabel EmailLabel    @default(inbox)
-  priority   EmailPriority @default(medium)
+  emailLabel     EmailLabel    @default(inbox)
+  priority       EmailPriority @default(medium)
+  autoReplyDraft String?
 
   @@index([threadId])
   @@index([emailLabel])
@@ -109,6 +115,8 @@ enum EmailLabel {
   inbox
   sent
   draft
+  spam
+  junk
 }
 
 enum EmailPriority {
@@ -186,4 +194,24 @@ model StripeSubscription {
 
   @@index([userId])
   @@index([subscriptionId])
+}
+
+model ChatFeedback {
+  id              String   @id @default(cuid())
+  userId          String
+  accountId       String
+  query           String
+  response        String
+  retrievedEmails String[] // Email IDs or thread IDs that were retrieved
+  helpful         Boolean? // true/false/null (null = implicit feedback)
+  correctedQuery  String? // If user rephrased the query
+  interactionType String   @default("explicit") // 'explicit', 'implicit', 'correction'
+  createdAt       DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, accountId])
+  @@index([helpful])
+  @@index([createdAt])
+  @@index([interactionType])
 }

@@ -33,9 +33,10 @@ type EmailEditorProps = {
     onCcChange: (values: { label: string, value: string }[]) => void;
 
     defaultToolbarExpand?: boolean;
+    initialDraft?: string | null;
 }
 
-const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, isSending, onToChange, onCcChange, defaultToolbarExpand }: EmailEditorProps) => {
+const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, isSending, onToChange, onCcChange, defaultToolbarExpand, initialDraft }: EmailEditorProps) => {
 
     const [ref] = useAutoAnimate();
     const [accountId] = useLocalStorage('accountId', '');
@@ -109,6 +110,18 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
     }, [generation, editor]);
 
     const [value, setValue] = React.useState('');
+
+    // Load initial draft when editor is ready and draft is available
+    React.useEffect(() => {
+        if (!editor || !initialDraft) return;
+        
+        // Only load if editor is empty
+        const currentContent = editor.getHTML();
+        if (currentContent === '<p></p>' || currentContent === '') {
+            editor.commands.setContent(initialDraft);
+            setValue(initialDraft);
+        }
+    }, [editor, initialDraft]);
 
 
 
