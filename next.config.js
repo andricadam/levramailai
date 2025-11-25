@@ -12,6 +12,10 @@ const config = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    // Handle external packages for server components
+    experimental: {
+        serverComponentsExternalPackages: ['@opentelemetry/api'],
+    },
 };
 
 export default config;

@@ -176,7 +176,8 @@ exports.Prisma.EmailScalarFieldEnum = {
   nativeProperties: 'nativeProperties',
   folderId: 'folderId',
   omitted: 'omitted',
-  emailLabel: 'emailLabel'
+  emailLabel: 'emailLabel',
+  priority: 'priority'
 };
 
 exports.Prisma.EmailAddressScalarFieldEnum = {
@@ -260,6 +261,12 @@ exports.EmailLabel = exports.$Enums.EmailLabel = {
   inbox: 'inbox',
   sent: 'sent',
   draft: 'draft'
+};
+
+exports.EmailPriority = exports.$Enums.EmailPriority = {
+  high: 'high',
+  medium: 'medium',
+  low: 'low'
 };
 
 exports.Prisma.ModelName = {

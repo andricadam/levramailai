@@ -96,17 +96,25 @@ model Email {
   folderId             String?
   omitted              String[]
 
-  emailLabel EmailLabel @default(inbox)
+  emailLabel EmailLabel    @default(inbox)
+  priority   EmailPriority @default(medium)
 
   @@index([threadId])
   @@index([emailLabel])
   @@index([sentAt])
+  @@index([priority])
 }
 
 enum EmailLabel {
   inbox
   sent
   draft
+}
+
+enum EmailPriority {
+  high
+  medium
+  low
 }
 
 model EmailAddress {

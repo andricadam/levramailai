@@ -97,15 +97,30 @@ const ThreadList = () => {
                                     >
                                     </div>
                                 )}
+                                <div className='flex items-center gap-2 flex-wrap'>
                                 {thread.emails[0]?.sysLabels && (thread.emails[0].sysLabels.length > 0) && (
-                                    <div className='flex items-center gap-2'>
+                                        <>
                                         {thread.emails[0]?.sysLabels.map(label => {
                                             return <Badge key={label} variant={getBadgeVariantFromLabel(label)}>
                                                 {label}
                                             </Badge>
                                         })}
+                                        </>
+                                    )}
+                                    {thread.emails.at(-1)?.priority && (
+                                        <Badge 
+                                            variant="outline"
+                                            className={cn(
+                                                'border-0',
+                                                thread.emails.at(-1)?.priority === 'high' && 'bg-red-500 text-white',
+                                                thread.emails.at(-1)?.priority === 'medium' && 'bg-gray-500 text-white',
+                                                thread.emails.at(-1)?.priority === 'low' && 'bg-green-500 text-white'
+                                            )}
+                                        >
+                                            {thread.emails.at(-1)?.priority}
+                                        </Badge>
+                                    )}
                                     </div>
-                                )}
                             </button>
                         ))}
                     </React.Fragment>

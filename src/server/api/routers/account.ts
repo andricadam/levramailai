@@ -135,6 +135,7 @@ export const accountRouter = createTRPCRouter({
                         sysLabels: true,
                         id: true,
                         sentAt: true,
+                        priority: true,
                     }
                 }
             }, 
@@ -169,6 +170,7 @@ export const accountRouter = createTRPCRouter({
                         sysLabels: true,
                         id: true,
                         sentAt: true,
+                        priority: true,
                     }
                 }
             }

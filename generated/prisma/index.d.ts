@@ -67,6 +67,15 @@ export namespace $Enums {
 export type EmailLabel = (typeof EmailLabel)[keyof typeof EmailLabel]
 
 
+export const EmailPriority: {
+  high: 'high',
+  medium: 'medium',
+  low: 'low'
+};
+
+export type EmailPriority = (typeof EmailPriority)[keyof typeof EmailPriority]
+
+
 export const Sensitivity: {
   normal: 'normal',
   private: 'private',
@@ -92,6 +101,10 @@ export type MeetingMessageMethod = (typeof MeetingMessageMethod)[keyof typeof Me
 export type EmailLabel = $Enums.EmailLabel
 
 export const EmailLabel: typeof $Enums.EmailLabel
+
+export type EmailPriority = $Enums.EmailPriority
+
+export const EmailPriority: typeof $Enums.EmailPriority
 
 export type Sensitivity = $Enums.Sensitivity
 
@@ -5218,6 +5231,7 @@ export namespace Prisma {
     threadIndex: string | null
     folderId: string | null
     emailLabel: $Enums.EmailLabel | null
+    priority: $Enums.EmailPriority | null
   }
 
   export type EmailMaxAggregateOutputType = {
@@ -5240,6 +5254,7 @@ export namespace Prisma {
     threadIndex: string | null
     folderId: string | null
     emailLabel: $Enums.EmailLabel | null
+    priority: $Enums.EmailPriority | null
   }
 
   export type EmailCountAggregateOutputType = {
@@ -5268,6 +5283,7 @@ export namespace Prisma {
     folderId: number
     omitted: number
     emailLabel: number
+    priority: number
     _all: number
   }
 
@@ -5292,6 +5308,7 @@ export namespace Prisma {
     threadIndex?: true
     folderId?: true
     emailLabel?: true
+    priority?: true
   }
 
   export type EmailMaxAggregateInputType = {
@@ -5314,6 +5331,7 @@ export namespace Prisma {
     threadIndex?: true
     folderId?: true
     emailLabel?: true
+    priority?: true
   }
 
   export type EmailCountAggregateInputType = {
@@ -5342,6 +5360,7 @@ export namespace Prisma {
     folderId?: true
     omitted?: true
     emailLabel?: true
+    priority?: true
     _all?: true
   }
 
@@ -5443,6 +5462,7 @@ export namespace Prisma {
     folderId: string | null
     omitted: string[]
     emailLabel: $Enums.EmailLabel
+    priority: $Enums.EmailPriority
     _count: EmailCountAggregateOutputType | null
     _min: EmailMinAggregateOutputType | null
     _max: EmailMaxAggregateOutputType | null
@@ -5488,6 +5508,7 @@ export namespace Prisma {
     folderId?: boolean
     omitted?: boolean
     emailLabel?: boolean
+    priority?: boolean
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
     to?: boolean | Email$toArgs<ExtArgs>
@@ -5524,6 +5545,7 @@ export namespace Prisma {
     folderId?: boolean
     omitted?: boolean
     emailLabel?: boolean
+    priority?: boolean
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
@@ -5554,6 +5576,7 @@ export namespace Prisma {
     folderId?: boolean
     omitted?: boolean
     emailLabel?: boolean
+    priority?: boolean
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["email"]>
@@ -5584,9 +5607,10 @@ export namespace Prisma {
     folderId?: boolean
     omitted?: boolean
     emailLabel?: boolean
+    priority?: boolean
   }
 
-  export type EmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "createdTime" | "lastModifiedTime" | "sentAt" | "receivedAt" | "internetMessageId" | "subject" | "sysLabels" | "keywords" | "sysClassifications" | "sensitivity" | "meetingMessageMethod" | "fromId" | "hasAttachments" | "body" | "bodySnippet" | "inReplyTo" | "references" | "threadIndex" | "internetHeaders" | "nativeProperties" | "folderId" | "omitted" | "emailLabel", ExtArgs["result"]["email"]>
+  export type EmailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "createdTime" | "lastModifiedTime" | "sentAt" | "receivedAt" | "internetMessageId" | "subject" | "sysLabels" | "keywords" | "sysClassifications" | "sensitivity" | "meetingMessageMethod" | "fromId" | "hasAttachments" | "body" | "bodySnippet" | "inReplyTo" | "references" | "threadIndex" | "internetHeaders" | "nativeProperties" | "folderId" | "omitted" | "emailLabel" | "priority", ExtArgs["result"]["email"]>
   export type EmailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     thread?: boolean | ThreadDefaultArgs<ExtArgs>
     from?: boolean | EmailAddressDefaultArgs<ExtArgs>
@@ -5643,6 +5667,7 @@ export namespace Prisma {
       folderId: string | null
       omitted: string[]
       emailLabel: $Enums.EmailLabel
+      priority: $Enums.EmailPriority
     }, ExtArgs["result"]["email"]>
     composites: {}
   }
@@ -6098,6 +6123,7 @@ export namespace Prisma {
     readonly folderId: FieldRef<"Email", 'String'>
     readonly omitted: FieldRef<"Email", 'String[]'>
     readonly emailLabel: FieldRef<"Email", 'EmailLabel'>
+    readonly priority: FieldRef<"Email", 'EmailPriority'>
   }
     
 
@@ -11217,7 +11243,8 @@ export namespace Prisma {
     nativeProperties: 'nativeProperties',
     folderId: 'folderId',
     omitted: 'omitted',
-    emailLabel: 'emailLabel'
+    emailLabel: 'emailLabel',
+    priority: 'priority'
   };
 
   export type EmailScalarFieldEnum = (typeof EmailScalarFieldEnum)[keyof typeof EmailScalarFieldEnum]
@@ -11413,6 +11440,20 @@ export namespace Prisma {
    * Reference to a field of type 'EmailLabel[]'
    */
   export type ListEnumEmailLabelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailLabel[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'EmailPriority'
+   */
+  export type EnumEmailPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailPriority'>
+    
+
+
+  /**
+   * Reference to a field of type 'EmailPriority[]'
+   */
+  export type ListEnumEmailPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailPriority[]'>
     
 
 
@@ -11686,6 +11727,7 @@ export namespace Prisma {
     folderId?: StringNullableFilter<"Email"> | string | null
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelFilter<"Email"> | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFilter<"Email"> | $Enums.EmailPriority
     thread?: XOR<ThreadScalarRelationFilter, ThreadWhereInput>
     from?: XOR<EmailAddressScalarRelationFilter, EmailAddressWhereInput>
     to?: EmailAddressListRelationFilter
@@ -11721,6 +11763,7 @@ export namespace Prisma {
     folderId?: SortOrderInput | SortOrder
     omitted?: SortOrder
     emailLabel?: SortOrder
+    priority?: SortOrder
     thread?: ThreadOrderByWithRelationInput
     from?: EmailAddressOrderByWithRelationInput
     to?: EmailAddressOrderByRelationAggregateInput
@@ -11759,6 +11802,7 @@ export namespace Prisma {
     folderId?: StringNullableFilter<"Email"> | string | null
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelFilter<"Email"> | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFilter<"Email"> | $Enums.EmailPriority
     thread?: XOR<ThreadScalarRelationFilter, ThreadWhereInput>
     from?: XOR<EmailAddressScalarRelationFilter, EmailAddressWhereInput>
     to?: EmailAddressListRelationFilter
@@ -11794,6 +11838,7 @@ export namespace Prisma {
     folderId?: SortOrderInput | SortOrder
     omitted?: SortOrder
     emailLabel?: SortOrder
+    priority?: SortOrder
     _count?: EmailCountOrderByAggregateInput
     _max?: EmailMaxOrderByAggregateInput
     _min?: EmailMinOrderByAggregateInput
@@ -11828,6 +11873,7 @@ export namespace Prisma {
     folderId?: StringNullableWithAggregatesFilter<"Email"> | string | null
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelWithAggregatesFilter<"Email"> | $Enums.EmailLabel
+    priority?: EnumEmailPriorityWithAggregatesFilter<"Email"> | $Enums.EmailPriority
   }
 
   export type EmailAddressWhereInput = {
@@ -12352,6 +12398,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -12387,6 +12434,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -12418,6 +12466,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -12453,6 +12502,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -12486,6 +12536,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
   }
 
   export type EmailUpdateManyMutationInput = {
@@ -12512,6 +12563,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailUncheckedUpdateManyInput = {
@@ -12540,6 +12592,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailAddressCreateInput = {
@@ -13145,6 +13198,13 @@ export namespace Prisma {
     not?: NestedEnumEmailLabelFilter<$PrismaModel> | $Enums.EmailLabel
   }
 
+  export type EnumEmailPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailPriority | EnumEmailPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailPriorityFilter<$PrismaModel> | $Enums.EmailPriority
+  }
+
   export type ThreadScalarRelationFilter = {
     is?: ThreadWhereInput
     isNot?: ThreadWhereInput
@@ -13191,6 +13251,7 @@ export namespace Prisma {
     folderId?: SortOrder
     omitted?: SortOrder
     emailLabel?: SortOrder
+    priority?: SortOrder
   }
 
   export type EmailMaxOrderByAggregateInput = {
@@ -13213,6 +13274,7 @@ export namespace Prisma {
     threadIndex?: SortOrder
     folderId?: SortOrder
     emailLabel?: SortOrder
+    priority?: SortOrder
   }
 
   export type EmailMinOrderByAggregateInput = {
@@ -13235,6 +13297,7 @@ export namespace Prisma {
     threadIndex?: SortOrder
     folderId?: SortOrder
     emailLabel?: SortOrder
+    priority?: SortOrder
   }
 
   export type EnumSensitivityWithAggregatesFilter<$PrismaModel = never> = {
@@ -13291,6 +13354,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumEmailLabelFilter<$PrismaModel>
     _max?: NestedEnumEmailLabelFilter<$PrismaModel>
+  }
+
+  export type EnumEmailPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailPriority | EnumEmailPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailPriorityWithAggregatesFilter<$PrismaModel> | $Enums.EmailPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEmailPriorityFilter<$PrismaModel>
+    _max?: NestedEnumEmailPriorityFilter<$PrismaModel>
   }
 
   export type EmailAddressAccountIdAddressCompoundUniqueInput = {
@@ -13888,6 +13961,10 @@ export namespace Prisma {
     set?: $Enums.EmailLabel
   }
 
+  export type EnumEmailPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.EmailPriority
+  }
+
   export type ThreadUpdateOneRequiredWithoutEmailsNestedInput = {
     create?: XOR<ThreadCreateWithoutEmailsInput, ThreadUncheckedCreateWithoutEmailsInput>
     connectOrCreate?: ThreadCreateOrConnectWithoutEmailsInput
@@ -14437,6 +14514,13 @@ export namespace Prisma {
     not?: NestedEnumEmailLabelFilter<$PrismaModel> | $Enums.EmailLabel
   }
 
+  export type NestedEnumEmailPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailPriority | EnumEmailPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailPriorityFilter<$PrismaModel> | $Enums.EmailPriority
+  }
+
   export type NestedEnumSensitivityWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.Sensitivity | EnumSensitivityFieldRefInput<$PrismaModel>
     in?: $Enums.Sensitivity[] | ListEnumSensitivityFieldRefInput<$PrismaModel>
@@ -14488,6 +14572,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumEmailLabelFilter<$PrismaModel>
     _max?: NestedEnumEmailLabelFilter<$PrismaModel>
+  }
+
+  export type NestedEnumEmailPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EmailPriority | EnumEmailPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EmailPriority[] | ListEnumEmailPriorityFieldRefInput<$PrismaModel>
+    not?: NestedEnumEmailPriorityWithAggregatesFilter<$PrismaModel> | $Enums.EmailPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumEmailPriorityFilter<$PrismaModel>
+    _max?: NestedEnumEmailPriorityFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -14911,6 +15005,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressCreateNestedManyWithoutReceivedCcInput
@@ -14944,6 +15039,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -15039,6 +15135,7 @@ export namespace Prisma {
     folderId?: StringNullableFilter<"Email"> | string | null
     omitted?: StringNullableListFilter<"Email">
     emailLabel?: EnumEmailLabelFilter<"Email"> | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFilter<"Email"> | $Enums.EmailPriority
   }
 
   export type ThreadCreateWithoutEmailsInput = {
@@ -15436,6 +15533,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressCreateNestedManyWithoutReceivedCcInput
@@ -15469,6 +15567,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -15510,6 +15609,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     cc?: EmailAddressCreateNestedManyWithoutReceivedCcInput
@@ -15544,6 +15644,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
     replyTo?: EmailAddressUncheckedCreateNestedManyWithoutReplyToEmailsInput
@@ -15579,6 +15680,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15613,6 +15715,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
     replyTo?: EmailAddressUncheckedCreateNestedManyWithoutReplyToEmailsInput
@@ -15648,6 +15751,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15682,6 +15786,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     replyTo?: EmailAddressUncheckedCreateNestedManyWithoutReplyToEmailsInput
@@ -15717,6 +15822,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15751,6 +15857,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -15926,6 +16033,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     thread: ThreadCreateNestedOneWithoutEmailsInput
     from: EmailAddressCreateNestedOneWithoutSentEmailsInput
     to?: EmailAddressCreateNestedManyWithoutReceivedToInput
@@ -15960,6 +16068,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
     to?: EmailAddressUncheckedCreateNestedManyWithoutReceivedToInput
     cc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedCcInput
     bcc?: EmailAddressUncheckedCreateNestedManyWithoutReceivedBccInput
@@ -16006,6 +16115,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -16040,6 +16150,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -16331,6 +16442,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
   }
 
   export type EmailUpdateWithoutThreadInput = {
@@ -16357,6 +16469,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUpdateManyWithoutReceivedCcNestedInput
@@ -16390,6 +16503,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -16422,6 +16536,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailAttachmentCreateManyEmailInput = {
@@ -16621,6 +16736,7 @@ export namespace Prisma {
     folderId?: string | null
     omitted?: EmailCreateomittedInput | string[]
     emailLabel?: $Enums.EmailLabel
+    priority?: $Enums.EmailPriority
   }
 
   export type EmailUpdateWithoutFromInput = {
@@ -16647,6 +16763,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUpdateManyWithoutReceivedCcNestedInput
@@ -16680,6 +16797,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -16712,6 +16830,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailUpdateWithoutToInput = {
@@ -16738,6 +16857,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     cc?: EmailAddressUpdateManyWithoutReceivedCcNestedInput
@@ -16772,6 +16892,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
@@ -16804,6 +16925,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailUpdateWithoutCcInput = {
@@ -16830,6 +16952,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -16864,6 +16987,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
@@ -16896,6 +17020,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailUpdateWithoutBccInput = {
@@ -16922,6 +17047,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -16956,6 +17082,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     replyTo?: EmailAddressUncheckedUpdateManyWithoutReplyToEmailsNestedInput
@@ -16988,6 +17115,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
   export type EmailUpdateWithoutReplyToInput = {
@@ -17014,6 +17142,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     thread?: ThreadUpdateOneRequiredWithoutEmailsNestedInput
     from?: EmailAddressUpdateOneRequiredWithoutSentEmailsNestedInput
     to?: EmailAddressUpdateManyWithoutReceivedToNestedInput
@@ -17048,6 +17177,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     to?: EmailAddressUncheckedUpdateManyWithoutReceivedToNestedInput
     cc?: EmailAddressUncheckedUpdateManyWithoutReceivedCcNestedInput
     bcc?: EmailAddressUncheckedUpdateManyWithoutReceivedBccNestedInput
@@ -17080,6 +17210,7 @@ export namespace Prisma {
     folderId?: NullableStringFieldUpdateOperationsInput | string | null
     omitted?: EmailUpdateomittedInput | string[]
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
+    priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
   }
 
 

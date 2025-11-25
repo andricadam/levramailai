@@ -3,13 +3,12 @@ import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react'
-import { Send, X, Pencil, Square, Minus } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useLocalStorage } from 'usehooks-ts';
 import { cn } from '@/lib/utils';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import { toast } from 'sonner';
 import { api } from '@/trpc/react';
-import { SheetClose } from '@/components/ui/sheet';
 
 const transitionDebug = {
     type: "tween" as const,
@@ -79,28 +78,6 @@ const AskAI = ({ onClose }: AskAIProps) => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b flex-shrink-0">
                 <h2 className="text-lg font-semibold text-foreground">New AI Chat</h2>
-                <div className="flex items-center gap-2">
-                    <button
-                        className="p-1.5 rounded-md hover:bg-muted transition-colors"
-                        aria-label="Edit"
-                    >
-                        <Pencil className="size-4 text-muted-foreground" />
-                    </button>
-                    <button
-                        className="p-1.5 rounded-md hover:bg-muted transition-colors"
-                        aria-label="New window"
-                    >
-                        <Square className="size-4 text-muted-foreground" />
-                    </button>
-                    <SheetClose asChild>
-                        <button
-                            className="p-1.5 rounded-md hover:bg-muted transition-colors"
-                            aria-label="Close"
-                        >
-                            <Minus className="size-4 text-muted-foreground" />
-                        </button>
-                    </SheetClose>
-                </div>
             </div>
 
             {/* Main Content Area */}

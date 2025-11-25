@@ -4,6 +4,7 @@ import { OramaClient } from './orama';
 // TODO: Implement these modules
 import { getEmbeddings } from '@/lib/embedding';
 import { turndown } from './turndown';
+import { determineEmailPriority } from '@/app/mail/components/ai/priority';
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
     console.log(`attempting to sync emails to database ${emails.length}`)
@@ -72,6 +73,23 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
             emailLabelType = 'sent'
         } else if (email.sysLabels.includes('draft')) {
             emailLabelType = 'draft'
+        }
+
+        // Determine priority for inbox emails only
+        let emailPriority: 'high' | 'medium' | 'low' = 'medium';
+        if (emailLabelType === 'inbox') {
+            try {
+                emailPriority = await determineEmailPriority(
+                    email.body ?? email.bodySnippet ?? '',
+                    email.subject,
+                    email.from.name || email.from.address,
+                    new Date(email.sentAt).toLocaleString()
+                );
+            } catch (error) {
+                console.error(`Error determining priority for email ${email.id}:`, error);
+                // Default to medium on error
+                emailPriority = 'medium';
+            }
         }
 
         // 1. Upsert EmailAddress records
@@ -167,10 +185,12 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
                 folderId: email.folderId,
                 omitted: email.omitted,
                 emailLabel: emailLabelType,
+                priority: emailPriority,
             },
             create: {
                 id: email.id,
                 emailLabel: emailLabelType,
+                priority: emailPriority,
                 threadId: thread.id,
                 createdTime: new Date(email.createdTime),
                 lastModifiedTime: new Date(),
