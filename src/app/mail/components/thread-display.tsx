@@ -45,6 +45,7 @@ import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
 import { useId } from "react";
 import React from "react";
+import { SummaryButton } from "./ai/summary";
 
 
 export function ThreadDisplay() {
@@ -55,6 +56,7 @@ export function ThreadDisplay() {
   const _thread = threads?.find(t => t.id === threadId)
   const [isSearching] = useAtom(isSearchingAtom)
   const [showReplyBox, setShowReplyBox] = React.useState(false)
+  const [summary, setSummary] = React.useState<string>('')
 
   const [accountId] = useLocalStorage('accountId', '')
   const { data: foundThread } = api.mail.getThreadById.useQuery({
@@ -63,9 +65,10 @@ export function ThreadDisplay() {
   }, { enabled: !_thread && !!threadId })
   const thread = _thread ?? foundThread
 
-  // Reset reply box when thread changes
+  // Reset reply box and summary when thread changes
   React.useEffect(() => {
     setShowReplyBox(false)
+    setSummary('')
   }, [threadId])
 
   return (
@@ -163,6 +166,18 @@ export function ThreadDisplay() {
         <div className="flex items-center gap-2 ml-auto">
           <Tooltip>
             <TooltipTrigger asChild>
+              <SummaryButton
+                emailContent={thread?.emails?.[0]?.body ?? thread?.emails?.[0]?.bodySnippet ?? ''}
+                subject={thread?.emails?.[0]?.subject ?? ''}
+                from={thread?.emails?.[0]?.from?.name ?? thread?.emails?.[0]?.from?.address ?? 'Unknown'}
+                sentAt={thread?.emails?.[0]?.sentAt ? format(new Date(thread.emails[0].sentAt), "PPpp") : ''}
+                onSummaryGenerated={setSummary}
+              />
+            </TooltipTrigger>
+            <TooltipContent>Summarize email</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
               <Button 
                 variant={showReplyBox ? "secondary" : "ghost"}
                 size="icon" 
@@ -211,6 +226,14 @@ export function ThreadDisplay() {
         </DropdownMenu>
       </div>
       <Separator />
+      {summary && (
+        <div className="p-4 bg-muted/50 border-b">
+          <div className="text-sm font-semibold mb-2 text-foreground">Summary</div>
+          <div className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+            {summary}
+          </div>
+        </div>
+      )}
       {isSearching ? <SearchDisplay /> : (
         thread ? (
           <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
