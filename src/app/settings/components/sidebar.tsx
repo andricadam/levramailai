@@ -6,27 +6,23 @@ import {
     User,
     Shield,
     CreditCard,
-    Zap,
-    Plug,
-    Code,
 } from "lucide-react"
 import { useLocalStorage } from 'usehooks-ts'
+import { useLanguage } from '@/contexts/language-context'
 
 type Props = { isCollapsed: boolean }
 
 const SideBar = ({ isCollapsed = false }: Props) => {
     const [mounted, setMounted] = React.useState(false)
-    const [view] = useLocalStorage("settings-view", "allgemein")
+    const [view] = useLocalStorage("settings-view", "general")
+    const { t } = useLanguage()
 
     React.useEffect(() => {
         setMounted(true)
     }, [])
 
-    // Use default "allgemein" on server to match initial client render
-    const currentView = mounted ? view : "allgemein"
-
-    // Helper function to normalize view names for comparison
-    const normalizeView = (title: string) => title.toLowerCase().replace(/\s+/g, '-')
+    // Use default "general" on server to match initial client render
+    const currentView = mounted ? view : "general"
 
     return (
         <div className="py-2 w-full">
@@ -34,46 +30,32 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                 isCollapsed={isCollapsed}
                 links={[
                     {
-                        title: "Allgemein",
+                        title: t('settings.general'),
                         label: undefined,
                         icon: SettingsIcon,
-                        variant: currentView === normalizeView("Allgemein") ? "default" : "ghost",
+                        variant: currentView === "general" ? "default" : "ghost",
+                        viewKey: "general",
                     },
                     {
-                        title: "Konto",
+                        title: t('settings.account'),
                         label: undefined,
                         icon: User,
-                        variant: currentView === normalizeView("Konto") ? "default" : "ghost",
+                        variant: currentView === "account" ? "default" : "ghost",
+                        viewKey: "account",
                     },
                     {
-                        title: "Datenschutz",
+                        title: t('settings.privacy'),
                         label: undefined,
                         icon: Shield,
-                        variant: currentView === normalizeView("Datenschutz") ? "default" : "ghost",
+                        variant: currentView === "privacy" ? "default" : "ghost",
+                        viewKey: "privacy",
                     },
                     {
-                        title: "Abrechnung",
+                        title: t('settings.billing'),
                         label: undefined,
                         icon: CreditCard,
-                        variant: currentView === normalizeView("Abrechnung") ? "default" : "ghost",
-                    },
-                    {
-                        title: "Fähigkeiten",
-                        label: undefined,
-                        icon: Zap,
-                        variant: currentView === normalizeView("Fähigkeiten") ? "default" : "ghost",
-                    },
-                    {
-                        title: "Konnektoren",
-                        label: undefined,
-                        icon: Plug,
-                        variant: currentView === normalizeView("Konnektoren") ? "default" : "ghost",
-                    },
-                    {
-                        title: "Claude Code",
-                        label: undefined,
-                        icon: Code,
-                        variant: currentView === normalizeView("Claude Code") ? "default" : "ghost",
+                        variant: currentView === "billing" ? "default" : "ghost",
+                        viewKey: "billing",
                     },
                 ]}
             />

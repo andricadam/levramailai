@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { TRPCReactProvider } from "@/trpc/react";
 import KBar from "@/components/kbar";
 import { Toaster } from "@/components/ui/sonner"
+import { LanguageProvider } from "@/contexts/language-context"
 
 import {
   ClerkProvider,
@@ -36,18 +37,20 @@ export default function RootLayout({
     >
       <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
         <body>
-        <ThemeProvider
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-          <TRPCReactProvider>
-            <KBar>
-              {children}
-              <Toaster />
-            </KBar>
+          <LanguageProvider>
+            <TRPCReactProvider>
+              <KBar>
+                {children}
+                <Toaster />
+              </KBar>
             </TRPCReactProvider>
+          </LanguageProvider>
           </ThemeProvider>
         </body>
       </html>

@@ -18,12 +18,13 @@ interface NavProps {
     label?: string
     icon?: LucideIcon
     variant: "default" | "ghost",
+    viewKey?: string
   }[]
 }
 
 export function Nav({ links, isCollapsed }: NavProps) {
 
-  const [_, setView] = useLocalStorage("settings-view", "allgemein")
+  const [_, setView] = useLocalStorage("settings-view", "general")
 
   return (
     <div
@@ -37,7 +38,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  onClick={() => setView(link.title.toLowerCase().replace(/\s+/g, '-'))}
+                  onClick={() => setView(link.viewKey || link.title.toLowerCase().replace(/\s+/g, '-'))}
                   className={cn(
                     buttonVariants({ variant: link.variant, size: "icon" }),
                     "h-9 w-9 cursor-pointer",
@@ -62,7 +63,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
             <button
               key={index}
               type="button"
-                  onClick={() => setView(link.title.toLowerCase().replace(/\s+/g, '-'))}
+              onClick={() => setView(link.viewKey || link.title.toLowerCase().replace(/\s+/g, '-'))}
               className={cn(
                 buttonVariants({ variant: link.variant, size: "sm" }),
                 link.variant === "default" &&
