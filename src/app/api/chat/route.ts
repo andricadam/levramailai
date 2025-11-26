@@ -11,6 +11,7 @@ import { FREE_CREDITS_PER_DAY, QA_CACHE_SIMILARITY_THRESHOLD, SMALL_MODEL, LARGE
 import { turndown } from "@/lib/turndown";
 import { downloadAndProcessAttachments } from "@/lib/download-attachment";
 import { MAX_FILE_SIZE } from "@/lib/file-processor";
+import { searchWeb, formatWebSearchResults } from "@/lib/web-search";
 
 // export const runtime = "edge";
 
@@ -61,9 +62,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
         
-        const { messages, accountId, emailContext, fileContext } = body;
+        const { messages, accountId, emailContext, fileContext, webSearch } = body;
         
-        console.log("Extracted values - messages:", messages?.length, "accountId:", accountId, "emailContext:", emailContext, "fileContext:", fileContext);
+        console.log("Extracted values - messages:", messages?.length, "accountId:", accountId, "emailContext:", emailContext, "fileContext:", fileContext, "webSearch:", webSearch);
         
         if (!messages || !Array.isArray(messages) || messages.length === 0) {
             console.error("Invalid messages:", messages);
@@ -182,10 +183,11 @@ Guidelines:
         // ===== STAGE 2: Expensive Model Flow (Original RAG System) =====
         // Track sources used in the response
         type SourceInfo = {
-            type: 'email' | 'attachment'
+            type: 'email' | 'attachment' | 'web'
             id: string
             title: string
             threadId?: string
+            url?: string // For web sources
         }
         const sources: SourceInfo[] = []
 
@@ -400,12 +402,12 @@ Guidelines:
                 })
             }
         })
-
+        
         // Extract retrieved email identifiers for feedback tracking
         const retrievedEmailIds = [
             ...contextEmailIdsForTracking,
             ...limitedHits.map((hit: any) => 
-                hit.document?.threadId || hit.document?.subject || ''
+            hit.document?.threadId || hit.document?.subject || ''
             ).filter(Boolean)
         ];
         
@@ -456,14 +458,15 @@ Guidelines:
 TIME: ${new Date().toLocaleString()}
 
 CONTEXT:
-${contextText}
+${finalContextText}
 
 GUIDELINES:
 - Use context to answer questions
+- Use web search results for current information or general knowledge
 - If context is insufficient, say so politely
 - Be concise and helpful
 - Don't invent information not in the context
-- At the end of your response, mention which sources you used (emails/attachments)`
+- At the end of your response, mention which sources you used (emails/attachments/web)`
         };
 
         // Convert messages to format expected by streamText

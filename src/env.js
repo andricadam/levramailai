@@ -15,6 +15,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: z.string().min(1).optional(),
     AURINKO_CLIENT_ID: z.string().min(1).optional(),
     AURINKO_CLIENT_SECRET: z.string().min(1).optional(),
+    SERPER_API_KEY: z.string().min(1).optional(),
   },
 
   /**
@@ -37,6 +38,7 @@ export const env = createEnv({
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     AURINKO_CLIENT_ID: process.env.AURINKO_CLIENT_ID,
     AURINKO_CLIENT_SECRET: process.env.AURINKO_CLIENT_SECRET,
+    SERPER_API_KEY: process.env.SERPER_API_KEY,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
   },
   /**

@@ -12,6 +12,7 @@ import { api } from '@/trpc/react';
 import { EmailContextSelector, type EmailContext } from './email-context-selector';
 import { FileAttachmentSelector, type FileAttachment } from './file-attachment-selector';
 import { SourceCitations, type Source } from './source-citations';
+import { WebSearchToggle } from './web-search-toggle';
 
 const transitionDebug = {
     type: "tween" as const,
@@ -29,6 +30,7 @@ const AskAI = ({ onClose }: AskAIProps) => {
     const [input, setInput] = useState('')
     const [selectedEmailContext, setSelectedEmailContext] = useState<EmailContext[]>([])
     const [selectedFiles, setSelectedFiles] = useState<FileAttachment[]>([])
+    const [webSearchEnabled, setWebSearchEnabled] = useState(false)
     const [messageSources, setMessageSources] = useState<Map<string, Source[]>>(new Map())
     const [feedbackGiven, setFeedbackGiven] = useState<Set<string>>(new Set())
     const messageTimestamps = useRef<Map<string, number>>(new Map())
@@ -44,6 +46,7 @@ const AskAI = ({ onClose }: AskAIProps) => {
                 fileContext: selectedFiles.filter(f => f.status === 'ready').length > 0
                     ? { fileIds: selectedFiles.filter(f => f.status === 'ready').map(f => f.id) }
                     : undefined,
+                webSearch: webSearchEnabled,
             },
         }),
         onError: (error: Error) => {
@@ -362,6 +365,13 @@ const AskAI = ({ onClose }: AskAIProps) => {
 
                 {/* Input Area */}
                 <div className="border-t p-4 flex-shrink-0 bg-background">
+                    {/* Source Selection Row */}
+                    <div className="flex items-center gap-3 mb-2">
+                        <WebSearchToggle
+                            enabled={webSearchEnabled}
+                            onToggle={setWebSearchEnabled}
+                        />
+                    </div>
                     {/* Email Context Selector */}
                     {accountId && (
                         <EmailContextSelector
