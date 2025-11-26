@@ -10,6 +10,8 @@ import { SparklesIcon } from '@heroicons/react/24/solid';
 import { toast } from 'sonner';
 import { api } from '@/trpc/react';
 import { EmailContextSelector, type EmailContext } from './email-context-selector';
+import { FileAttachmentSelector, type FileAttachment } from './file-attachment-selector';
+import { SourceCitations, type Source } from './source-citations';
 
 const transitionDebug = {
     type: "tween" as const,
@@ -26,6 +28,8 @@ const AskAI = ({ onClose }: AskAIProps) => {
     const utils = api.useUtils()
     const [input, setInput] = useState('')
     const [selectedEmailContext, setSelectedEmailContext] = useState<EmailContext[]>([])
+    const [selectedFiles, setSelectedFiles] = useState<FileAttachment[]>([])
+    const [messageSources, setMessageSources] = useState<Map<string, Source[]>>(new Map())
     const [feedbackGiven, setFeedbackGiven] = useState<Set<string>>(new Set())
     const messageTimestamps = useRef<Map<string, number>>(new Map())
     
@@ -36,6 +40,9 @@ const AskAI = ({ onClose }: AskAIProps) => {
                 accountId,
                 emailContext: selectedEmailContext.length > 0 
                     ? { emailIds: selectedEmailContext.map(e => e.emailId) }
+                    : undefined,
+                fileContext: selectedFiles.filter(f => f.status === 'ready').length > 0
+                    ? { fileIds: selectedFiles.filter(f => f.status === 'ready').map(f => f.id) }
                     : undefined,
             },
         }),
@@ -64,6 +71,30 @@ const AskAI = ({ onClose }: AskAIProps) => {
             // Track timestamp for query correction detection
             if (options.message?.id) {
                 messageTimestamps.current.set(options.message.id, Date.now());
+            }
+            
+            // Extract sources from response if available
+            // Note: We'll need to fetch sources from the API response or store them separately
+            // For now, we'll extract from the current context
+            if (options.message?.id && !options.isAbort && !options.isError) {
+                // Build sources from current context
+                const currentSources: Source[] = [
+                    ...selectedEmailContext.map(email => ({
+                        type: 'email' as const,
+                        id: email.emailId,
+                        title: email.subject,
+                        threadId: email.threadId,
+                    })),
+                    ...selectedFiles.filter(f => f.status === 'ready').map(file => ({
+                        type: 'attachment' as const,
+                        id: file.id,
+                        title: file.fileName,
+                    })),
+                ]
+                
+                if (currentSources.length > 0) {
+                    setMessageSources(prev => new Map(prev).set(options.message!.id, currentSources))
+                }
             }
             
             // Implicit feedback: User saw the full response (didn't abort)
@@ -281,6 +312,14 @@ const AskAI = ({ onClose }: AskAIProps) => {
                                             {content || (role === 'assistant' && status === 'streaming' ? '...' : '')}
                                         </div>
                                         
+                                        {/* Source Citations */}
+                                        {role === 'assistant' && messageSources.get(message.id) && messageSources.get(message.id)!.length > 0 && (
+                                            <SourceCitations 
+                                                sources={messageSources.get(message.id) || []}
+                                                accountId={accountId}
+                                            />
+                                        )}
+                                        
                                         {/* Feedback buttons for assistant messages */}
                                         {role === 'assistant' && status !== 'streaming' && status !== 'submitted' && (
                                             <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/50">
@@ -336,6 +375,19 @@ const AskAI = ({ onClose }: AskAIProps) => {
                             }}
                         />
                     )}
+                    {/* File Attachment Selector */}
+                    {accountId && (
+                        <FileAttachmentSelector
+                            accountId={accountId}
+                            selectedFiles={selectedFiles}
+                            onSelect={(file) => {
+                                setSelectedFiles(prev => [...prev, file])
+                            }}
+                            onRemove={(fileId) => {
+                                setSelectedFiles(prev => prev.filter(f => f.id !== fileId))
+                            }}
+                        />
+                    )}
                     <form 
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -346,8 +398,9 @@ const AskAI = ({ onClose }: AskAIProps) => {
                             if (input.trim()) {
                                 sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] } as any);
                                 setInput('');
-                                // Clear email context after sending
+                                // Clear email context and files after sending
                                 setSelectedEmailContext([]);
+                                setSelectedFiles([]);
                             }
                         }} 
                         className="flex items-end gap-2"

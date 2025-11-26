@@ -63,6 +63,11 @@ export type ChatFeedback = $Result.DefaultSelection<Prisma.$ChatFeedbackPayload>
  * 
  */
 export type InstantReplyFeedback = $Result.DefaultSelection<Prisma.$InstantReplyFeedbackPayload>
+/**
+ * Model ChatAttachment
+ * 
+ */
+export type ChatAttachment = $Result.DefaultSelection<Prisma.$ChatAttachmentPayload>
 
 /**
  * Enums
@@ -343,6 +348,16 @@ export class PrismaClient<
     * ```
     */
   get instantReplyFeedback(): Prisma.InstantReplyFeedbackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.chatAttachment`: Exposes CRUD operations for the **ChatAttachment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ChatAttachments
+    * const chatAttachments = await prisma.chatAttachment.findMany()
+    * ```
+    */
+  get chatAttachment(): Prisma.ChatAttachmentDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -793,7 +808,8 @@ export namespace Prisma {
     ChatbotInteraction: 'ChatbotInteraction',
     StripeSubscription: 'StripeSubscription',
     ChatFeedback: 'ChatFeedback',
-    InstantReplyFeedback: 'InstantReplyFeedback'
+    InstantReplyFeedback: 'InstantReplyFeedback',
+    ChatAttachment: 'ChatAttachment'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -812,7 +828,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback"
+      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback" | "chatAttachment"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1556,6 +1572,80 @@ export namespace Prisma {
           }
         }
       }
+      ChatAttachment: {
+        payload: Prisma.$ChatAttachmentPayload<ExtArgs>
+        fields: Prisma.ChatAttachmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ChatAttachmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ChatAttachmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>
+          }
+          findFirst: {
+            args: Prisma.ChatAttachmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ChatAttachmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>
+          }
+          findMany: {
+            args: Prisma.ChatAttachmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>[]
+          }
+          create: {
+            args: Prisma.ChatAttachmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>
+          }
+          createMany: {
+            args: Prisma.ChatAttachmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ChatAttachmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>[]
+          }
+          delete: {
+            args: Prisma.ChatAttachmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>
+          }
+          update: {
+            args: Prisma.ChatAttachmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ChatAttachmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ChatAttachmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ChatAttachmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ChatAttachmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ChatAttachmentPayload>
+          }
+          aggregate: {
+            args: Prisma.ChatAttachmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateChatAttachment>
+          }
+          groupBy: {
+            args: Prisma.ChatAttachmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ChatAttachmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ChatAttachmentCountArgs<ExtArgs>
+            result: $Utils.Optional<ChatAttachmentCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1662,6 +1752,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionOmit
     chatFeedback?: ChatFeedbackOmit
     instantReplyFeedback?: InstantReplyFeedbackOmit
+    chatAttachment?: ChatAttachmentOmit
   }
 
   /* Types for Logging */
@@ -1746,6 +1837,7 @@ export namespace Prisma {
     chatbotInteractions: number
     chatFeedback: number
     instantReplyFeedback: number
+    chatAttachments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1753,6 +1845,7 @@ export namespace Prisma {
     chatbotInteractions?: boolean | UserCountOutputTypeCountChatbotInteractionsArgs
     chatFeedback?: boolean | UserCountOutputTypeCountChatFeedbackArgs
     instantReplyFeedback?: boolean | UserCountOutputTypeCountInstantReplyFeedbackArgs
+    chatAttachments?: boolean | UserCountOutputTypeCountChatAttachmentsArgs
   }
 
   // Custom InputTypes
@@ -1794,6 +1887,13 @@ export namespace Prisma {
     where?: InstantReplyFeedbackWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountChatAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatAttachmentWhereInput
+  }
+
 
   /**
    * Count Type AccountCountOutputType
@@ -1802,11 +1902,13 @@ export namespace Prisma {
   export type AccountCountOutputType = {
     threads: number
     emailAddresses: number
+    chatAttachments: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     threads?: boolean | AccountCountOutputTypeCountThreadsArgs
     emailAddresses?: boolean | AccountCountOutputTypeCountEmailAddressesArgs
+    chatAttachments?: boolean | AccountCountOutputTypeCountChatAttachmentsArgs
   }
 
   // Custom InputTypes
@@ -1832,6 +1934,13 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountEmailAddressesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmailAddressWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountChatAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatAttachmentWhereInput
   }
 
 
@@ -2173,6 +2282,7 @@ export namespace Prisma {
     chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
     chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
     instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
+    chatAttachments?: boolean | User$chatAttachmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2207,6 +2317,7 @@ export namespace Prisma {
     chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
     chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
     instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
+    chatAttachments?: boolean | User$chatAttachmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2220,6 +2331,7 @@ export namespace Prisma {
       chatbotInteractions: Prisma.$ChatbotInteractionPayload<ExtArgs>[]
       chatFeedback: Prisma.$ChatFeedbackPayload<ExtArgs>[]
       instantReplyFeedback: Prisma.$InstantReplyFeedbackPayload<ExtArgs>[]
+      chatAttachments: Prisma.$ChatAttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2626,6 +2738,7 @@ export namespace Prisma {
     chatbotInteractions<T extends User$chatbotInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatbotInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatFeedback<T extends User$chatFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$chatFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     instantReplyFeedback<T extends User$instantReplyFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$instantReplyFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chatAttachments<T extends User$chatAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3163,6 +3276,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.chatAttachments
+   */
+  export type User$chatAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    where?: ChatAttachmentWhereInput
+    orderBy?: ChatAttachmentOrderByWithRelationInput | ChatAttachmentOrderByWithRelationInput[]
+    cursor?: ChatAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatAttachmentScalarFieldEnum | ChatAttachmentScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3372,6 +3509,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Account$threadsArgs<ExtArgs>
     emailAddresses?: boolean | Account$emailAddressesArgs<ExtArgs>
+    chatAttachments?: boolean | Account$chatAttachmentsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -3415,6 +3553,7 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Account$threadsArgs<ExtArgs>
     emailAddresses?: boolean | Account$emailAddressesArgs<ExtArgs>
+    chatAttachments?: boolean | Account$chatAttachmentsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3430,6 +3569,7 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       threads: Prisma.$ThreadPayload<ExtArgs>[]
       emailAddresses: Prisma.$EmailAddressPayload<ExtArgs>[]
+      chatAttachments: Prisma.$ChatAttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3837,6 +3977,7 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     threads<T extends Account$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Account$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emailAddresses<T extends Account$emailAddressesArgs<ExtArgs> = {}>(args?: Subset<T, Account$emailAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    chatAttachments<T extends Account$chatAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Account$chatAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4315,6 +4456,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmailAddressScalarFieldEnum | EmailAddressScalarFieldEnum[]
+  }
+
+  /**
+   * Account.chatAttachments
+   */
+  export type Account$chatAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    where?: ChatAttachmentWhereInput
+    orderBy?: ChatAttachmentOrderByWithRelationInput | ChatAttachmentOrderByWithRelationInput[]
+    cursor?: ChatAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChatAttachmentScalarFieldEnum | ChatAttachmentScalarFieldEnum[]
   }
 
   /**
@@ -13817,6 +13982,1197 @@ export namespace Prisma {
 
 
   /**
+   * Model ChatAttachment
+   */
+
+  export type AggregateChatAttachment = {
+    _count: ChatAttachmentCountAggregateOutputType | null
+    _avg: ChatAttachmentAvgAggregateOutputType | null
+    _sum: ChatAttachmentSumAggregateOutputType | null
+    _min: ChatAttachmentMinAggregateOutputType | null
+    _max: ChatAttachmentMaxAggregateOutputType | null
+  }
+
+  export type ChatAttachmentAvgAggregateOutputType = {
+    size: number | null
+    textEmbeddings: number | null
+  }
+
+  export type ChatAttachmentSumAggregateOutputType = {
+    size: number | null
+    textEmbeddings: number[]
+  }
+
+  export type ChatAttachmentMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    fileName: string | null
+    mimeType: string | null
+    size: number | null
+    fileUrl: string | null
+    extractedText: string | null
+    inKnowledgeBase: boolean | null
+    uploadedAt: Date | null
+    indexedAt: Date | null
+  }
+
+  export type ChatAttachmentMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    fileName: string | null
+    mimeType: string | null
+    size: number | null
+    fileUrl: string | null
+    extractedText: string | null
+    inKnowledgeBase: boolean | null
+    uploadedAt: Date | null
+    indexedAt: Date | null
+  }
+
+  export type ChatAttachmentCountAggregateOutputType = {
+    id: number
+    userId: number
+    accountId: number
+    fileName: number
+    mimeType: number
+    size: number
+    fileUrl: number
+    extractedText: number
+    textEmbeddings: number
+    inKnowledgeBase: number
+    uploadedAt: number
+    indexedAt: number
+    _all: number
+  }
+
+
+  export type ChatAttachmentAvgAggregateInputType = {
+    size?: true
+    textEmbeddings?: true
+  }
+
+  export type ChatAttachmentSumAggregateInputType = {
+    size?: true
+    textEmbeddings?: true
+  }
+
+  export type ChatAttachmentMinAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    fileName?: true
+    mimeType?: true
+    size?: true
+    fileUrl?: true
+    extractedText?: true
+    inKnowledgeBase?: true
+    uploadedAt?: true
+    indexedAt?: true
+  }
+
+  export type ChatAttachmentMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    fileName?: true
+    mimeType?: true
+    size?: true
+    fileUrl?: true
+    extractedText?: true
+    inKnowledgeBase?: true
+    uploadedAt?: true
+    indexedAt?: true
+  }
+
+  export type ChatAttachmentCountAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    fileName?: true
+    mimeType?: true
+    size?: true
+    fileUrl?: true
+    extractedText?: true
+    textEmbeddings?: true
+    inKnowledgeBase?: true
+    uploadedAt?: true
+    indexedAt?: true
+    _all?: true
+  }
+
+  export type ChatAttachmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatAttachment to aggregate.
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatAttachments to fetch.
+     */
+    orderBy?: ChatAttachmentOrderByWithRelationInput | ChatAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ChatAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ChatAttachments
+    **/
+    _count?: true | ChatAttachmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ChatAttachmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ChatAttachmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ChatAttachmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ChatAttachmentMaxAggregateInputType
+  }
+
+  export type GetChatAttachmentAggregateType<T extends ChatAttachmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateChatAttachment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateChatAttachment[P]>
+      : GetScalarType<T[P], AggregateChatAttachment[P]>
+  }
+
+
+
+
+  export type ChatAttachmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChatAttachmentWhereInput
+    orderBy?: ChatAttachmentOrderByWithAggregationInput | ChatAttachmentOrderByWithAggregationInput[]
+    by: ChatAttachmentScalarFieldEnum[] | ChatAttachmentScalarFieldEnum
+    having?: ChatAttachmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ChatAttachmentCountAggregateInputType | true
+    _avg?: ChatAttachmentAvgAggregateInputType
+    _sum?: ChatAttachmentSumAggregateInputType
+    _min?: ChatAttachmentMinAggregateInputType
+    _max?: ChatAttachmentMaxAggregateInputType
+  }
+
+  export type ChatAttachmentGroupByOutputType = {
+    id: string
+    userId: string
+    accountId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl: string | null
+    extractedText: string
+    textEmbeddings: number[]
+    inKnowledgeBase: boolean
+    uploadedAt: Date
+    indexedAt: Date | null
+    _count: ChatAttachmentCountAggregateOutputType | null
+    _avg: ChatAttachmentAvgAggregateOutputType | null
+    _sum: ChatAttachmentSumAggregateOutputType | null
+    _min: ChatAttachmentMinAggregateOutputType | null
+    _max: ChatAttachmentMaxAggregateOutputType | null
+  }
+
+  type GetChatAttachmentGroupByPayload<T extends ChatAttachmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ChatAttachmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ChatAttachmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ChatAttachmentGroupByOutputType[P]>
+            : GetScalarType<T[P], ChatAttachmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ChatAttachmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    fileUrl?: boolean
+    extractedText?: boolean
+    textEmbeddings?: boolean
+    inKnowledgeBase?: boolean
+    uploadedAt?: boolean
+    indexedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatAttachment"]>
+
+  export type ChatAttachmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    fileUrl?: boolean
+    extractedText?: boolean
+    textEmbeddings?: boolean
+    inKnowledgeBase?: boolean
+    uploadedAt?: boolean
+    indexedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatAttachment"]>
+
+  export type ChatAttachmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    fileUrl?: boolean
+    extractedText?: boolean
+    textEmbeddings?: boolean
+    inKnowledgeBase?: boolean
+    uploadedAt?: boolean
+    indexedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["chatAttachment"]>
+
+  export type ChatAttachmentSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    fileName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    fileUrl?: boolean
+    extractedText?: boolean
+    textEmbeddings?: boolean
+    inKnowledgeBase?: boolean
+    uploadedAt?: boolean
+    indexedAt?: boolean
+  }
+
+  export type ChatAttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accountId" | "fileName" | "mimeType" | "size" | "fileUrl" | "extractedText" | "textEmbeddings" | "inKnowledgeBase" | "uploadedAt" | "indexedAt", ExtArgs["result"]["chatAttachment"]>
+  export type ChatAttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }
+  export type ChatAttachmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }
+  export type ChatAttachmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AccountDefaultArgs<ExtArgs>
+  }
+
+  export type $ChatAttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ChatAttachment"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      account: Prisma.$AccountPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      accountId: string
+      fileName: string
+      mimeType: string
+      size: number
+      fileUrl: string | null
+      extractedText: string
+      textEmbeddings: number[]
+      inKnowledgeBase: boolean
+      uploadedAt: Date
+      indexedAt: Date | null
+    }, ExtArgs["result"]["chatAttachment"]>
+    composites: {}
+  }
+
+  type ChatAttachmentGetPayload<S extends boolean | null | undefined | ChatAttachmentDefaultArgs> = $Result.GetResult<Prisma.$ChatAttachmentPayload, S>
+
+  type ChatAttachmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ChatAttachmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ChatAttachmentCountAggregateInputType | true
+    }
+
+  export interface ChatAttachmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ChatAttachment'], meta: { name: 'ChatAttachment' } }
+    /**
+     * Find zero or one ChatAttachment that matches the filter.
+     * @param {ChatAttachmentFindUniqueArgs} args - Arguments to find a ChatAttachment
+     * @example
+     * // Get one ChatAttachment
+     * const chatAttachment = await prisma.chatAttachment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ChatAttachmentFindUniqueArgs>(args: SelectSubset<T, ChatAttachmentFindUniqueArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ChatAttachment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ChatAttachmentFindUniqueOrThrowArgs} args - Arguments to find a ChatAttachment
+     * @example
+     * // Get one ChatAttachment
+     * const chatAttachment = await prisma.chatAttachment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ChatAttachmentFindUniqueOrThrowArgs>(args: SelectSubset<T, ChatAttachmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatAttachment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentFindFirstArgs} args - Arguments to find a ChatAttachment
+     * @example
+     * // Get one ChatAttachment
+     * const chatAttachment = await prisma.chatAttachment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ChatAttachmentFindFirstArgs>(args?: SelectSubset<T, ChatAttachmentFindFirstArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ChatAttachment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentFindFirstOrThrowArgs} args - Arguments to find a ChatAttachment
+     * @example
+     * // Get one ChatAttachment
+     * const chatAttachment = await prisma.chatAttachment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ChatAttachmentFindFirstOrThrowArgs>(args?: SelectSubset<T, ChatAttachmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ChatAttachments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ChatAttachments
+     * const chatAttachments = await prisma.chatAttachment.findMany()
+     * 
+     * // Get first 10 ChatAttachments
+     * const chatAttachments = await prisma.chatAttachment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const chatAttachmentWithIdOnly = await prisma.chatAttachment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ChatAttachmentFindManyArgs>(args?: SelectSubset<T, ChatAttachmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ChatAttachment.
+     * @param {ChatAttachmentCreateArgs} args - Arguments to create a ChatAttachment.
+     * @example
+     * // Create one ChatAttachment
+     * const ChatAttachment = await prisma.chatAttachment.create({
+     *   data: {
+     *     // ... data to create a ChatAttachment
+     *   }
+     * })
+     * 
+     */
+    create<T extends ChatAttachmentCreateArgs>(args: SelectSubset<T, ChatAttachmentCreateArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ChatAttachments.
+     * @param {ChatAttachmentCreateManyArgs} args - Arguments to create many ChatAttachments.
+     * @example
+     * // Create many ChatAttachments
+     * const chatAttachment = await prisma.chatAttachment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ChatAttachmentCreateManyArgs>(args?: SelectSubset<T, ChatAttachmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ChatAttachments and returns the data saved in the database.
+     * @param {ChatAttachmentCreateManyAndReturnArgs} args - Arguments to create many ChatAttachments.
+     * @example
+     * // Create many ChatAttachments
+     * const chatAttachment = await prisma.chatAttachment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ChatAttachments and only return the `id`
+     * const chatAttachmentWithIdOnly = await prisma.chatAttachment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ChatAttachmentCreateManyAndReturnArgs>(args?: SelectSubset<T, ChatAttachmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ChatAttachment.
+     * @param {ChatAttachmentDeleteArgs} args - Arguments to delete one ChatAttachment.
+     * @example
+     * // Delete one ChatAttachment
+     * const ChatAttachment = await prisma.chatAttachment.delete({
+     *   where: {
+     *     // ... filter to delete one ChatAttachment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ChatAttachmentDeleteArgs>(args: SelectSubset<T, ChatAttachmentDeleteArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ChatAttachment.
+     * @param {ChatAttachmentUpdateArgs} args - Arguments to update one ChatAttachment.
+     * @example
+     * // Update one ChatAttachment
+     * const chatAttachment = await prisma.chatAttachment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ChatAttachmentUpdateArgs>(args: SelectSubset<T, ChatAttachmentUpdateArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ChatAttachments.
+     * @param {ChatAttachmentDeleteManyArgs} args - Arguments to filter ChatAttachments to delete.
+     * @example
+     * // Delete a few ChatAttachments
+     * const { count } = await prisma.chatAttachment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ChatAttachmentDeleteManyArgs>(args?: SelectSubset<T, ChatAttachmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ChatAttachments
+     * const chatAttachment = await prisma.chatAttachment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ChatAttachmentUpdateManyArgs>(args: SelectSubset<T, ChatAttachmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ChatAttachments and returns the data updated in the database.
+     * @param {ChatAttachmentUpdateManyAndReturnArgs} args - Arguments to update many ChatAttachments.
+     * @example
+     * // Update many ChatAttachments
+     * const chatAttachment = await prisma.chatAttachment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ChatAttachments and only return the `id`
+     * const chatAttachmentWithIdOnly = await prisma.chatAttachment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ChatAttachmentUpdateManyAndReturnArgs>(args: SelectSubset<T, ChatAttachmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ChatAttachment.
+     * @param {ChatAttachmentUpsertArgs} args - Arguments to update or create a ChatAttachment.
+     * @example
+     * // Update or create a ChatAttachment
+     * const chatAttachment = await prisma.chatAttachment.upsert({
+     *   create: {
+     *     // ... data to create a ChatAttachment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ChatAttachment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ChatAttachmentUpsertArgs>(args: SelectSubset<T, ChatAttachmentUpsertArgs<ExtArgs>>): Prisma__ChatAttachmentClient<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ChatAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentCountArgs} args - Arguments to filter ChatAttachments to count.
+     * @example
+     * // Count the number of ChatAttachments
+     * const count = await prisma.chatAttachment.count({
+     *   where: {
+     *     // ... the filter for the ChatAttachments we want to count
+     *   }
+     * })
+    **/
+    count<T extends ChatAttachmentCountArgs>(
+      args?: Subset<T, ChatAttachmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ChatAttachmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ChatAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ChatAttachmentAggregateArgs>(args: Subset<T, ChatAttachmentAggregateArgs>): Prisma.PrismaPromise<GetChatAttachmentAggregateType<T>>
+
+    /**
+     * Group by ChatAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ChatAttachmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ChatAttachmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ChatAttachmentGroupByArgs['orderBy'] }
+        : { orderBy?: ChatAttachmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ChatAttachmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetChatAttachmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ChatAttachment model
+   */
+  readonly fields: ChatAttachmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ChatAttachment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ChatAttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ChatAttachment model
+   */
+  interface ChatAttachmentFieldRefs {
+    readonly id: FieldRef<"ChatAttachment", 'String'>
+    readonly userId: FieldRef<"ChatAttachment", 'String'>
+    readonly accountId: FieldRef<"ChatAttachment", 'String'>
+    readonly fileName: FieldRef<"ChatAttachment", 'String'>
+    readonly mimeType: FieldRef<"ChatAttachment", 'String'>
+    readonly size: FieldRef<"ChatAttachment", 'Int'>
+    readonly fileUrl: FieldRef<"ChatAttachment", 'String'>
+    readonly extractedText: FieldRef<"ChatAttachment", 'String'>
+    readonly textEmbeddings: FieldRef<"ChatAttachment", 'Float[]'>
+    readonly inKnowledgeBase: FieldRef<"ChatAttachment", 'Boolean'>
+    readonly uploadedAt: FieldRef<"ChatAttachment", 'DateTime'>
+    readonly indexedAt: FieldRef<"ChatAttachment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ChatAttachment findUnique
+   */
+  export type ChatAttachmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatAttachment to fetch.
+     */
+    where: ChatAttachmentWhereUniqueInput
+  }
+
+  /**
+   * ChatAttachment findUniqueOrThrow
+   */
+  export type ChatAttachmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatAttachment to fetch.
+     */
+    where: ChatAttachmentWhereUniqueInput
+  }
+
+  /**
+   * ChatAttachment findFirst
+   */
+  export type ChatAttachmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatAttachment to fetch.
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatAttachments to fetch.
+     */
+    orderBy?: ChatAttachmentOrderByWithRelationInput | ChatAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatAttachments.
+     */
+    cursor?: ChatAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatAttachments.
+     */
+    distinct?: ChatAttachmentScalarFieldEnum | ChatAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * ChatAttachment findFirstOrThrow
+   */
+  export type ChatAttachmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatAttachment to fetch.
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatAttachments to fetch.
+     */
+    orderBy?: ChatAttachmentOrderByWithRelationInput | ChatAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ChatAttachments.
+     */
+    cursor?: ChatAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ChatAttachments.
+     */
+    distinct?: ChatAttachmentScalarFieldEnum | ChatAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * ChatAttachment findMany
+   */
+  export type ChatAttachmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which ChatAttachments to fetch.
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ChatAttachments to fetch.
+     */
+    orderBy?: ChatAttachmentOrderByWithRelationInput | ChatAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ChatAttachments.
+     */
+    cursor?: ChatAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ChatAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ChatAttachments.
+     */
+    skip?: number
+    distinct?: ChatAttachmentScalarFieldEnum | ChatAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * ChatAttachment create
+   */
+  export type ChatAttachmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ChatAttachment.
+     */
+    data: XOR<ChatAttachmentCreateInput, ChatAttachmentUncheckedCreateInput>
+  }
+
+  /**
+   * ChatAttachment createMany
+   */
+  export type ChatAttachmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ChatAttachments.
+     */
+    data: ChatAttachmentCreateManyInput | ChatAttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ChatAttachment createManyAndReturn
+   */
+  export type ChatAttachmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many ChatAttachments.
+     */
+    data: ChatAttachmentCreateManyInput | ChatAttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChatAttachment update
+   */
+  export type ChatAttachmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ChatAttachment.
+     */
+    data: XOR<ChatAttachmentUpdateInput, ChatAttachmentUncheckedUpdateInput>
+    /**
+     * Choose, which ChatAttachment to update.
+     */
+    where: ChatAttachmentWhereUniqueInput
+  }
+
+  /**
+   * ChatAttachment updateMany
+   */
+  export type ChatAttachmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ChatAttachments.
+     */
+    data: XOR<ChatAttachmentUpdateManyMutationInput, ChatAttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatAttachments to update
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * Limit how many ChatAttachments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatAttachment updateManyAndReturn
+   */
+  export type ChatAttachmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * The data used to update ChatAttachments.
+     */
+    data: XOR<ChatAttachmentUpdateManyMutationInput, ChatAttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which ChatAttachments to update
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * Limit how many ChatAttachments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ChatAttachment upsert
+   */
+  export type ChatAttachmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ChatAttachment to update in case it exists.
+     */
+    where: ChatAttachmentWhereUniqueInput
+    /**
+     * In case the ChatAttachment found by the `where` argument doesn't exist, create a new ChatAttachment with this data.
+     */
+    create: XOR<ChatAttachmentCreateInput, ChatAttachmentUncheckedCreateInput>
+    /**
+     * In case the ChatAttachment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ChatAttachmentUpdateInput, ChatAttachmentUncheckedUpdateInput>
+  }
+
+  /**
+   * ChatAttachment delete
+   */
+  export type ChatAttachmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter which ChatAttachment to delete.
+     */
+    where: ChatAttachmentWhereUniqueInput
+  }
+
+  /**
+   * ChatAttachment deleteMany
+   */
+  export type ChatAttachmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ChatAttachments to delete
+     */
+    where?: ChatAttachmentWhereInput
+    /**
+     * Limit how many ChatAttachments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ChatAttachment without action
+   */
+  export type ChatAttachmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChatAttachment
+     */
+    select?: ChatAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChatAttachment
+     */
+    omit?: ChatAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChatAttachmentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -13989,6 +15345,24 @@ export namespace Prisma {
   };
 
   export type InstantReplyFeedbackScalarFieldEnum = (typeof InstantReplyFeedbackScalarFieldEnum)[keyof typeof InstantReplyFeedbackScalarFieldEnum]
+
+
+  export const ChatAttachmentScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    accountId: 'accountId',
+    fileName: 'fileName',
+    mimeType: 'mimeType',
+    size: 'size',
+    fileUrl: 'fileUrl',
+    extractedText: 'extractedText',
+    textEmbeddings: 'textEmbeddings',
+    inKnowledgeBase: 'inKnowledgeBase',
+    uploadedAt: 'uploadedAt',
+    indexedAt: 'indexedAt'
+  };
+
+  export type ChatAttachmentScalarFieldEnum = (typeof ChatAttachmentScalarFieldEnum)[keyof typeof ChatAttachmentScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -14194,6 +15568,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionListRelationFilter
     chatFeedback?: ChatFeedbackListRelationFilter
     instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
+    chatAttachments?: ChatAttachmentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14207,6 +15582,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionOrderByRelationAggregateInput
     chatFeedback?: ChatFeedbackOrderByRelationAggregateInput
     instantReplyFeedback?: InstantReplyFeedbackOrderByRelationAggregateInput
+    chatAttachments?: ChatAttachmentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -14223,6 +15599,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionListRelationFilter
     chatFeedback?: ChatFeedbackListRelationFilter
     instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
+    chatAttachments?: ChatAttachmentListRelationFilter
   }, "id" | "emailAddress">
 
   export type UserOrderByWithAggregationInput = {
@@ -14262,6 +15639,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ThreadListRelationFilter
     emailAddresses?: EmailAddressListRelationFilter
+    chatAttachments?: ChatAttachmentListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -14276,6 +15654,7 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     threads?: ThreadOrderByRelationAggregateInput
     emailAddresses?: EmailAddressOrderByRelationAggregateInput
+    chatAttachments?: ChatAttachmentOrderByRelationAggregateInput
   }
 
   export type AccountWhereUniqueInput = Prisma.AtLeast<{
@@ -14293,6 +15672,7 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     threads?: ThreadListRelationFilter
     emailAddresses?: EmailAddressListRelationFilter
+    chatAttachments?: ChatAttachmentListRelationFilter
   }, "id" | "accessToken">
 
   export type AccountOrderByWithAggregationInput = {
@@ -15047,6 +16427,101 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"InstantReplyFeedback"> | Date | string
   }
 
+  export type ChatAttachmentWhereInput = {
+    AND?: ChatAttachmentWhereInput | ChatAttachmentWhereInput[]
+    OR?: ChatAttachmentWhereInput[]
+    NOT?: ChatAttachmentWhereInput | ChatAttachmentWhereInput[]
+    id?: StringFilter<"ChatAttachment"> | string
+    userId?: StringFilter<"ChatAttachment"> | string
+    accountId?: StringFilter<"ChatAttachment"> | string
+    fileName?: StringFilter<"ChatAttachment"> | string
+    mimeType?: StringFilter<"ChatAttachment"> | string
+    size?: IntFilter<"ChatAttachment"> | number
+    fileUrl?: StringNullableFilter<"ChatAttachment"> | string | null
+    extractedText?: StringFilter<"ChatAttachment"> | string
+    textEmbeddings?: FloatNullableListFilter<"ChatAttachment">
+    inKnowledgeBase?: BoolFilter<"ChatAttachment"> | boolean
+    uploadedAt?: DateTimeFilter<"ChatAttachment"> | Date | string
+    indexedAt?: DateTimeNullableFilter<"ChatAttachment"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }
+
+  export type ChatAttachmentOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    fileUrl?: SortOrderInput | SortOrder
+    extractedText?: SortOrder
+    textEmbeddings?: SortOrder
+    inKnowledgeBase?: SortOrder
+    uploadedAt?: SortOrder
+    indexedAt?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    account?: AccountOrderByWithRelationInput
+  }
+
+  export type ChatAttachmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ChatAttachmentWhereInput | ChatAttachmentWhereInput[]
+    OR?: ChatAttachmentWhereInput[]
+    NOT?: ChatAttachmentWhereInput | ChatAttachmentWhereInput[]
+    userId?: StringFilter<"ChatAttachment"> | string
+    accountId?: StringFilter<"ChatAttachment"> | string
+    fileName?: StringFilter<"ChatAttachment"> | string
+    mimeType?: StringFilter<"ChatAttachment"> | string
+    size?: IntFilter<"ChatAttachment"> | number
+    fileUrl?: StringNullableFilter<"ChatAttachment"> | string | null
+    extractedText?: StringFilter<"ChatAttachment"> | string
+    textEmbeddings?: FloatNullableListFilter<"ChatAttachment">
+    inKnowledgeBase?: BoolFilter<"ChatAttachment"> | boolean
+    uploadedAt?: DateTimeFilter<"ChatAttachment"> | Date | string
+    indexedAt?: DateTimeNullableFilter<"ChatAttachment"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+  }, "id">
+
+  export type ChatAttachmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    fileUrl?: SortOrderInput | SortOrder
+    extractedText?: SortOrder
+    textEmbeddings?: SortOrder
+    inKnowledgeBase?: SortOrder
+    uploadedAt?: SortOrder
+    indexedAt?: SortOrderInput | SortOrder
+    _count?: ChatAttachmentCountOrderByAggregateInput
+    _avg?: ChatAttachmentAvgOrderByAggregateInput
+    _max?: ChatAttachmentMaxOrderByAggregateInput
+    _min?: ChatAttachmentMinOrderByAggregateInput
+    _sum?: ChatAttachmentSumOrderByAggregateInput
+  }
+
+  export type ChatAttachmentScalarWhereWithAggregatesInput = {
+    AND?: ChatAttachmentScalarWhereWithAggregatesInput | ChatAttachmentScalarWhereWithAggregatesInput[]
+    OR?: ChatAttachmentScalarWhereWithAggregatesInput[]
+    NOT?: ChatAttachmentScalarWhereWithAggregatesInput | ChatAttachmentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ChatAttachment"> | string
+    userId?: StringWithAggregatesFilter<"ChatAttachment"> | string
+    accountId?: StringWithAggregatesFilter<"ChatAttachment"> | string
+    fileName?: StringWithAggregatesFilter<"ChatAttachment"> | string
+    mimeType?: StringWithAggregatesFilter<"ChatAttachment"> | string
+    size?: IntWithAggregatesFilter<"ChatAttachment"> | number
+    fileUrl?: StringNullableWithAggregatesFilter<"ChatAttachment"> | string | null
+    extractedText?: StringWithAggregatesFilter<"ChatAttachment"> | string
+    textEmbeddings?: FloatNullableListFilter<"ChatAttachment">
+    inKnowledgeBase?: BoolWithAggregatesFilter<"ChatAttachment"> | boolean
+    uploadedAt?: DateTimeWithAggregatesFilter<"ChatAttachment"> | Date | string
+    indexedAt?: DateTimeNullableWithAggregatesFilter<"ChatAttachment"> | Date | string | null
+  }
+
   export type UserCreateInput = {
     id: string
     emailAddress: string
@@ -15058,6 +16533,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -15071,6 +16547,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -15084,6 +16561,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -15097,6 +16575,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15134,6 +16613,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutAccountsInput
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -15147,6 +16627,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUpdateInput = {
@@ -15160,6 +16641,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -15173,6 +16655,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -16026,6 +17509,109 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChatAttachmentCreateInput = {
+    id?: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutChatAttachmentsInput
+    account: AccountCreateNestedOneWithoutChatAttachmentsInput
+  }
+
+  export type ChatAttachmentUncheckedCreateInput = {
+    id?: string
+    userId: string
+    accountId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+  }
+
+  export type ChatAttachmentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutChatAttachmentsNestedInput
+    account?: AccountUpdateOneRequiredWithoutChatAttachmentsNestedInput
+  }
+
+  export type ChatAttachmentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChatAttachmentCreateManyInput = {
+    id?: string
+    userId: string
+    accountId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+  }
+
+  export type ChatAttachmentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChatAttachmentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16085,6 +17671,12 @@ export namespace Prisma {
     none?: InstantReplyFeedbackWhereInput
   }
 
+  export type ChatAttachmentListRelationFilter = {
+    every?: ChatAttachmentWhereInput
+    some?: ChatAttachmentWhereInput
+    none?: ChatAttachmentWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -16103,6 +17695,10 @@ export namespace Prisma {
   }
 
   export type InstantReplyFeedbackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChatAttachmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16862,6 +18458,92 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type FloatNullableListFilter<$PrismaModel = never> = {
+    equals?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    has?: number | FloatFieldRefInput<$PrismaModel> | null
+    hasEvery?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    hasSome?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type ChatAttachmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    fileUrl?: SortOrder
+    extractedText?: SortOrder
+    textEmbeddings?: SortOrder
+    inKnowledgeBase?: SortOrder
+    uploadedAt?: SortOrder
+    indexedAt?: SortOrder
+  }
+
+  export type ChatAttachmentAvgOrderByAggregateInput = {
+    size?: SortOrder
+    textEmbeddings?: SortOrder
+  }
+
+  export type ChatAttachmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    fileUrl?: SortOrder
+    extractedText?: SortOrder
+    inKnowledgeBase?: SortOrder
+    uploadedAt?: SortOrder
+    indexedAt?: SortOrder
+  }
+
+  export type ChatAttachmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    fileName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    fileUrl?: SortOrder
+    extractedText?: SortOrder
+    inKnowledgeBase?: SortOrder
+    uploadedAt?: SortOrder
+    indexedAt?: SortOrder
+  }
+
+  export type ChatAttachmentSumOrderByAggregateInput = {
+    size?: SortOrder
+    textEmbeddings?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -16896,6 +18578,13 @@ export namespace Prisma {
     connect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
   }
 
+  export type ChatAttachmentCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatAttachmentCreateWithoutUserInput, ChatAttachmentUncheckedCreateWithoutUserInput> | ChatAttachmentCreateWithoutUserInput[] | ChatAttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutUserInput | ChatAttachmentCreateOrConnectWithoutUserInput[]
+    createMany?: ChatAttachmentCreateManyUserInputEnvelope
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -16928,6 +18617,13 @@ export namespace Prisma {
     connectOrCreate?: InstantReplyFeedbackCreateOrConnectWithoutUserInput | InstantReplyFeedbackCreateOrConnectWithoutUserInput[]
     createMany?: InstantReplyFeedbackCreateManyUserInputEnvelope
     connect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+  }
+
+  export type ChatAttachmentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ChatAttachmentCreateWithoutUserInput, ChatAttachmentUncheckedCreateWithoutUserInput> | ChatAttachmentCreateWithoutUserInput[] | ChatAttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutUserInput | ChatAttachmentCreateOrConnectWithoutUserInput[]
+    createMany?: ChatAttachmentCreateManyUserInputEnvelope
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -17004,6 +18700,20 @@ export namespace Prisma {
     deleteMany?: InstantReplyFeedbackScalarWhereInput | InstantReplyFeedbackScalarWhereInput[]
   }
 
+  export type ChatAttachmentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatAttachmentCreateWithoutUserInput, ChatAttachmentUncheckedCreateWithoutUserInput> | ChatAttachmentCreateWithoutUserInput[] | ChatAttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutUserInput | ChatAttachmentCreateOrConnectWithoutUserInput[]
+    upsert?: ChatAttachmentUpsertWithWhereUniqueWithoutUserInput | ChatAttachmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatAttachmentCreateManyUserInputEnvelope
+    set?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    disconnect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    delete?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    update?: ChatAttachmentUpdateWithWhereUniqueWithoutUserInput | ChatAttachmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatAttachmentUpdateManyWithWhereWithoutUserInput | ChatAttachmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -17070,6 +18780,20 @@ export namespace Prisma {
     deleteMany?: InstantReplyFeedbackScalarWhereInput | InstantReplyFeedbackScalarWhereInput[]
   }
 
+  export type ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ChatAttachmentCreateWithoutUserInput, ChatAttachmentUncheckedCreateWithoutUserInput> | ChatAttachmentCreateWithoutUserInput[] | ChatAttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutUserInput | ChatAttachmentCreateOrConnectWithoutUserInput[]
+    upsert?: ChatAttachmentUpsertWithWhereUniqueWithoutUserInput | ChatAttachmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ChatAttachmentCreateManyUserInputEnvelope
+    set?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    disconnect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    delete?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    update?: ChatAttachmentUpdateWithWhereUniqueWithoutUserInput | ChatAttachmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ChatAttachmentUpdateManyWithWhereWithoutUserInput | ChatAttachmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -17090,6 +18814,13 @@ export namespace Prisma {
     connect?: EmailAddressWhereUniqueInput | EmailAddressWhereUniqueInput[]
   }
 
+  export type ChatAttachmentCreateNestedManyWithoutAccountInput = {
+    create?: XOR<ChatAttachmentCreateWithoutAccountInput, ChatAttachmentUncheckedCreateWithoutAccountInput> | ChatAttachmentCreateWithoutAccountInput[] | ChatAttachmentUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutAccountInput | ChatAttachmentCreateOrConnectWithoutAccountInput[]
+    createMany?: ChatAttachmentCreateManyAccountInputEnvelope
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+  }
+
   export type ThreadUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<ThreadCreateWithoutAccountInput, ThreadUncheckedCreateWithoutAccountInput> | ThreadCreateWithoutAccountInput[] | ThreadUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutAccountInput | ThreadCreateOrConnectWithoutAccountInput[]
@@ -17102,6 +18833,13 @@ export namespace Prisma {
     connectOrCreate?: EmailAddressCreateOrConnectWithoutAccountInput | EmailAddressCreateOrConnectWithoutAccountInput[]
     createMany?: EmailAddressCreateManyAccountInputEnvelope
     connect?: EmailAddressWhereUniqueInput | EmailAddressWhereUniqueInput[]
+  }
+
+  export type ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<ChatAttachmentCreateWithoutAccountInput, ChatAttachmentUncheckedCreateWithoutAccountInput> | ChatAttachmentCreateWithoutAccountInput[] | ChatAttachmentUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutAccountInput | ChatAttachmentCreateOrConnectWithoutAccountInput[]
+    createMany?: ChatAttachmentCreateManyAccountInputEnvelope
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
@@ -17140,6 +18878,20 @@ export namespace Prisma {
     deleteMany?: EmailAddressScalarWhereInput | EmailAddressScalarWhereInput[]
   }
 
+  export type ChatAttachmentUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<ChatAttachmentCreateWithoutAccountInput, ChatAttachmentUncheckedCreateWithoutAccountInput> | ChatAttachmentCreateWithoutAccountInput[] | ChatAttachmentUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutAccountInput | ChatAttachmentCreateOrConnectWithoutAccountInput[]
+    upsert?: ChatAttachmentUpsertWithWhereUniqueWithoutAccountInput | ChatAttachmentUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: ChatAttachmentCreateManyAccountInputEnvelope
+    set?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    disconnect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    delete?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    update?: ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput | ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: ChatAttachmentUpdateManyWithWhereWithoutAccountInput | ChatAttachmentUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
+  }
+
   export type ThreadUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<ThreadCreateWithoutAccountInput, ThreadUncheckedCreateWithoutAccountInput> | ThreadCreateWithoutAccountInput[] | ThreadUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutAccountInput | ThreadCreateOrConnectWithoutAccountInput[]
@@ -17166,6 +18918,20 @@ export namespace Prisma {
     update?: EmailAddressUpdateWithWhereUniqueWithoutAccountInput | EmailAddressUpdateWithWhereUniqueWithoutAccountInput[]
     updateMany?: EmailAddressUpdateManyWithWhereWithoutAccountInput | EmailAddressUpdateManyWithWhereWithoutAccountInput[]
     deleteMany?: EmailAddressScalarWhereInput | EmailAddressScalarWhereInput[]
+  }
+
+  export type ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<ChatAttachmentCreateWithoutAccountInput, ChatAttachmentUncheckedCreateWithoutAccountInput> | ChatAttachmentCreateWithoutAccountInput[] | ChatAttachmentUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: ChatAttachmentCreateOrConnectWithoutAccountInput | ChatAttachmentCreateOrConnectWithoutAccountInput[]
+    upsert?: ChatAttachmentUpsertWithWhereUniqueWithoutAccountInput | ChatAttachmentUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: ChatAttachmentCreateManyAccountInputEnvelope
+    set?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    disconnect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    delete?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+    update?: ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput | ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: ChatAttachmentUpdateManyWithWhereWithoutAccountInput | ChatAttachmentUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
   }
 
   export type ThreadCreateparticipantIdsInput = {
@@ -17831,6 +19597,47 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInstantReplyFeedbackInput, UserUpdateWithoutInstantReplyFeedbackInput>, UserUncheckedUpdateWithoutInstantReplyFeedbackInput>
   }
 
+  export type ChatAttachmentCreatetextEmbeddingsInput = {
+    set: number[]
+  }
+
+  export type UserCreateNestedOneWithoutChatAttachmentsInput = {
+    create?: XOR<UserCreateWithoutChatAttachmentsInput, UserUncheckedCreateWithoutChatAttachmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatAttachmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutChatAttachmentsInput = {
+    create?: XOR<AccountCreateWithoutChatAttachmentsInput, AccountUncheckedCreateWithoutChatAttachmentsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutChatAttachmentsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type ChatAttachmentUpdatetextEmbeddingsInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutChatAttachmentsNestedInput = {
+    create?: XOR<UserCreateWithoutChatAttachmentsInput, UserUncheckedCreateWithoutChatAttachmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutChatAttachmentsInput
+    upsert?: UserUpsertWithoutChatAttachmentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatAttachmentsInput, UserUpdateWithoutChatAttachmentsInput>, UserUncheckedUpdateWithoutChatAttachmentsInput>
+  }
+
+  export type AccountUpdateOneRequiredWithoutChatAttachmentsNestedInput = {
+    create?: XOR<AccountCreateWithoutChatAttachmentsInput, AccountUncheckedCreateWithoutChatAttachmentsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutChatAttachmentsInput
+    upsert?: AccountUpsertWithoutChatAttachmentsInput
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutChatAttachmentsInput, AccountUpdateWithoutChatAttachmentsInput>, AccountUncheckedUpdateWithoutChatAttachmentsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -18111,6 +19918,31 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateWithoutUserInput = {
     id?: string
     accessToken: string
@@ -18121,6 +19953,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutUserInput = {
@@ -18133,6 +19966,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutUserInput = {
@@ -18265,6 +20099,44 @@ export namespace Prisma {
 
   export type InstantReplyFeedbackCreateManyUserInputEnvelope = {
     data: InstantReplyFeedbackCreateManyUserInput | InstantReplyFeedbackCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChatAttachmentCreateWithoutUserInput = {
+    id?: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+    account: AccountCreateNestedOneWithoutChatAttachmentsInput
+  }
+
+  export type ChatAttachmentUncheckedCreateWithoutUserInput = {
+    id?: string
+    accountId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+  }
+
+  export type ChatAttachmentCreateOrConnectWithoutUserInput = {
+    where: ChatAttachmentWhereUniqueInput
+    create: XOR<ChatAttachmentCreateWithoutUserInput, ChatAttachmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatAttachmentCreateManyUserInputEnvelope = {
+    data: ChatAttachmentCreateManyUserInput | ChatAttachmentCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -18422,6 +20294,40 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
   }
 
+  export type ChatAttachmentUpsertWithWhereUniqueWithoutUserInput = {
+    where: ChatAttachmentWhereUniqueInput
+    update: XOR<ChatAttachmentUpdateWithoutUserInput, ChatAttachmentUncheckedUpdateWithoutUserInput>
+    create: XOR<ChatAttachmentCreateWithoutUserInput, ChatAttachmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type ChatAttachmentUpdateWithWhereUniqueWithoutUserInput = {
+    where: ChatAttachmentWhereUniqueInput
+    data: XOR<ChatAttachmentUpdateWithoutUserInput, ChatAttachmentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ChatAttachmentUpdateManyWithWhereWithoutUserInput = {
+    where: ChatAttachmentScalarWhereInput
+    data: XOR<ChatAttachmentUpdateManyMutationInput, ChatAttachmentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ChatAttachmentScalarWhereInput = {
+    AND?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
+    OR?: ChatAttachmentScalarWhereInput[]
+    NOT?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
+    id?: StringFilter<"ChatAttachment"> | string
+    userId?: StringFilter<"ChatAttachment"> | string
+    accountId?: StringFilter<"ChatAttachment"> | string
+    fileName?: StringFilter<"ChatAttachment"> | string
+    mimeType?: StringFilter<"ChatAttachment"> | string
+    size?: IntFilter<"ChatAttachment"> | number
+    fileUrl?: StringNullableFilter<"ChatAttachment"> | string | null
+    extractedText?: StringFilter<"ChatAttachment"> | string
+    textEmbeddings?: FloatNullableListFilter<"ChatAttachment">
+    inKnowledgeBase?: BoolFilter<"ChatAttachment"> | boolean
+    uploadedAt?: DateTimeFilter<"ChatAttachment"> | Date | string
+    indexedAt?: DateTimeNullableFilter<"ChatAttachment"> | Date | string | null
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id: string
     emailAddress: string
@@ -18432,6 +20338,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -18444,6 +20351,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -18523,6 +20431,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ChatAttachmentCreateWithoutAccountInput = {
+    id?: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutChatAttachmentsInput
+  }
+
+  export type ChatAttachmentUncheckedCreateWithoutAccountInput = {
+    id?: string
+    userId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+  }
+
+  export type ChatAttachmentCreateOrConnectWithoutAccountInput = {
+    where: ChatAttachmentWhereUniqueInput
+    create: XOR<ChatAttachmentCreateWithoutAccountInput, ChatAttachmentUncheckedCreateWithoutAccountInput>
+  }
+
+  export type ChatAttachmentCreateManyAccountInputEnvelope = {
+    data: ChatAttachmentCreateManyAccountInput | ChatAttachmentCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutAccountsInput = {
     update: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
     create: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
@@ -18544,6 +20490,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -18556,6 +20503,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithWhereUniqueWithoutAccountInput = {
@@ -18618,6 +20566,22 @@ export namespace Prisma {
     accountId?: StringFilter<"EmailAddress"> | string
   }
 
+  export type ChatAttachmentUpsertWithWhereUniqueWithoutAccountInput = {
+    where: ChatAttachmentWhereUniqueInput
+    update: XOR<ChatAttachmentUpdateWithoutAccountInput, ChatAttachmentUncheckedUpdateWithoutAccountInput>
+    create: XOR<ChatAttachmentCreateWithoutAccountInput, ChatAttachmentUncheckedCreateWithoutAccountInput>
+  }
+
+  export type ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput = {
+    where: ChatAttachmentWhereUniqueInput
+    data: XOR<ChatAttachmentUpdateWithoutAccountInput, ChatAttachmentUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type ChatAttachmentUpdateManyWithWhereWithoutAccountInput = {
+    where: ChatAttachmentScalarWhereInput
+    data: XOR<ChatAttachmentUpdateManyMutationInput, ChatAttachmentUncheckedUpdateManyWithoutAccountInput>
+  }
+
   export type AccountCreateWithoutThreadsInput = {
     id?: string
     accessToken: string
@@ -18628,6 +20592,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     user: UserCreateNestedOneWithoutAccountsInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutThreadsInput = {
@@ -18640,6 +20605,7 @@ export namespace Prisma {
     oramaIndex?: string | null
     qaCacheIndex?: string | null
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutThreadsInput = {
@@ -18746,6 +20712,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutThreadsInput = {
@@ -18758,6 +20725,7 @@ export namespace Prisma {
     oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type EmailUpsertWithWhereUniqueWithoutThreadInput = {
@@ -19568,6 +21536,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     user: UserCreateNestedOneWithoutAccountsInput
     threads?: ThreadCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutEmailAddressesInput = {
@@ -19580,6 +21549,7 @@ export namespace Prisma {
     oramaIndex?: string | null
     qaCacheIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutEmailAddressesInput = {
@@ -19688,6 +21658,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     threads?: ThreadUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutEmailAddressesInput = {
@@ -19700,6 +21671,7 @@ export namespace Prisma {
     oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type EmailCreateWithoutAttachmentsInput = {
@@ -19864,6 +21836,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatbotInteractionsInput = {
@@ -19876,6 +21849,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatbotInteractionsInput = {
@@ -19904,6 +21878,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatbotInteractionsInput = {
@@ -19916,6 +21891,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStripeSubscriptionInput = {
@@ -19928,6 +21904,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStripeSubscriptionInput = {
@@ -19940,6 +21917,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStripeSubscriptionInput = {
@@ -19968,6 +21946,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStripeSubscriptionInput = {
@@ -19980,6 +21959,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutChatFeedbackInput = {
@@ -19992,6 +21972,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatFeedbackInput = {
@@ -20004,6 +21985,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatFeedbackInput = {
@@ -20032,6 +22014,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatFeedbackInput = {
@@ -20044,6 +22027,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutInstantReplyFeedbackInput = {
@@ -20056,6 +22040,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInstantReplyFeedbackInput = {
@@ -20068,6 +22053,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInstantReplyFeedbackInput = {
@@ -20096,6 +22082,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInstantReplyFeedbackInput = {
@@ -20108,6 +22095,143 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutChatAttachmentsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutChatAttachmentsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutChatAttachmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutChatAttachmentsInput, UserUncheckedCreateWithoutChatAttachmentsInput>
+  }
+
+  export type AccountCreateWithoutChatAttachmentsInput = {
+    id?: string
+    accessToken: string
+    emailAddress: string
+    name: string
+    nextDeltaToken?: string | null
+    oramaIndex?: string | null
+    qaCacheIndex?: string | null
+    user: UserCreateNestedOneWithoutAccountsInput
+    threads?: ThreadCreateNestedManyWithoutAccountInput
+    emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountUncheckedCreateWithoutChatAttachmentsInput = {
+    id?: string
+    userId: string
+    accessToken: string
+    emailAddress: string
+    name: string
+    nextDeltaToken?: string | null
+    oramaIndex?: string | null
+    qaCacheIndex?: string | null
+    threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
+    emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountCreateOrConnectWithoutChatAttachmentsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutChatAttachmentsInput, AccountUncheckedCreateWithoutChatAttachmentsInput>
+  }
+
+  export type UserUpsertWithoutChatAttachmentsInput = {
+    update: XOR<UserUpdateWithoutChatAttachmentsInput, UserUncheckedUpdateWithoutChatAttachmentsInput>
+    create: XOR<UserCreateWithoutChatAttachmentsInput, UserUncheckedCreateWithoutChatAttachmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutChatAttachmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutChatAttachmentsInput, UserUncheckedUpdateWithoutChatAttachmentsInput>
+  }
+
+  export type UserUpdateWithoutChatAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutChatAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountUpsertWithoutChatAttachmentsInput = {
+    update: XOR<AccountUpdateWithoutChatAttachmentsInput, AccountUncheckedUpdateWithoutChatAttachmentsInput>
+    create: XOR<AccountCreateWithoutChatAttachmentsInput, AccountUncheckedCreateWithoutChatAttachmentsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutChatAttachmentsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutChatAttachmentsInput, AccountUncheckedUpdateWithoutChatAttachmentsInput>
+  }
+
+  export type AccountUpdateWithoutChatAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutAccountsNestedInput
+    threads?: ThreadUpdateManyWithoutAccountNestedInput
+    emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutChatAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
+    emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -20155,6 +22279,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ChatAttachmentCreateManyUserInput = {
+    id?: string
+    accountId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
+  }
+
   export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
@@ -20165,6 +22303,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutUserInput = {
@@ -20177,6 +22316,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateManyWithoutUserInput = {
@@ -20294,6 +22434,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ChatAttachmentUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    account?: AccountUpdateOneRequiredWithoutChatAttachmentsNestedInput
+  }
+
+  export type ChatAttachmentUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChatAttachmentUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type ThreadCreateManyAccountInput = {
     id?: string
     subject: string
@@ -20312,6 +22494,20 @@ export namespace Prisma {
     name?: string | null
     address: string
     raw?: string | null
+  }
+
+  export type ChatAttachmentCreateManyAccountInput = {
+    id?: string
+    userId: string
+    fileName: string
+    mimeType: string
+    size: number
+    fileUrl?: string | null
+    extractedText: string
+    textEmbeddings?: ChatAttachmentCreatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: boolean
+    uploadedAt?: Date | string
+    indexedAt?: Date | string | null
   }
 
   export type ThreadUpdateWithoutAccountInput = {
@@ -20384,6 +22580,48 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     raw?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ChatAttachmentUpdateWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutChatAttachmentsNestedInput
+  }
+
+  export type ChatAttachmentUncheckedUpdateWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChatAttachmentUncheckedUpdateManyWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    extractedText?: StringFieldUpdateOperationsInput | string
+    textEmbeddings?: ChatAttachmentUpdatetextEmbeddingsInput | number[]
+    inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type EmailCreateManyThreadInput = {

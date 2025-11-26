@@ -36,6 +36,8 @@ export class OramaClient {
 
         if (account.oramaIndex) {
             this.orama = await restore('json', account.oramaIndex as any)
+            // Check if schema needs migration (for existing indexes)
+            // If source field doesn't exist, we'll need to handle it gracefully
         } else {
             this.orama = await create({
                 schema: {
@@ -46,6 +48,10 @@ export class OramaClient {
                     to: 'string[]',
                     sentAt: 'string',
                     threadId: 'string',
+                    // New fields for file attachments
+                    source: 'string', // 'email' | 'file'
+                    sourceId: 'string', // emailId or fileId
+                    fileName: 'string', // For files
                     embeddings: 'vector[1536]'
                 }
             })

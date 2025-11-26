@@ -59,9 +59,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
         
-        const { messages, accountId, emailContext } = body;
+        const { messages, accountId, emailContext, fileContext } = body;
         
-        console.log("Extracted values - messages:", messages?.length, "accountId:", accountId, "emailContext:", emailContext);
+        console.log("Extracted values - messages:", messages?.length, "accountId:", accountId, "emailContext:", emailContext, "fileContext:", fileContext);
         
         if (!messages || !Array.isArray(messages) || messages.length === 0) {
             console.error("Invalid messages:", messages);
@@ -178,6 +178,15 @@ Guidelines:
         }
 
         // ===== STAGE 2: Expensive Model Flow (Original RAG System) =====
+        // Track sources used in the response
+        type SourceInfo = {
+            type: 'email' | 'attachment'
+            id: string
+            title: string
+            threadId?: string
+        }
+        const sources: SourceInfo[] = []
+
         // Extract email IDs from context if provided
         const contextEmailIds = emailContext?.emailIds || []
         let contextEmailsText = ''
@@ -205,11 +214,60 @@ Guidelines:
                         return `Subject: ${email.subject}\nFrom: ${email.from.name || email.from.address}\nDate: ${new Date(email.sentAt).toLocaleString()}\nBody: ${body}`
                     }).join('\n\n---\n\n')
                     contextEmailIdsForTracking = contextEmails.map(e => e.id)
+                    
+                    // Add to sources
+                    contextEmails.forEach(email => {
+                        sources.push({
+                            type: 'email',
+                            id: email.id,
+                            title: email.subject || '(No subject)',
+                            threadId: email.threadId,
+                        })
+                    })
+                    
                     console.log(`Fetched ${contextEmails.length} context emails`);
                 }
             } catch (error) {
                 console.error("Error fetching context emails:", error);
                 // Continue without context emails if fetch fails
+            }
+        }
+
+        // Extract file IDs from context if provided
+        const contextFileIds = fileContext?.fileIds || []
+        let fileContextText = ''
+
+        // Fetch file attachments if provided
+        if (contextFileIds.length > 0) {
+            try {
+                console.log(`Fetching ${contextFileIds.length} file attachments`);
+                const files = await db.chatAttachment.findMany({
+                    where: {
+                        id: { in: contextFileIds },
+                        accountId,
+                        userId
+                    }
+                })
+
+                if (files.length > 0) {
+                    fileContextText = files.map(file => 
+                        `File: ${file.fileName}\nContent:\n${file.extractedText || ''}`
+                    ).join('\n\n---\n\n')
+
+                    // Add to sources
+                    files.forEach(file => {
+                        sources.push({
+                            type: 'attachment',
+                            id: file.id,
+                            title: file.fileName,
+                        })
+                    })
+                    
+                    console.log(`Fetched ${files.length} file attachments`);
+                }
+            } catch (error) {
+                console.error("Error fetching file attachments:", error);
+                // Continue without file attachments if fetch fails
             }
         }
 
@@ -245,6 +303,27 @@ Guidelines:
         const limitedHits = context.hits.slice(0, maxVectorHits);
         console.log(`Using ${limitedHits.length} vector search hits (limited from ${context.hits.length})`);
         
+        // Add vector search results to sources
+        limitedHits.forEach((hit: any) => {
+            const doc = hit.document
+            if (doc?.threadId && !sources.find(s => s.id === doc.threadId && s.type === 'email')) {
+                sources.push({
+                    type: 'email',
+                    id: doc.threadId,
+                    title: doc.subject || '(No subject)',
+                    threadId: doc.threadId,
+                })
+            }
+            // Also track file sources from vector search
+            if (doc?.source === 'file' && doc?.sourceId && !sources.find(s => s.id === doc.sourceId && s.type === 'attachment')) {
+                sources.push({
+                    type: 'attachment',
+                    id: doc.sourceId,
+                    title: doc.fileName || doc.subject || 'File',
+                })
+            }
+        })
+
         // Extract retrieved email identifiers for feedback tracking
         const retrievedEmailIds = [
             ...contextEmailIdsForTracking,
@@ -272,10 +351,25 @@ Guidelines:
             }).join('\n\n---\n\n')
             : '';
 
-        // Combine context emails (prioritized) with vector search results
-        const contextText = contextEmailsText 
-            ? (contextEmailsText + (vectorContextText ? '\n\n---\n\nADDITIONAL RELEVANT EMAILS:\n\n' + vectorContextText : ''))
-            : (vectorContextText || 'No relevant email context found.');
+        // Combine file context with email context and vector search results
+        let contextText = ''
+        
+        if (fileContextText) {
+            contextText = fileContextText
+            if (contextEmailsText) {
+                contextText += '\n\n---\n\nEMAIL CONTEXT:\n\n' + contextEmailsText
+            }
+            if (vectorContextText) {
+                contextText += '\n\n---\n\nADDITIONAL RELEVANT EMAILS:\n\n' + vectorContextText
+            }
+        } else if (contextEmailsText) {
+            contextText = contextEmailsText
+            if (vectorContextText) {
+                contextText += '\n\n---\n\nADDITIONAL RELEVANT EMAILS:\n\n' + vectorContextText
+            }
+        } else {
+            contextText = vectorContextText || 'No relevant email context found.'
+        }
 
         // Create a more concise system prompt to save tokens
         const prompt = {
@@ -284,14 +378,15 @@ Guidelines:
 
 TIME: ${new Date().toLocaleString()}
 
-EMAIL CONTEXT:
+CONTEXT:
 ${contextText}
 
 GUIDELINES:
-- Use email context to answer questions
+- Use context to answer questions
 - If context is insufficient, say so politely
 - Be concise and helpful
-- Don't invent information not in the context`
+- Don't invent information not in the context
+- At the end of your response, mention which sources you used (emails/attachments)`
         };
 
         // Convert messages to format expected by streamText
@@ -364,6 +459,10 @@ GUIDELINES:
                     } catch (cacheError) {
                         console.error("Failed to add Q&A to cache:", cacheError);
                     }
+                    
+                    // Store sources for this response (we'll need to pass them to the client)
+                    // Note: Sources will be included in the response metadata
+                    console.log("Sources used in response:", sources);
                 },
             });
 

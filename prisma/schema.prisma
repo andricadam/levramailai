@@ -23,6 +23,7 @@ model User {
     chatbotInteractions ChatbotInteraction[]
     chatFeedback ChatFeedback[]
     instantReplyFeedback InstantReplyFeedback[]
+    chatAttachments ChatAttachment[]
 }
 
 model Account {
@@ -40,6 +41,7 @@ model Account {
     user User @relation(fields: [userId], references: [id])
     threads Thread[]
     emailAddresses EmailAddress[]
+    chatAttachments ChatAttachment[]
 }
 
 model Thread {
@@ -250,4 +252,31 @@ model InstantReplyFeedback {
     @@index([threadId])
     @@index([createdAt])
     @@index([type])
+}
+
+model ChatAttachment {
+    id String @id @default(cuid())
+    userId String
+    accountId String
+    
+    fileName String
+    mimeType String
+    size Int
+    fileUrl String? // For permanent storage
+    extractedText String
+    textEmbeddings Float[] // Optional - can be empty array if not needed
+    
+    // Knowledge base flag
+    inKnowledgeBase Boolean @default(false)
+    
+    // Metadata
+    uploadedAt DateTime @default(now())
+    indexedAt DateTime? // When added to Orama
+    
+    user User @relation(fields: [userId], references: [id])
+    account Account @relation(fields: [accountId], references: [id])
+    
+    @@index([userId, accountId])
+    @@index([inKnowledgeBase])
+    @@index([uploadedAt])
 }
