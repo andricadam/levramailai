@@ -9,6 +9,8 @@ import { auth } from "@clerk/nextjs/server";
 import { getSubscriptionStatus } from "@/lib/stripe-actions";
 import { FREE_CREDITS_PER_DAY, QA_CACHE_SIMILARITY_THRESHOLD, SMALL_MODEL, LARGE_MODEL } from "@/app/constants";
 import { turndown } from "@/lib/turndown";
+import { downloadAndProcessAttachments } from "@/lib/download-attachment";
+import { MAX_FILE_SIZE } from "@/lib/file-processor";
 
 // export const runtime = "edge";
 
@@ -203,29 +205,104 @@ Guidelines:
                     },
                     include: { 
                         from: true,
-                        thread: true
+                        thread: true,
+                        attachments: true // Include attachments to check if they exist
                     },
                     orderBy: { sentAt: 'asc' }
                 })
 
                 if (contextEmails.length > 0) {
-                    contextEmailsText = contextEmails.map(email => {
-                        const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
-                        return `Subject: ${email.subject}\nFrom: ${email.from.name || email.from.address}\nDate: ${new Date(email.sentAt).toLocaleString()}\nBody: ${body}`
-                    }).join('\n\n---\n\n')
+                    // Process emails with their attachments
+                    const emailContexts = await Promise.all(
+                        contextEmails.map(async (email) => {
+                            const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
+                            let emailText = `Subject: ${email.subject}\nFrom: ${email.from.name || email.from.address}\nDate: ${new Date(email.sentAt).toLocaleString()}\nBody: ${body}`
+                            
+                            // Process attachments on-demand if email has them
+                            let attachmentTexts: string[] = []
+                            if (email.attachments && email.attachments.length > 0) {
+                                try {
+                                    // Filter out inline attachments and limit to 5 per email
+                                    const nonInlineAttachments = email.attachments
+                                        .filter(att => {
+                                            // Skip inline attachments
+                                            if (att.inline) return false
+                                            // Skip if size is too large (pre-check)
+                                            if (att.size > MAX_FILE_SIZE) {
+                                                console.warn(`Skipping attachment ${att.id} - size ${att.size} exceeds limit`)
+                                                return false
+                                            }
+                                            return true
+                                        })
+                                        .slice(0, 5) // Limit to 5 attachments per email
+                                    
+                                    if (nonInlineAttachments.length > 0) {
+                                        console.log(`Processing ${nonInlineAttachments.length} attachments for email ${email.id}`)
+                                        
+                                        try {
+                                            const attachmentData = await downloadAndProcessAttachments(
+                                                nonInlineAttachments.map(att => ({
+                                                    attachmentId: att.id,
+                                                    emailId: email.id,
+                                                    accountId,
+                                                    userId
+                                                })),
+                                                5 // Max 5 attachments per email
+                                            )
+
+                                            if (attachmentData.length > 0) {
+                                                attachmentTexts = attachmentData.map(data => 
+                                                    `File: ${data.fileName}\nContent:\n${data.text}`
+                                                )
+
+                                                // Add attachment sources only for successfully processed attachments
+                                                attachmentData.forEach((data, index) => {
+                                                    const att = nonInlineAttachments[index]
+                                                    if (att) {
+                                                        sources.push({
+                                                            type: 'attachment',
+                                                            id: att.id,
+                                                            title: att.name,
+                                                        })
+                                                    }
+                                                })
+                                                
+                                                console.log(`Successfully processed ${attachmentData.length} attachments for email ${email.id}`)
+                                            } else {
+                                                console.warn(`No attachments were successfully processed for email ${email.id}`)
+                                            }
+                                        } catch (downloadError) {
+                                            console.error(`Error downloading/processing attachments for email ${email.id}:`, downloadError)
+                                            // Continue without attachments if processing fails
+                                        }
+                                    }
+                                } catch (attachmentError) {
+                                    console.error(`Error processing attachments for email ${email.id}:`, attachmentError)
+                                    // Continue without attachments if processing fails
+                                }
+                            }
+
+                            // Add email to sources
+                            sources.push({
+                                type: 'email',
+                                id: email.id,
+                                title: email.subject || '(No subject)',
+                                threadId: email.threadId,
+                            })
+
+                            // Combine email and attachment text
+                            if (attachmentTexts.length > 0) {
+                                emailText += '\n\n---\n\nATTACHMENTS:\n\n' + attachmentTexts.join('\n\n---\n\n')
+                            }
+
+                            return emailText
+                        })
+                    )
+
+                    contextEmailsText = emailContexts.join('\n\n---\n\n')
                     contextEmailIdsForTracking = contextEmails.map(e => e.id)
                     
-                    // Add to sources
-                    contextEmails.forEach(email => {
-                        sources.push({
-                            type: 'email',
-                            id: email.id,
-                            title: email.subject || '(No subject)',
-                            threadId: email.threadId,
-                        })
-                    })
-                    
-                    console.log(`Fetched ${contextEmails.length} context emails`);
+                    console.log(`Fetched ${contextEmails.length} context emails with attachments processed`);
                 }
             } catch (error) {
                 console.error("Error fetching context emails:", error);

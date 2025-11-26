@@ -502,6 +502,7 @@ export const accountRouter = createTRPCRouter({
                         subject: true,
                         bodySnippet: true,
                         sentAt: true,
+                        hasAttachments: true, // Include attachment flag
                         from: {
                             select: {
                                 name: true,

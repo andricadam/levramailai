@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
 import { api } from '@/trpc/react'
-import { Mail, X, Loader2 } from 'lucide-react'
+import { Mail, X, Loader2, Paperclip } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -14,6 +14,7 @@ export type EmailContext = {
   from: string
   snippet: string
   sentAt: Date
+  hasAttachments?: boolean
 }
 
 type EmailContextSelectorProps = {
@@ -60,6 +61,7 @@ export function EmailContextSelector({
         from: lastEmail.from.name || lastEmail.from.address || 'Unknown',
         snippet: lastEmail.bodySnippet || '',
         sentAt: lastEmail.sentAt,
+        hasAttachments: lastEmail.hasAttachments || false,
       })
       setIsOpen(false)
       setSearchQuery('')
@@ -76,6 +78,9 @@ export function EmailContextSelector({
         >
           <Mail className="size-3.5 text-primary" />
           <span className="truncate max-w-[150px] font-medium">{email.subject}</span>
+          {email.hasAttachments && (
+            <Paperclip className="size-3 text-primary" title="Has attachments" />
+          )}
           <button
             onClick={() => onRemove(email.emailId)}
             className="ml-0.5 hover:bg-primary/20 rounded p-0.5 transition-colors opacity-0 group-hover:opacity-100"
@@ -138,8 +143,11 @@ export function EmailContextSelector({
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm truncate">
+                          <div className="flex items-center gap-1.5 font-medium text-sm truncate">
                             {thread.subject || '(No subject)'}
+                            {lastEmail.hasAttachments && (
+                              <Paperclip className="size-3 text-muted-foreground flex-shrink-0" title="Has attachments" />
+                            )}
                           </div>
                           <div className="text-xs text-muted-foreground mt-1">
                             {lastEmail.from.name || lastEmail.from.address || 'Unknown'}
