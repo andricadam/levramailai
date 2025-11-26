@@ -16,6 +16,12 @@ export const env = createEnv({
     AURINKO_CLIENT_ID: z.string().min(1).optional(),
     AURINKO_CLIENT_SECRET: z.string().min(1).optional(),
     SERPER_API_KEY: z.string().min(1).optional(),
+    SERVER_GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+    SERVER_GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+    SERVER_GOOGLE_REDIRECT_URI: z.string().url().optional(),
+    SERVER_MICROSOFT_CLIENT_ID: z.string().min(1).optional(),
+    SERVER_MICROSOFT_CLIENT_SECRET: z.string().min(1).optional(),
+    SERVER_MICROSOFT_REDIRECT_URI: z.string().url().optional(),
   },
 
   /**
@@ -39,6 +45,12 @@ export const env = createEnv({
     AURINKO_CLIENT_ID: process.env.AURINKO_CLIENT_ID,
     AURINKO_CLIENT_SECRET: process.env.AURINKO_CLIENT_SECRET,
     SERPER_API_KEY: process.env.SERPER_API_KEY,
+    SERVER_GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    SERVER_GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    SERVER_GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+    SERVER_MICROSOFT_CLIENT_ID: process.env.MICROSOFT_CLIENT_ID,
+    SERVER_MICROSOFT_CLIENT_SECRET: process.env.MICROSOFT_CLIENT_SECRET,
+    SERVER_MICROSOFT_REDIRECT_URI: process.env.MICROSOFT_REDIRECT_URI,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
   },
   /**

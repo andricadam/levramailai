@@ -68,6 +68,16 @@ export type InstantReplyFeedback = $Result.DefaultSelection<Prisma.$InstantReply
  * 
  */
 export type ChatAttachment = $Result.DefaultSelection<Prisma.$ChatAttachmentPayload>
+/**
+ * Model AppConnection
+ * 
+ */
+export type AppConnection = $Result.DefaultSelection<Prisma.$AppConnectionPayload>
+/**
+ * Model SyncedItem
+ * 
+ */
+export type SyncedItem = $Result.DefaultSelection<Prisma.$SyncedItemPayload>
 
 /**
  * Enums
@@ -358,6 +368,26 @@ export class PrismaClient<
     * ```
     */
   get chatAttachment(): Prisma.ChatAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.appConnection`: Exposes CRUD operations for the **AppConnection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AppConnections
+    * const appConnections = await prisma.appConnection.findMany()
+    * ```
+    */
+  get appConnection(): Prisma.AppConnectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.syncedItem`: Exposes CRUD operations for the **SyncedItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SyncedItems
+    * const syncedItems = await prisma.syncedItem.findMany()
+    * ```
+    */
+  get syncedItem(): Prisma.SyncedItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -809,7 +839,9 @@ export namespace Prisma {
     StripeSubscription: 'StripeSubscription',
     ChatFeedback: 'ChatFeedback',
     InstantReplyFeedback: 'InstantReplyFeedback',
-    ChatAttachment: 'ChatAttachment'
+    ChatAttachment: 'ChatAttachment',
+    AppConnection: 'AppConnection',
+    SyncedItem: 'SyncedItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -828,7 +860,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback" | "chatAttachment"
+      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback" | "chatAttachment" | "appConnection" | "syncedItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1646,6 +1678,154 @@ export namespace Prisma {
           }
         }
       }
+      AppConnection: {
+        payload: Prisma.$AppConnectionPayload<ExtArgs>
+        fields: Prisma.AppConnectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AppConnectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AppConnectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>
+          }
+          findFirst: {
+            args: Prisma.AppConnectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AppConnectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>
+          }
+          findMany: {
+            args: Prisma.AppConnectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>[]
+          }
+          create: {
+            args: Prisma.AppConnectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>
+          }
+          createMany: {
+            args: Prisma.AppConnectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AppConnectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>[]
+          }
+          delete: {
+            args: Prisma.AppConnectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>
+          }
+          update: {
+            args: Prisma.AppConnectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.AppConnectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AppConnectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AppConnectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.AppConnectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AppConnectionPayload>
+          }
+          aggregate: {
+            args: Prisma.AppConnectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAppConnection>
+          }
+          groupBy: {
+            args: Prisma.AppConnectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AppConnectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AppConnectionCountArgs<ExtArgs>
+            result: $Utils.Optional<AppConnectionCountAggregateOutputType> | number
+          }
+        }
+      }
+      SyncedItem: {
+        payload: Prisma.$SyncedItemPayload<ExtArgs>
+        fields: Prisma.SyncedItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SyncedItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SyncedItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>
+          }
+          findFirst: {
+            args: Prisma.SyncedItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SyncedItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>
+          }
+          findMany: {
+            args: Prisma.SyncedItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>[]
+          }
+          create: {
+            args: Prisma.SyncedItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>
+          }
+          createMany: {
+            args: Prisma.SyncedItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SyncedItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>[]
+          }
+          delete: {
+            args: Prisma.SyncedItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>
+          }
+          update: {
+            args: Prisma.SyncedItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.SyncedItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SyncedItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SyncedItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.SyncedItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SyncedItemPayload>
+          }
+          aggregate: {
+            args: Prisma.SyncedItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSyncedItem>
+          }
+          groupBy: {
+            args: Prisma.SyncedItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SyncedItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SyncedItemCountArgs<ExtArgs>
+            result: $Utils.Optional<SyncedItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1753,6 +1933,8 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackOmit
     instantReplyFeedback?: InstantReplyFeedbackOmit
     chatAttachment?: ChatAttachmentOmit
+    appConnection?: AppConnectionOmit
+    syncedItem?: SyncedItemOmit
   }
 
   /* Types for Logging */
@@ -1838,6 +2020,7 @@ export namespace Prisma {
     chatFeedback: number
     instantReplyFeedback: number
     chatAttachments: number
+    appConnections: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1846,6 +2029,7 @@ export namespace Prisma {
     chatFeedback?: boolean | UserCountOutputTypeCountChatFeedbackArgs
     instantReplyFeedback?: boolean | UserCountOutputTypeCountInstantReplyFeedbackArgs
     chatAttachments?: boolean | UserCountOutputTypeCountChatAttachmentsArgs
+    appConnections?: boolean | UserCountOutputTypeCountAppConnectionsArgs
   }
 
   // Custom InputTypes
@@ -1894,6 +2078,13 @@ export namespace Prisma {
     where?: ChatAttachmentWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAppConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AppConnectionWhereInput
+  }
+
 
   /**
    * Count Type AccountCountOutputType
@@ -1903,12 +2094,14 @@ export namespace Prisma {
     threads: number
     emailAddresses: number
     chatAttachments: number
+    appConnections: number
   }
 
   export type AccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     threads?: boolean | AccountCountOutputTypeCountThreadsArgs
     emailAddresses?: boolean | AccountCountOutputTypeCountEmailAddressesArgs
     chatAttachments?: boolean | AccountCountOutputTypeCountChatAttachmentsArgs
+    appConnections?: boolean | AccountCountOutputTypeCountAppConnectionsArgs
   }
 
   // Custom InputTypes
@@ -1941,6 +2134,13 @@ export namespace Prisma {
    */
   export type AccountCountOutputTypeCountChatAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatAttachmentWhereInput
+  }
+
+  /**
+   * AccountCountOutputType without action
+   */
+  export type AccountCountOutputTypeCountAppConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AppConnectionWhereInput
   }
 
 
@@ -2106,6 +2306,37 @@ export namespace Prisma {
    */
   export type EmailAddressCountOutputTypeCountReplyToEmailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmailWhereInput
+  }
+
+
+  /**
+   * Count Type AppConnectionCountOutputType
+   */
+
+  export type AppConnectionCountOutputType = {
+    syncedItems: number
+  }
+
+  export type AppConnectionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    syncedItems?: boolean | AppConnectionCountOutputTypeCountSyncedItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AppConnectionCountOutputType without action
+   */
+  export type AppConnectionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnectionCountOutputType
+     */
+    select?: AppConnectionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AppConnectionCountOutputType without action
+   */
+  export type AppConnectionCountOutputTypeCountSyncedItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SyncedItemWhereInput
   }
 
 
@@ -2283,6 +2514,7 @@ export namespace Prisma {
     chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
     instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
     chatAttachments?: boolean | User$chatAttachmentsArgs<ExtArgs>
+    appConnections?: boolean | User$appConnectionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2318,6 +2550,7 @@ export namespace Prisma {
     chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
     instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
     chatAttachments?: boolean | User$chatAttachmentsArgs<ExtArgs>
+    appConnections?: boolean | User$appConnectionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2332,6 +2565,7 @@ export namespace Prisma {
       chatFeedback: Prisma.$ChatFeedbackPayload<ExtArgs>[]
       instantReplyFeedback: Prisma.$InstantReplyFeedbackPayload<ExtArgs>[]
       chatAttachments: Prisma.$ChatAttachmentPayload<ExtArgs>[]
+      appConnections: Prisma.$AppConnectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2739,6 +2973,7 @@ export namespace Prisma {
     chatFeedback<T extends User$chatFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$chatFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     instantReplyFeedback<T extends User$instantReplyFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$instantReplyFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatAttachments<T extends User$chatAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    appConnections<T extends User$appConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$appConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3300,6 +3535,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.appConnections
+   */
+  export type User$appConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    where?: AppConnectionWhereInput
+    orderBy?: AppConnectionOrderByWithRelationInput | AppConnectionOrderByWithRelationInput[]
+    cursor?: AppConnectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AppConnectionScalarFieldEnum | AppConnectionScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3510,6 +3769,7 @@ export namespace Prisma {
     threads?: boolean | Account$threadsArgs<ExtArgs>
     emailAddresses?: boolean | Account$emailAddressesArgs<ExtArgs>
     chatAttachments?: boolean | Account$chatAttachmentsArgs<ExtArgs>
+    appConnections?: boolean | Account$appConnectionsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["account"]>
 
@@ -3554,6 +3814,7 @@ export namespace Prisma {
     threads?: boolean | Account$threadsArgs<ExtArgs>
     emailAddresses?: boolean | Account$emailAddressesArgs<ExtArgs>
     chatAttachments?: boolean | Account$chatAttachmentsArgs<ExtArgs>
+    appConnections?: boolean | Account$appConnectionsArgs<ExtArgs>
     _count?: boolean | AccountCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3570,6 +3831,7 @@ export namespace Prisma {
       threads: Prisma.$ThreadPayload<ExtArgs>[]
       emailAddresses: Prisma.$EmailAddressPayload<ExtArgs>[]
       chatAttachments: Prisma.$ChatAttachmentPayload<ExtArgs>[]
+      appConnections: Prisma.$AppConnectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3978,6 +4240,7 @@ export namespace Prisma {
     threads<T extends Account$threadsArgs<ExtArgs> = {}>(args?: Subset<T, Account$threadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emailAddresses<T extends Account$emailAddressesArgs<ExtArgs> = {}>(args?: Subset<T, Account$emailAddressesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailAddressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatAttachments<T extends Account$chatAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Account$chatAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    appConnections<T extends Account$appConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, Account$appConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4480,6 +4743,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChatAttachmentScalarFieldEnum | ChatAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Account.appConnections
+   */
+  export type Account$appConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    where?: AppConnectionWhereInput
+    orderBy?: AppConnectionOrderByWithRelationInput | AppConnectionOrderByWithRelationInput[]
+    cursor?: AppConnectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AppConnectionScalarFieldEnum | AppConnectionScalarFieldEnum[]
   }
 
   /**
@@ -15173,6 +15460,2421 @@ export namespace Prisma {
 
 
   /**
+   * Model AppConnection
+   */
+
+  export type AggregateAppConnection = {
+    _count: AppConnectionCountAggregateOutputType | null
+    _min: AppConnectionMinAggregateOutputType | null
+    _max: AppConnectionMaxAggregateOutputType | null
+  }
+
+  export type AppConnectionMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    appType: string | null
+    appName: string | null
+    accessToken: string | null
+    refreshToken: string | null
+    expiresAt: Date | null
+    connectedAt: Date | null
+    lastSyncedAt: Date | null
+    syncStatus: string | null
+    syncError: string | null
+    enabled: boolean | null
+    syncFrequency: string | null
+  }
+
+  export type AppConnectionMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    appType: string | null
+    appName: string | null
+    accessToken: string | null
+    refreshToken: string | null
+    expiresAt: Date | null
+    connectedAt: Date | null
+    lastSyncedAt: Date | null
+    syncStatus: string | null
+    syncError: string | null
+    enabled: boolean | null
+    syncFrequency: string | null
+  }
+
+  export type AppConnectionCountAggregateOutputType = {
+    id: number
+    userId: number
+    accountId: number
+    appType: number
+    appName: number
+    accessToken: number
+    refreshToken: number
+    expiresAt: number
+    connectedAt: number
+    lastSyncedAt: number
+    syncStatus: number
+    syncError: number
+    enabled: number
+    syncFrequency: number
+    _all: number
+  }
+
+
+  export type AppConnectionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    appType?: true
+    appName?: true
+    accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    connectedAt?: true
+    lastSyncedAt?: true
+    syncStatus?: true
+    syncError?: true
+    enabled?: true
+    syncFrequency?: true
+  }
+
+  export type AppConnectionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    appType?: true
+    appName?: true
+    accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    connectedAt?: true
+    lastSyncedAt?: true
+    syncStatus?: true
+    syncError?: true
+    enabled?: true
+    syncFrequency?: true
+  }
+
+  export type AppConnectionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    appType?: true
+    appName?: true
+    accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    connectedAt?: true
+    lastSyncedAt?: true
+    syncStatus?: true
+    syncError?: true
+    enabled?: true
+    syncFrequency?: true
+    _all?: true
+  }
+
+  export type AppConnectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AppConnection to aggregate.
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AppConnections to fetch.
+     */
+    orderBy?: AppConnectionOrderByWithRelationInput | AppConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AppConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AppConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AppConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AppConnections
+    **/
+    _count?: true | AppConnectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AppConnectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AppConnectionMaxAggregateInputType
+  }
+
+  export type GetAppConnectionAggregateType<T extends AppConnectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateAppConnection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAppConnection[P]>
+      : GetScalarType<T[P], AggregateAppConnection[P]>
+  }
+
+
+
+
+  export type AppConnectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AppConnectionWhereInput
+    orderBy?: AppConnectionOrderByWithAggregationInput | AppConnectionOrderByWithAggregationInput[]
+    by: AppConnectionScalarFieldEnum[] | AppConnectionScalarFieldEnum
+    having?: AppConnectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AppConnectionCountAggregateInputType | true
+    _min?: AppConnectionMinAggregateInputType
+    _max?: AppConnectionMaxAggregateInputType
+  }
+
+  export type AppConnectionGroupByOutputType = {
+    id: string
+    userId: string
+    accountId: string | null
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken: string | null
+    expiresAt: Date | null
+    connectedAt: Date
+    lastSyncedAt: Date | null
+    syncStatus: string
+    syncError: string | null
+    enabled: boolean
+    syncFrequency: string
+    _count: AppConnectionCountAggregateOutputType | null
+    _min: AppConnectionMinAggregateOutputType | null
+    _max: AppConnectionMaxAggregateOutputType | null
+  }
+
+  type GetAppConnectionGroupByPayload<T extends AppConnectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AppConnectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AppConnectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AppConnectionGroupByOutputType[P]>
+            : GetScalarType<T[P], AppConnectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AppConnectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    appType?: boolean
+    appName?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    lastSyncedAt?: boolean
+    syncStatus?: boolean
+    syncError?: boolean
+    enabled?: boolean
+    syncFrequency?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AppConnection$accountArgs<ExtArgs>
+    syncedItems?: boolean | AppConnection$syncedItemsArgs<ExtArgs>
+    _count?: boolean | AppConnectionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["appConnection"]>
+
+  export type AppConnectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    appType?: boolean
+    appName?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    lastSyncedAt?: boolean
+    syncStatus?: boolean
+    syncError?: boolean
+    enabled?: boolean
+    syncFrequency?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AppConnection$accountArgs<ExtArgs>
+  }, ExtArgs["result"]["appConnection"]>
+
+  export type AppConnectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    appType?: boolean
+    appName?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    lastSyncedAt?: boolean
+    syncStatus?: boolean
+    syncError?: boolean
+    enabled?: boolean
+    syncFrequency?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AppConnection$accountArgs<ExtArgs>
+  }, ExtArgs["result"]["appConnection"]>
+
+  export type AppConnectionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    appType?: boolean
+    appName?: boolean
+    accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    connectedAt?: boolean
+    lastSyncedAt?: boolean
+    syncStatus?: boolean
+    syncError?: boolean
+    enabled?: boolean
+    syncFrequency?: boolean
+  }
+
+  export type AppConnectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accountId" | "appType" | "appName" | "accessToken" | "refreshToken" | "expiresAt" | "connectedAt" | "lastSyncedAt" | "syncStatus" | "syncError" | "enabled" | "syncFrequency", ExtArgs["result"]["appConnection"]>
+  export type AppConnectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AppConnection$accountArgs<ExtArgs>
+    syncedItems?: boolean | AppConnection$syncedItemsArgs<ExtArgs>
+    _count?: boolean | AppConnectionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AppConnectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AppConnection$accountArgs<ExtArgs>
+  }
+  export type AppConnectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    account?: boolean | AppConnection$accountArgs<ExtArgs>
+  }
+
+  export type $AppConnectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AppConnection"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      account: Prisma.$AccountPayload<ExtArgs> | null
+      syncedItems: Prisma.$SyncedItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      accountId: string | null
+      appType: string
+      appName: string
+      accessToken: string
+      refreshToken: string | null
+      expiresAt: Date | null
+      connectedAt: Date
+      lastSyncedAt: Date | null
+      syncStatus: string
+      syncError: string | null
+      enabled: boolean
+      syncFrequency: string
+    }, ExtArgs["result"]["appConnection"]>
+    composites: {}
+  }
+
+  type AppConnectionGetPayload<S extends boolean | null | undefined | AppConnectionDefaultArgs> = $Result.GetResult<Prisma.$AppConnectionPayload, S>
+
+  type AppConnectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AppConnectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AppConnectionCountAggregateInputType | true
+    }
+
+  export interface AppConnectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AppConnection'], meta: { name: 'AppConnection' } }
+    /**
+     * Find zero or one AppConnection that matches the filter.
+     * @param {AppConnectionFindUniqueArgs} args - Arguments to find a AppConnection
+     * @example
+     * // Get one AppConnection
+     * const appConnection = await prisma.appConnection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AppConnectionFindUniqueArgs>(args: SelectSubset<T, AppConnectionFindUniqueArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AppConnection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AppConnectionFindUniqueOrThrowArgs} args - Arguments to find a AppConnection
+     * @example
+     * // Get one AppConnection
+     * const appConnection = await prisma.appConnection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AppConnectionFindUniqueOrThrowArgs>(args: SelectSubset<T, AppConnectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AppConnection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionFindFirstArgs} args - Arguments to find a AppConnection
+     * @example
+     * // Get one AppConnection
+     * const appConnection = await prisma.appConnection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AppConnectionFindFirstArgs>(args?: SelectSubset<T, AppConnectionFindFirstArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AppConnection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionFindFirstOrThrowArgs} args - Arguments to find a AppConnection
+     * @example
+     * // Get one AppConnection
+     * const appConnection = await prisma.appConnection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AppConnectionFindFirstOrThrowArgs>(args?: SelectSubset<T, AppConnectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AppConnections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AppConnections
+     * const appConnections = await prisma.appConnection.findMany()
+     * 
+     * // Get first 10 AppConnections
+     * const appConnections = await prisma.appConnection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const appConnectionWithIdOnly = await prisma.appConnection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AppConnectionFindManyArgs>(args?: SelectSubset<T, AppConnectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AppConnection.
+     * @param {AppConnectionCreateArgs} args - Arguments to create a AppConnection.
+     * @example
+     * // Create one AppConnection
+     * const AppConnection = await prisma.appConnection.create({
+     *   data: {
+     *     // ... data to create a AppConnection
+     *   }
+     * })
+     * 
+     */
+    create<T extends AppConnectionCreateArgs>(args: SelectSubset<T, AppConnectionCreateArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AppConnections.
+     * @param {AppConnectionCreateManyArgs} args - Arguments to create many AppConnections.
+     * @example
+     * // Create many AppConnections
+     * const appConnection = await prisma.appConnection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AppConnectionCreateManyArgs>(args?: SelectSubset<T, AppConnectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AppConnections and returns the data saved in the database.
+     * @param {AppConnectionCreateManyAndReturnArgs} args - Arguments to create many AppConnections.
+     * @example
+     * // Create many AppConnections
+     * const appConnection = await prisma.appConnection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AppConnections and only return the `id`
+     * const appConnectionWithIdOnly = await prisma.appConnection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AppConnectionCreateManyAndReturnArgs>(args?: SelectSubset<T, AppConnectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AppConnection.
+     * @param {AppConnectionDeleteArgs} args - Arguments to delete one AppConnection.
+     * @example
+     * // Delete one AppConnection
+     * const AppConnection = await prisma.appConnection.delete({
+     *   where: {
+     *     // ... filter to delete one AppConnection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AppConnectionDeleteArgs>(args: SelectSubset<T, AppConnectionDeleteArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AppConnection.
+     * @param {AppConnectionUpdateArgs} args - Arguments to update one AppConnection.
+     * @example
+     * // Update one AppConnection
+     * const appConnection = await prisma.appConnection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AppConnectionUpdateArgs>(args: SelectSubset<T, AppConnectionUpdateArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AppConnections.
+     * @param {AppConnectionDeleteManyArgs} args - Arguments to filter AppConnections to delete.
+     * @example
+     * // Delete a few AppConnections
+     * const { count } = await prisma.appConnection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AppConnectionDeleteManyArgs>(args?: SelectSubset<T, AppConnectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AppConnections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AppConnections
+     * const appConnection = await prisma.appConnection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AppConnectionUpdateManyArgs>(args: SelectSubset<T, AppConnectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AppConnections and returns the data updated in the database.
+     * @param {AppConnectionUpdateManyAndReturnArgs} args - Arguments to update many AppConnections.
+     * @example
+     * // Update many AppConnections
+     * const appConnection = await prisma.appConnection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AppConnections and only return the `id`
+     * const appConnectionWithIdOnly = await prisma.appConnection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AppConnectionUpdateManyAndReturnArgs>(args: SelectSubset<T, AppConnectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AppConnection.
+     * @param {AppConnectionUpsertArgs} args - Arguments to update or create a AppConnection.
+     * @example
+     * // Update or create a AppConnection
+     * const appConnection = await prisma.appConnection.upsert({
+     *   create: {
+     *     // ... data to create a AppConnection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AppConnection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AppConnectionUpsertArgs>(args: SelectSubset<T, AppConnectionUpsertArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AppConnections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionCountArgs} args - Arguments to filter AppConnections to count.
+     * @example
+     * // Count the number of AppConnections
+     * const count = await prisma.appConnection.count({
+     *   where: {
+     *     // ... the filter for the AppConnections we want to count
+     *   }
+     * })
+    **/
+    count<T extends AppConnectionCountArgs>(
+      args?: Subset<T, AppConnectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AppConnectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AppConnection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AppConnectionAggregateArgs>(args: Subset<T, AppConnectionAggregateArgs>): Prisma.PrismaPromise<GetAppConnectionAggregateType<T>>
+
+    /**
+     * Group by AppConnection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AppConnectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AppConnectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AppConnectionGroupByArgs['orderBy'] }
+        : { orderBy?: AppConnectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AppConnectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAppConnectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AppConnection model
+   */
+  readonly fields: AppConnectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AppConnection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AppConnectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    account<T extends AppConnection$accountArgs<ExtArgs> = {}>(args?: Subset<T, AppConnection$accountArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    syncedItems<T extends AppConnection$syncedItemsArgs<ExtArgs> = {}>(args?: Subset<T, AppConnection$syncedItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AppConnection model
+   */
+  interface AppConnectionFieldRefs {
+    readonly id: FieldRef<"AppConnection", 'String'>
+    readonly userId: FieldRef<"AppConnection", 'String'>
+    readonly accountId: FieldRef<"AppConnection", 'String'>
+    readonly appType: FieldRef<"AppConnection", 'String'>
+    readonly appName: FieldRef<"AppConnection", 'String'>
+    readonly accessToken: FieldRef<"AppConnection", 'String'>
+    readonly refreshToken: FieldRef<"AppConnection", 'String'>
+    readonly expiresAt: FieldRef<"AppConnection", 'DateTime'>
+    readonly connectedAt: FieldRef<"AppConnection", 'DateTime'>
+    readonly lastSyncedAt: FieldRef<"AppConnection", 'DateTime'>
+    readonly syncStatus: FieldRef<"AppConnection", 'String'>
+    readonly syncError: FieldRef<"AppConnection", 'String'>
+    readonly enabled: FieldRef<"AppConnection", 'Boolean'>
+    readonly syncFrequency: FieldRef<"AppConnection", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AppConnection findUnique
+   */
+  export type AppConnectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which AppConnection to fetch.
+     */
+    where: AppConnectionWhereUniqueInput
+  }
+
+  /**
+   * AppConnection findUniqueOrThrow
+   */
+  export type AppConnectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which AppConnection to fetch.
+     */
+    where: AppConnectionWhereUniqueInput
+  }
+
+  /**
+   * AppConnection findFirst
+   */
+  export type AppConnectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which AppConnection to fetch.
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AppConnections to fetch.
+     */
+    orderBy?: AppConnectionOrderByWithRelationInput | AppConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AppConnections.
+     */
+    cursor?: AppConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AppConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AppConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AppConnections.
+     */
+    distinct?: AppConnectionScalarFieldEnum | AppConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * AppConnection findFirstOrThrow
+   */
+  export type AppConnectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which AppConnection to fetch.
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AppConnections to fetch.
+     */
+    orderBy?: AppConnectionOrderByWithRelationInput | AppConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AppConnections.
+     */
+    cursor?: AppConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AppConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AppConnections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AppConnections.
+     */
+    distinct?: AppConnectionScalarFieldEnum | AppConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * AppConnection findMany
+   */
+  export type AppConnectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * Filter, which AppConnections to fetch.
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AppConnections to fetch.
+     */
+    orderBy?: AppConnectionOrderByWithRelationInput | AppConnectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AppConnections.
+     */
+    cursor?: AppConnectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AppConnections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AppConnections.
+     */
+    skip?: number
+    distinct?: AppConnectionScalarFieldEnum | AppConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * AppConnection create
+   */
+  export type AppConnectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AppConnection.
+     */
+    data: XOR<AppConnectionCreateInput, AppConnectionUncheckedCreateInput>
+  }
+
+  /**
+   * AppConnection createMany
+   */
+  export type AppConnectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AppConnections.
+     */
+    data: AppConnectionCreateManyInput | AppConnectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AppConnection createManyAndReturn
+   */
+  export type AppConnectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many AppConnections.
+     */
+    data: AppConnectionCreateManyInput | AppConnectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AppConnection update
+   */
+  export type AppConnectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AppConnection.
+     */
+    data: XOR<AppConnectionUpdateInput, AppConnectionUncheckedUpdateInput>
+    /**
+     * Choose, which AppConnection to update.
+     */
+    where: AppConnectionWhereUniqueInput
+  }
+
+  /**
+   * AppConnection updateMany
+   */
+  export type AppConnectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AppConnections.
+     */
+    data: XOR<AppConnectionUpdateManyMutationInput, AppConnectionUncheckedUpdateManyInput>
+    /**
+     * Filter which AppConnections to update
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * Limit how many AppConnections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AppConnection updateManyAndReturn
+   */
+  export type AppConnectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * The data used to update AppConnections.
+     */
+    data: XOR<AppConnectionUpdateManyMutationInput, AppConnectionUncheckedUpdateManyInput>
+    /**
+     * Filter which AppConnections to update
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * Limit how many AppConnections to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AppConnection upsert
+   */
+  export type AppConnectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AppConnection to update in case it exists.
+     */
+    where: AppConnectionWhereUniqueInput
+    /**
+     * In case the AppConnection found by the `where` argument doesn't exist, create a new AppConnection with this data.
+     */
+    create: XOR<AppConnectionCreateInput, AppConnectionUncheckedCreateInput>
+    /**
+     * In case the AppConnection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AppConnectionUpdateInput, AppConnectionUncheckedUpdateInput>
+  }
+
+  /**
+   * AppConnection delete
+   */
+  export type AppConnectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+    /**
+     * Filter which AppConnection to delete.
+     */
+    where: AppConnectionWhereUniqueInput
+  }
+
+  /**
+   * AppConnection deleteMany
+   */
+  export type AppConnectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AppConnections to delete
+     */
+    where?: AppConnectionWhereInput
+    /**
+     * Limit how many AppConnections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AppConnection.account
+   */
+  export type AppConnection$accountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * AppConnection.syncedItems
+   */
+  export type AppConnection$syncedItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    where?: SyncedItemWhereInput
+    orderBy?: SyncedItemOrderByWithRelationInput | SyncedItemOrderByWithRelationInput[]
+    cursor?: SyncedItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SyncedItemScalarFieldEnum | SyncedItemScalarFieldEnum[]
+  }
+
+  /**
+   * AppConnection without action
+   */
+  export type AppConnectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AppConnection
+     */
+    select?: AppConnectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AppConnection
+     */
+    omit?: AppConnectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AppConnectionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SyncedItem
+   */
+
+  export type AggregateSyncedItem = {
+    _count: SyncedItemCountAggregateOutputType | null
+    _avg: SyncedItemAvgAggregateOutputType | null
+    _sum: SyncedItemSumAggregateOutputType | null
+    _min: SyncedItemMinAggregateOutputType | null
+    _max: SyncedItemMaxAggregateOutputType | null
+  }
+
+  export type SyncedItemAvgAggregateOutputType = {
+    size: number | null
+    embeddings: number | null
+  }
+
+  export type SyncedItemSumAggregateOutputType = {
+    size: number | null
+    embeddings: number[]
+  }
+
+  export type SyncedItemMinAggregateOutputType = {
+    id: string | null
+    connectionId: string | null
+    externalId: string | null
+    itemType: string | null
+    title: string | null
+    content: string | null
+    url: string | null
+    mimeType: string | null
+    size: number | null
+    modifiedAt: Date | null
+    indexedAt: Date | null
+  }
+
+  export type SyncedItemMaxAggregateOutputType = {
+    id: string | null
+    connectionId: string | null
+    externalId: string | null
+    itemType: string | null
+    title: string | null
+    content: string | null
+    url: string | null
+    mimeType: string | null
+    size: number | null
+    modifiedAt: Date | null
+    indexedAt: Date | null
+  }
+
+  export type SyncedItemCountAggregateOutputType = {
+    id: number
+    connectionId: number
+    externalId: number
+    itemType: number
+    title: number
+    content: number
+    url: number
+    mimeType: number
+    size: number
+    modifiedAt: number
+    indexedAt: number
+    embeddings: number
+    _all: number
+  }
+
+
+  export type SyncedItemAvgAggregateInputType = {
+    size?: true
+    embeddings?: true
+  }
+
+  export type SyncedItemSumAggregateInputType = {
+    size?: true
+    embeddings?: true
+  }
+
+  export type SyncedItemMinAggregateInputType = {
+    id?: true
+    connectionId?: true
+    externalId?: true
+    itemType?: true
+    title?: true
+    content?: true
+    url?: true
+    mimeType?: true
+    size?: true
+    modifiedAt?: true
+    indexedAt?: true
+  }
+
+  export type SyncedItemMaxAggregateInputType = {
+    id?: true
+    connectionId?: true
+    externalId?: true
+    itemType?: true
+    title?: true
+    content?: true
+    url?: true
+    mimeType?: true
+    size?: true
+    modifiedAt?: true
+    indexedAt?: true
+  }
+
+  export type SyncedItemCountAggregateInputType = {
+    id?: true
+    connectionId?: true
+    externalId?: true
+    itemType?: true
+    title?: true
+    content?: true
+    url?: true
+    mimeType?: true
+    size?: true
+    modifiedAt?: true
+    indexedAt?: true
+    embeddings?: true
+    _all?: true
+  }
+
+  export type SyncedItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SyncedItem to aggregate.
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncedItems to fetch.
+     */
+    orderBy?: SyncedItemOrderByWithRelationInput | SyncedItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SyncedItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncedItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncedItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SyncedItems
+    **/
+    _count?: true | SyncedItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SyncedItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SyncedItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SyncedItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SyncedItemMaxAggregateInputType
+  }
+
+  export type GetSyncedItemAggregateType<T extends SyncedItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateSyncedItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSyncedItem[P]>
+      : GetScalarType<T[P], AggregateSyncedItem[P]>
+  }
+
+
+
+
+  export type SyncedItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SyncedItemWhereInput
+    orderBy?: SyncedItemOrderByWithAggregationInput | SyncedItemOrderByWithAggregationInput[]
+    by: SyncedItemScalarFieldEnum[] | SyncedItemScalarFieldEnum
+    having?: SyncedItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SyncedItemCountAggregateInputType | true
+    _avg?: SyncedItemAvgAggregateInputType
+    _sum?: SyncedItemSumAggregateInputType
+    _min?: SyncedItemMinAggregateInputType
+    _max?: SyncedItemMaxAggregateInputType
+  }
+
+  export type SyncedItemGroupByOutputType = {
+    id: string
+    connectionId: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url: string | null
+    mimeType: string | null
+    size: number | null
+    modifiedAt: Date | null
+    indexedAt: Date | null
+    embeddings: number[]
+    _count: SyncedItemCountAggregateOutputType | null
+    _avg: SyncedItemAvgAggregateOutputType | null
+    _sum: SyncedItemSumAggregateOutputType | null
+    _min: SyncedItemMinAggregateOutputType | null
+    _max: SyncedItemMaxAggregateOutputType | null
+  }
+
+  type GetSyncedItemGroupByPayload<T extends SyncedItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SyncedItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SyncedItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SyncedItemGroupByOutputType[P]>
+            : GetScalarType<T[P], SyncedItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SyncedItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    connectionId?: boolean
+    externalId?: boolean
+    itemType?: boolean
+    title?: boolean
+    content?: boolean
+    url?: boolean
+    mimeType?: boolean
+    size?: boolean
+    modifiedAt?: boolean
+    indexedAt?: boolean
+    embeddings?: boolean
+    connection?: boolean | AppConnectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["syncedItem"]>
+
+  export type SyncedItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    connectionId?: boolean
+    externalId?: boolean
+    itemType?: boolean
+    title?: boolean
+    content?: boolean
+    url?: boolean
+    mimeType?: boolean
+    size?: boolean
+    modifiedAt?: boolean
+    indexedAt?: boolean
+    embeddings?: boolean
+    connection?: boolean | AppConnectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["syncedItem"]>
+
+  export type SyncedItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    connectionId?: boolean
+    externalId?: boolean
+    itemType?: boolean
+    title?: boolean
+    content?: boolean
+    url?: boolean
+    mimeType?: boolean
+    size?: boolean
+    modifiedAt?: boolean
+    indexedAt?: boolean
+    embeddings?: boolean
+    connection?: boolean | AppConnectionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["syncedItem"]>
+
+  export type SyncedItemSelectScalar = {
+    id?: boolean
+    connectionId?: boolean
+    externalId?: boolean
+    itemType?: boolean
+    title?: boolean
+    content?: boolean
+    url?: boolean
+    mimeType?: boolean
+    size?: boolean
+    modifiedAt?: boolean
+    indexedAt?: boolean
+    embeddings?: boolean
+  }
+
+  export type SyncedItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "connectionId" | "externalId" | "itemType" | "title" | "content" | "url" | "mimeType" | "size" | "modifiedAt" | "indexedAt" | "embeddings", ExtArgs["result"]["syncedItem"]>
+  export type SyncedItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    connection?: boolean | AppConnectionDefaultArgs<ExtArgs>
+  }
+  export type SyncedItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    connection?: boolean | AppConnectionDefaultArgs<ExtArgs>
+  }
+  export type SyncedItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    connection?: boolean | AppConnectionDefaultArgs<ExtArgs>
+  }
+
+  export type $SyncedItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SyncedItem"
+    objects: {
+      connection: Prisma.$AppConnectionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      connectionId: string
+      externalId: string
+      itemType: string
+      title: string
+      content: string
+      url: string | null
+      mimeType: string | null
+      size: number | null
+      modifiedAt: Date | null
+      indexedAt: Date | null
+      embeddings: number[]
+    }, ExtArgs["result"]["syncedItem"]>
+    composites: {}
+  }
+
+  type SyncedItemGetPayload<S extends boolean | null | undefined | SyncedItemDefaultArgs> = $Result.GetResult<Prisma.$SyncedItemPayload, S>
+
+  type SyncedItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SyncedItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SyncedItemCountAggregateInputType | true
+    }
+
+  export interface SyncedItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SyncedItem'], meta: { name: 'SyncedItem' } }
+    /**
+     * Find zero or one SyncedItem that matches the filter.
+     * @param {SyncedItemFindUniqueArgs} args - Arguments to find a SyncedItem
+     * @example
+     * // Get one SyncedItem
+     * const syncedItem = await prisma.syncedItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SyncedItemFindUniqueArgs>(args: SelectSubset<T, SyncedItemFindUniqueArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SyncedItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SyncedItemFindUniqueOrThrowArgs} args - Arguments to find a SyncedItem
+     * @example
+     * // Get one SyncedItem
+     * const syncedItem = await prisma.syncedItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SyncedItemFindUniqueOrThrowArgs>(args: SelectSubset<T, SyncedItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SyncedItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemFindFirstArgs} args - Arguments to find a SyncedItem
+     * @example
+     * // Get one SyncedItem
+     * const syncedItem = await prisma.syncedItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SyncedItemFindFirstArgs>(args?: SelectSubset<T, SyncedItemFindFirstArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SyncedItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemFindFirstOrThrowArgs} args - Arguments to find a SyncedItem
+     * @example
+     * // Get one SyncedItem
+     * const syncedItem = await prisma.syncedItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SyncedItemFindFirstOrThrowArgs>(args?: SelectSubset<T, SyncedItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SyncedItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SyncedItems
+     * const syncedItems = await prisma.syncedItem.findMany()
+     * 
+     * // Get first 10 SyncedItems
+     * const syncedItems = await prisma.syncedItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const syncedItemWithIdOnly = await prisma.syncedItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SyncedItemFindManyArgs>(args?: SelectSubset<T, SyncedItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SyncedItem.
+     * @param {SyncedItemCreateArgs} args - Arguments to create a SyncedItem.
+     * @example
+     * // Create one SyncedItem
+     * const SyncedItem = await prisma.syncedItem.create({
+     *   data: {
+     *     // ... data to create a SyncedItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends SyncedItemCreateArgs>(args: SelectSubset<T, SyncedItemCreateArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SyncedItems.
+     * @param {SyncedItemCreateManyArgs} args - Arguments to create many SyncedItems.
+     * @example
+     * // Create many SyncedItems
+     * const syncedItem = await prisma.syncedItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SyncedItemCreateManyArgs>(args?: SelectSubset<T, SyncedItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SyncedItems and returns the data saved in the database.
+     * @param {SyncedItemCreateManyAndReturnArgs} args - Arguments to create many SyncedItems.
+     * @example
+     * // Create many SyncedItems
+     * const syncedItem = await prisma.syncedItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SyncedItems and only return the `id`
+     * const syncedItemWithIdOnly = await prisma.syncedItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SyncedItemCreateManyAndReturnArgs>(args?: SelectSubset<T, SyncedItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SyncedItem.
+     * @param {SyncedItemDeleteArgs} args - Arguments to delete one SyncedItem.
+     * @example
+     * // Delete one SyncedItem
+     * const SyncedItem = await prisma.syncedItem.delete({
+     *   where: {
+     *     // ... filter to delete one SyncedItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SyncedItemDeleteArgs>(args: SelectSubset<T, SyncedItemDeleteArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SyncedItem.
+     * @param {SyncedItemUpdateArgs} args - Arguments to update one SyncedItem.
+     * @example
+     * // Update one SyncedItem
+     * const syncedItem = await prisma.syncedItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SyncedItemUpdateArgs>(args: SelectSubset<T, SyncedItemUpdateArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SyncedItems.
+     * @param {SyncedItemDeleteManyArgs} args - Arguments to filter SyncedItems to delete.
+     * @example
+     * // Delete a few SyncedItems
+     * const { count } = await prisma.syncedItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SyncedItemDeleteManyArgs>(args?: SelectSubset<T, SyncedItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SyncedItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SyncedItems
+     * const syncedItem = await prisma.syncedItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SyncedItemUpdateManyArgs>(args: SelectSubset<T, SyncedItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SyncedItems and returns the data updated in the database.
+     * @param {SyncedItemUpdateManyAndReturnArgs} args - Arguments to update many SyncedItems.
+     * @example
+     * // Update many SyncedItems
+     * const syncedItem = await prisma.syncedItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SyncedItems and only return the `id`
+     * const syncedItemWithIdOnly = await prisma.syncedItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SyncedItemUpdateManyAndReturnArgs>(args: SelectSubset<T, SyncedItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SyncedItem.
+     * @param {SyncedItemUpsertArgs} args - Arguments to update or create a SyncedItem.
+     * @example
+     * // Update or create a SyncedItem
+     * const syncedItem = await prisma.syncedItem.upsert({
+     *   create: {
+     *     // ... data to create a SyncedItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SyncedItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SyncedItemUpsertArgs>(args: SelectSubset<T, SyncedItemUpsertArgs<ExtArgs>>): Prisma__SyncedItemClient<$Result.GetResult<Prisma.$SyncedItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SyncedItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemCountArgs} args - Arguments to filter SyncedItems to count.
+     * @example
+     * // Count the number of SyncedItems
+     * const count = await prisma.syncedItem.count({
+     *   where: {
+     *     // ... the filter for the SyncedItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends SyncedItemCountArgs>(
+      args?: Subset<T, SyncedItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SyncedItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SyncedItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SyncedItemAggregateArgs>(args: Subset<T, SyncedItemAggregateArgs>): Prisma.PrismaPromise<GetSyncedItemAggregateType<T>>
+
+    /**
+     * Group by SyncedItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SyncedItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SyncedItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SyncedItemGroupByArgs['orderBy'] }
+        : { orderBy?: SyncedItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SyncedItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSyncedItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SyncedItem model
+   */
+  readonly fields: SyncedItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SyncedItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SyncedItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    connection<T extends AppConnectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AppConnectionDefaultArgs<ExtArgs>>): Prisma__AppConnectionClient<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SyncedItem model
+   */
+  interface SyncedItemFieldRefs {
+    readonly id: FieldRef<"SyncedItem", 'String'>
+    readonly connectionId: FieldRef<"SyncedItem", 'String'>
+    readonly externalId: FieldRef<"SyncedItem", 'String'>
+    readonly itemType: FieldRef<"SyncedItem", 'String'>
+    readonly title: FieldRef<"SyncedItem", 'String'>
+    readonly content: FieldRef<"SyncedItem", 'String'>
+    readonly url: FieldRef<"SyncedItem", 'String'>
+    readonly mimeType: FieldRef<"SyncedItem", 'String'>
+    readonly size: FieldRef<"SyncedItem", 'Int'>
+    readonly modifiedAt: FieldRef<"SyncedItem", 'DateTime'>
+    readonly indexedAt: FieldRef<"SyncedItem", 'DateTime'>
+    readonly embeddings: FieldRef<"SyncedItem", 'Float[]'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SyncedItem findUnique
+   */
+  export type SyncedItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncedItem to fetch.
+     */
+    where: SyncedItemWhereUniqueInput
+  }
+
+  /**
+   * SyncedItem findUniqueOrThrow
+   */
+  export type SyncedItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncedItem to fetch.
+     */
+    where: SyncedItemWhereUniqueInput
+  }
+
+  /**
+   * SyncedItem findFirst
+   */
+  export type SyncedItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncedItem to fetch.
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncedItems to fetch.
+     */
+    orderBy?: SyncedItemOrderByWithRelationInput | SyncedItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SyncedItems.
+     */
+    cursor?: SyncedItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncedItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncedItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SyncedItems.
+     */
+    distinct?: SyncedItemScalarFieldEnum | SyncedItemScalarFieldEnum[]
+  }
+
+  /**
+   * SyncedItem findFirstOrThrow
+   */
+  export type SyncedItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncedItem to fetch.
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncedItems to fetch.
+     */
+    orderBy?: SyncedItemOrderByWithRelationInput | SyncedItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SyncedItems.
+     */
+    cursor?: SyncedItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncedItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncedItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SyncedItems.
+     */
+    distinct?: SyncedItemScalarFieldEnum | SyncedItemScalarFieldEnum[]
+  }
+
+  /**
+   * SyncedItem findMany
+   */
+  export type SyncedItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * Filter, which SyncedItems to fetch.
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SyncedItems to fetch.
+     */
+    orderBy?: SyncedItemOrderByWithRelationInput | SyncedItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SyncedItems.
+     */
+    cursor?: SyncedItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SyncedItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SyncedItems.
+     */
+    skip?: number
+    distinct?: SyncedItemScalarFieldEnum | SyncedItemScalarFieldEnum[]
+  }
+
+  /**
+   * SyncedItem create
+   */
+  export type SyncedItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SyncedItem.
+     */
+    data: XOR<SyncedItemCreateInput, SyncedItemUncheckedCreateInput>
+  }
+
+  /**
+   * SyncedItem createMany
+   */
+  export type SyncedItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SyncedItems.
+     */
+    data: SyncedItemCreateManyInput | SyncedItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SyncedItem createManyAndReturn
+   */
+  export type SyncedItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many SyncedItems.
+     */
+    data: SyncedItemCreateManyInput | SyncedItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SyncedItem update
+   */
+  export type SyncedItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SyncedItem.
+     */
+    data: XOR<SyncedItemUpdateInput, SyncedItemUncheckedUpdateInput>
+    /**
+     * Choose, which SyncedItem to update.
+     */
+    where: SyncedItemWhereUniqueInput
+  }
+
+  /**
+   * SyncedItem updateMany
+   */
+  export type SyncedItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SyncedItems.
+     */
+    data: XOR<SyncedItemUpdateManyMutationInput, SyncedItemUncheckedUpdateManyInput>
+    /**
+     * Filter which SyncedItems to update
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * Limit how many SyncedItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SyncedItem updateManyAndReturn
+   */
+  export type SyncedItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * The data used to update SyncedItems.
+     */
+    data: XOR<SyncedItemUpdateManyMutationInput, SyncedItemUncheckedUpdateManyInput>
+    /**
+     * Filter which SyncedItems to update
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * Limit how many SyncedItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SyncedItem upsert
+   */
+  export type SyncedItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SyncedItem to update in case it exists.
+     */
+    where: SyncedItemWhereUniqueInput
+    /**
+     * In case the SyncedItem found by the `where` argument doesn't exist, create a new SyncedItem with this data.
+     */
+    create: XOR<SyncedItemCreateInput, SyncedItemUncheckedCreateInput>
+    /**
+     * In case the SyncedItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SyncedItemUpdateInput, SyncedItemUncheckedUpdateInput>
+  }
+
+  /**
+   * SyncedItem delete
+   */
+  export type SyncedItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+    /**
+     * Filter which SyncedItem to delete.
+     */
+    where: SyncedItemWhereUniqueInput
+  }
+
+  /**
+   * SyncedItem deleteMany
+   */
+  export type SyncedItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SyncedItems to delete
+     */
+    where?: SyncedItemWhereInput
+    /**
+     * Limit how many SyncedItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SyncedItem without action
+   */
+  export type SyncedItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SyncedItem
+     */
+    select?: SyncedItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SyncedItem
+     */
+    omit?: SyncedItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SyncedItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15363,6 +18065,44 @@ export namespace Prisma {
   };
 
   export type ChatAttachmentScalarFieldEnum = (typeof ChatAttachmentScalarFieldEnum)[keyof typeof ChatAttachmentScalarFieldEnum]
+
+
+  export const AppConnectionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    accountId: 'accountId',
+    appType: 'appType',
+    appName: 'appName',
+    accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
+    expiresAt: 'expiresAt',
+    connectedAt: 'connectedAt',
+    lastSyncedAt: 'lastSyncedAt',
+    syncStatus: 'syncStatus',
+    syncError: 'syncError',
+    enabled: 'enabled',
+    syncFrequency: 'syncFrequency'
+  };
+
+  export type AppConnectionScalarFieldEnum = (typeof AppConnectionScalarFieldEnum)[keyof typeof AppConnectionScalarFieldEnum]
+
+
+  export const SyncedItemScalarFieldEnum: {
+    id: 'id',
+    connectionId: 'connectionId',
+    externalId: 'externalId',
+    itemType: 'itemType',
+    title: 'title',
+    content: 'content',
+    url: 'url',
+    mimeType: 'mimeType',
+    size: 'size',
+    modifiedAt: 'modifiedAt',
+    indexedAt: 'indexedAt',
+    embeddings: 'embeddings'
+  };
+
+  export type SyncedItemScalarFieldEnum = (typeof SyncedItemScalarFieldEnum)[keyof typeof SyncedItemScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15569,6 +18309,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackListRelationFilter
     instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
+    appConnections?: AppConnectionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15583,6 +18324,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackOrderByRelationAggregateInput
     instantReplyFeedback?: InstantReplyFeedbackOrderByRelationAggregateInput
     chatAttachments?: ChatAttachmentOrderByRelationAggregateInput
+    appConnections?: AppConnectionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -15600,6 +18342,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackListRelationFilter
     instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
+    appConnections?: AppConnectionListRelationFilter
   }, "id" | "emailAddress">
 
   export type UserOrderByWithAggregationInput = {
@@ -15640,6 +18383,7 @@ export namespace Prisma {
     threads?: ThreadListRelationFilter
     emailAddresses?: EmailAddressListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
+    appConnections?: AppConnectionListRelationFilter
   }
 
   export type AccountOrderByWithRelationInput = {
@@ -15655,6 +18399,7 @@ export namespace Prisma {
     threads?: ThreadOrderByRelationAggregateInput
     emailAddresses?: EmailAddressOrderByRelationAggregateInput
     chatAttachments?: ChatAttachmentOrderByRelationAggregateInput
+    appConnections?: AppConnectionOrderByRelationAggregateInput
   }
 
   export type AccountWhereUniqueInput = Prisma.AtLeast<{
@@ -15673,6 +18418,7 @@ export namespace Prisma {
     threads?: ThreadListRelationFilter
     emailAddresses?: EmailAddressListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
+    appConnections?: AppConnectionListRelationFilter
   }, "id" | "accessToken">
 
   export type AccountOrderByWithAggregationInput = {
@@ -16522,6 +19268,206 @@ export namespace Prisma {
     indexedAt?: DateTimeNullableWithAggregatesFilter<"ChatAttachment"> | Date | string | null
   }
 
+  export type AppConnectionWhereInput = {
+    AND?: AppConnectionWhereInput | AppConnectionWhereInput[]
+    OR?: AppConnectionWhereInput[]
+    NOT?: AppConnectionWhereInput | AppConnectionWhereInput[]
+    id?: StringFilter<"AppConnection"> | string
+    userId?: StringFilter<"AppConnection"> | string
+    accountId?: StringNullableFilter<"AppConnection"> | string | null
+    appType?: StringFilter<"AppConnection"> | string
+    appName?: StringFilter<"AppConnection"> | string
+    accessToken?: StringFilter<"AppConnection"> | string
+    refreshToken?: StringNullableFilter<"AppConnection"> | string | null
+    expiresAt?: DateTimeNullableFilter<"AppConnection"> | Date | string | null
+    connectedAt?: DateTimeFilter<"AppConnection"> | Date | string
+    lastSyncedAt?: DateTimeNullableFilter<"AppConnection"> | Date | string | null
+    syncStatus?: StringFilter<"AppConnection"> | string
+    syncError?: StringNullableFilter<"AppConnection"> | string | null
+    enabled?: BoolFilter<"AppConnection"> | boolean
+    syncFrequency?: StringFilter<"AppConnection"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    syncedItems?: SyncedItemListRelationFilter
+  }
+
+  export type AppConnectionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrderInput | SortOrder
+    appType?: SortOrder
+    appName?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    connectedAt?: SortOrder
+    lastSyncedAt?: SortOrderInput | SortOrder
+    syncStatus?: SortOrder
+    syncError?: SortOrderInput | SortOrder
+    enabled?: SortOrder
+    syncFrequency?: SortOrder
+    user?: UserOrderByWithRelationInput
+    account?: AccountOrderByWithRelationInput
+    syncedItems?: SyncedItemOrderByRelationAggregateInput
+  }
+
+  export type AppConnectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_appType?: AppConnectionUserIdAppTypeCompoundUniqueInput
+    AND?: AppConnectionWhereInput | AppConnectionWhereInput[]
+    OR?: AppConnectionWhereInput[]
+    NOT?: AppConnectionWhereInput | AppConnectionWhereInput[]
+    userId?: StringFilter<"AppConnection"> | string
+    accountId?: StringNullableFilter<"AppConnection"> | string | null
+    appType?: StringFilter<"AppConnection"> | string
+    appName?: StringFilter<"AppConnection"> | string
+    accessToken?: StringFilter<"AppConnection"> | string
+    refreshToken?: StringNullableFilter<"AppConnection"> | string | null
+    expiresAt?: DateTimeNullableFilter<"AppConnection"> | Date | string | null
+    connectedAt?: DateTimeFilter<"AppConnection"> | Date | string
+    lastSyncedAt?: DateTimeNullableFilter<"AppConnection"> | Date | string | null
+    syncStatus?: StringFilter<"AppConnection"> | string
+    syncError?: StringNullableFilter<"AppConnection"> | string | null
+    enabled?: BoolFilter<"AppConnection"> | boolean
+    syncFrequency?: StringFilter<"AppConnection"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    account?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    syncedItems?: SyncedItemListRelationFilter
+  }, "id" | "userId_appType">
+
+  export type AppConnectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrderInput | SortOrder
+    appType?: SortOrder
+    appName?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    connectedAt?: SortOrder
+    lastSyncedAt?: SortOrderInput | SortOrder
+    syncStatus?: SortOrder
+    syncError?: SortOrderInput | SortOrder
+    enabled?: SortOrder
+    syncFrequency?: SortOrder
+    _count?: AppConnectionCountOrderByAggregateInput
+    _max?: AppConnectionMaxOrderByAggregateInput
+    _min?: AppConnectionMinOrderByAggregateInput
+  }
+
+  export type AppConnectionScalarWhereWithAggregatesInput = {
+    AND?: AppConnectionScalarWhereWithAggregatesInput | AppConnectionScalarWhereWithAggregatesInput[]
+    OR?: AppConnectionScalarWhereWithAggregatesInput[]
+    NOT?: AppConnectionScalarWhereWithAggregatesInput | AppConnectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AppConnection"> | string
+    userId?: StringWithAggregatesFilter<"AppConnection"> | string
+    accountId?: StringNullableWithAggregatesFilter<"AppConnection"> | string | null
+    appType?: StringWithAggregatesFilter<"AppConnection"> | string
+    appName?: StringWithAggregatesFilter<"AppConnection"> | string
+    accessToken?: StringWithAggregatesFilter<"AppConnection"> | string
+    refreshToken?: StringNullableWithAggregatesFilter<"AppConnection"> | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"AppConnection"> | Date | string | null
+    connectedAt?: DateTimeWithAggregatesFilter<"AppConnection"> | Date | string
+    lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"AppConnection"> | Date | string | null
+    syncStatus?: StringWithAggregatesFilter<"AppConnection"> | string
+    syncError?: StringNullableWithAggregatesFilter<"AppConnection"> | string | null
+    enabled?: BoolWithAggregatesFilter<"AppConnection"> | boolean
+    syncFrequency?: StringWithAggregatesFilter<"AppConnection"> | string
+  }
+
+  export type SyncedItemWhereInput = {
+    AND?: SyncedItemWhereInput | SyncedItemWhereInput[]
+    OR?: SyncedItemWhereInput[]
+    NOT?: SyncedItemWhereInput | SyncedItemWhereInput[]
+    id?: StringFilter<"SyncedItem"> | string
+    connectionId?: StringFilter<"SyncedItem"> | string
+    externalId?: StringFilter<"SyncedItem"> | string
+    itemType?: StringFilter<"SyncedItem"> | string
+    title?: StringFilter<"SyncedItem"> | string
+    content?: StringFilter<"SyncedItem"> | string
+    url?: StringNullableFilter<"SyncedItem"> | string | null
+    mimeType?: StringNullableFilter<"SyncedItem"> | string | null
+    size?: IntNullableFilter<"SyncedItem"> | number | null
+    modifiedAt?: DateTimeNullableFilter<"SyncedItem"> | Date | string | null
+    indexedAt?: DateTimeNullableFilter<"SyncedItem"> | Date | string | null
+    embeddings?: FloatNullableListFilter<"SyncedItem">
+    connection?: XOR<AppConnectionScalarRelationFilter, AppConnectionWhereInput>
+  }
+
+  export type SyncedItemOrderByWithRelationInput = {
+    id?: SortOrder
+    connectionId?: SortOrder
+    externalId?: SortOrder
+    itemType?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    url?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    size?: SortOrderInput | SortOrder
+    modifiedAt?: SortOrderInput | SortOrder
+    indexedAt?: SortOrderInput | SortOrder
+    embeddings?: SortOrder
+    connection?: AppConnectionOrderByWithRelationInput
+  }
+
+  export type SyncedItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    connectionId_externalId?: SyncedItemConnectionIdExternalIdCompoundUniqueInput
+    AND?: SyncedItemWhereInput | SyncedItemWhereInput[]
+    OR?: SyncedItemWhereInput[]
+    NOT?: SyncedItemWhereInput | SyncedItemWhereInput[]
+    connectionId?: StringFilter<"SyncedItem"> | string
+    externalId?: StringFilter<"SyncedItem"> | string
+    itemType?: StringFilter<"SyncedItem"> | string
+    title?: StringFilter<"SyncedItem"> | string
+    content?: StringFilter<"SyncedItem"> | string
+    url?: StringNullableFilter<"SyncedItem"> | string | null
+    mimeType?: StringNullableFilter<"SyncedItem"> | string | null
+    size?: IntNullableFilter<"SyncedItem"> | number | null
+    modifiedAt?: DateTimeNullableFilter<"SyncedItem"> | Date | string | null
+    indexedAt?: DateTimeNullableFilter<"SyncedItem"> | Date | string | null
+    embeddings?: FloatNullableListFilter<"SyncedItem">
+    connection?: XOR<AppConnectionScalarRelationFilter, AppConnectionWhereInput>
+  }, "id" | "connectionId_externalId">
+
+  export type SyncedItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    connectionId?: SortOrder
+    externalId?: SortOrder
+    itemType?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    url?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
+    size?: SortOrderInput | SortOrder
+    modifiedAt?: SortOrderInput | SortOrder
+    indexedAt?: SortOrderInput | SortOrder
+    embeddings?: SortOrder
+    _count?: SyncedItemCountOrderByAggregateInput
+    _avg?: SyncedItemAvgOrderByAggregateInput
+    _max?: SyncedItemMaxOrderByAggregateInput
+    _min?: SyncedItemMinOrderByAggregateInput
+    _sum?: SyncedItemSumOrderByAggregateInput
+  }
+
+  export type SyncedItemScalarWhereWithAggregatesInput = {
+    AND?: SyncedItemScalarWhereWithAggregatesInput | SyncedItemScalarWhereWithAggregatesInput[]
+    OR?: SyncedItemScalarWhereWithAggregatesInput[]
+    NOT?: SyncedItemScalarWhereWithAggregatesInput | SyncedItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SyncedItem"> | string
+    connectionId?: StringWithAggregatesFilter<"SyncedItem"> | string
+    externalId?: StringWithAggregatesFilter<"SyncedItem"> | string
+    itemType?: StringWithAggregatesFilter<"SyncedItem"> | string
+    title?: StringWithAggregatesFilter<"SyncedItem"> | string
+    content?: StringWithAggregatesFilter<"SyncedItem"> | string
+    url?: StringNullableWithAggregatesFilter<"SyncedItem"> | string | null
+    mimeType?: StringNullableWithAggregatesFilter<"SyncedItem"> | string | null
+    size?: IntNullableWithAggregatesFilter<"SyncedItem"> | number | null
+    modifiedAt?: DateTimeNullableWithAggregatesFilter<"SyncedItem"> | Date | string | null
+    indexedAt?: DateTimeNullableWithAggregatesFilter<"SyncedItem"> | Date | string | null
+    embeddings?: FloatNullableListFilter<"SyncedItem">
+  }
+
   export type UserCreateInput = {
     id: string
     emailAddress: string
@@ -16534,6 +19480,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -16548,6 +19495,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -16562,6 +19510,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -16576,6 +19525,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -16614,6 +19564,7 @@ export namespace Prisma {
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateInput = {
@@ -16628,6 +19579,7 @@ export namespace Prisma {
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUpdateInput = {
@@ -16642,6 +19594,7 @@ export namespace Prisma {
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateInput = {
@@ -16656,6 +19609,7 @@ export namespace Prisma {
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountCreateManyInput = {
@@ -17612,6 +20566,231 @@ export namespace Prisma {
     indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type AppConnectionCreateInput = {
+    id?: string
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    user: UserCreateNestedOneWithoutAppConnectionsInput
+    account?: AccountCreateNestedOneWithoutAppConnectionsInput
+    syncedItems?: SyncedItemCreateNestedManyWithoutConnectionInput
+  }
+
+  export type AppConnectionUncheckedCreateInput = {
+    id?: string
+    userId: string
+    accountId?: string | null
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    syncedItems?: SyncedItemUncheckedCreateNestedManyWithoutConnectionInput
+  }
+
+  export type AppConnectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutAppConnectionsNestedInput
+    account?: AccountUpdateOneWithoutAppConnectionsNestedInput
+    syncedItems?: SyncedItemUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type AppConnectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    syncedItems?: SyncedItemUncheckedUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type AppConnectionCreateManyInput = {
+    id?: string
+    userId: string
+    accountId?: string | null
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+  }
+
+  export type AppConnectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AppConnectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type SyncedItemCreateInput = {
+    id?: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url?: string | null
+    mimeType?: string | null
+    size?: number | null
+    modifiedAt?: Date | string | null
+    indexedAt?: Date | string | null
+    embeddings?: SyncedItemCreateembeddingsInput | number[]
+    connection: AppConnectionCreateNestedOneWithoutSyncedItemsInput
+  }
+
+  export type SyncedItemUncheckedCreateInput = {
+    id?: string
+    connectionId: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url?: string | null
+    mimeType?: string | null
+    size?: number | null
+    modifiedAt?: Date | string | null
+    indexedAt?: Date | string | null
+    embeddings?: SyncedItemCreateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
+    connection?: AppConnectionUpdateOneRequiredWithoutSyncedItemsNestedInput
+  }
+
+  export type SyncedItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    connectionId?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
+  }
+
+  export type SyncedItemCreateManyInput = {
+    id?: string
+    connectionId: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url?: string | null
+    mimeType?: string | null
+    size?: number | null
+    modifiedAt?: Date | string | null
+    indexedAt?: Date | string | null
+    embeddings?: SyncedItemCreateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    connectionId?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17677,6 +20856,12 @@ export namespace Prisma {
     none?: ChatAttachmentWhereInput
   }
 
+  export type AppConnectionListRelationFilter = {
+    every?: AppConnectionWhereInput
+    some?: AppConnectionWhereInput
+    none?: AppConnectionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -17699,6 +20884,10 @@ export namespace Prisma {
   }
 
   export type ChatAttachmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AppConnectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18544,6 +21733,167 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type AccountNullableScalarRelationFilter = {
+    is?: AccountWhereInput | null
+    isNot?: AccountWhereInput | null
+  }
+
+  export type SyncedItemListRelationFilter = {
+    every?: SyncedItemWhereInput
+    some?: SyncedItemWhereInput
+    none?: SyncedItemWhereInput
+  }
+
+  export type SyncedItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AppConnectionUserIdAppTypeCompoundUniqueInput = {
+    userId: string
+    appType: string
+  }
+
+  export type AppConnectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    appType?: SortOrder
+    appName?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    connectedAt?: SortOrder
+    lastSyncedAt?: SortOrder
+    syncStatus?: SortOrder
+    syncError?: SortOrder
+    enabled?: SortOrder
+    syncFrequency?: SortOrder
+  }
+
+  export type AppConnectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    appType?: SortOrder
+    appName?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    connectedAt?: SortOrder
+    lastSyncedAt?: SortOrder
+    syncStatus?: SortOrder
+    syncError?: SortOrder
+    enabled?: SortOrder
+    syncFrequency?: SortOrder
+  }
+
+  export type AppConnectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    appType?: SortOrder
+    appName?: SortOrder
+    accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    connectedAt?: SortOrder
+    lastSyncedAt?: SortOrder
+    syncStatus?: SortOrder
+    syncError?: SortOrder
+    enabled?: SortOrder
+    syncFrequency?: SortOrder
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type AppConnectionScalarRelationFilter = {
+    is?: AppConnectionWhereInput
+    isNot?: AppConnectionWhereInput
+  }
+
+  export type SyncedItemConnectionIdExternalIdCompoundUniqueInput = {
+    connectionId: string
+    externalId: string
+  }
+
+  export type SyncedItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    connectionId?: SortOrder
+    externalId?: SortOrder
+    itemType?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    modifiedAt?: SortOrder
+    indexedAt?: SortOrder
+    embeddings?: SortOrder
+  }
+
+  export type SyncedItemAvgOrderByAggregateInput = {
+    size?: SortOrder
+    embeddings?: SortOrder
+  }
+
+  export type SyncedItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    connectionId?: SortOrder
+    externalId?: SortOrder
+    itemType?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    modifiedAt?: SortOrder
+    indexedAt?: SortOrder
+  }
+
+  export type SyncedItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    connectionId?: SortOrder
+    externalId?: SortOrder
+    itemType?: SortOrder
+    title?: SortOrder
+    content?: SortOrder
+    url?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    modifiedAt?: SortOrder
+    indexedAt?: SortOrder
+  }
+
+  export type SyncedItemSumOrderByAggregateInput = {
+    size?: SortOrder
+    embeddings?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -18585,6 +21935,13 @@ export namespace Prisma {
     connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
   }
 
+  export type AppConnectionCreateNestedManyWithoutUserInput = {
+    create?: XOR<AppConnectionCreateWithoutUserInput, AppConnectionUncheckedCreateWithoutUserInput> | AppConnectionCreateWithoutUserInput[] | AppConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutUserInput | AppConnectionCreateOrConnectWithoutUserInput[]
+    createMany?: AppConnectionCreateManyUserInputEnvelope
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -18624,6 +21981,13 @@ export namespace Prisma {
     connectOrCreate?: ChatAttachmentCreateOrConnectWithoutUserInput | ChatAttachmentCreateOrConnectWithoutUserInput[]
     createMany?: ChatAttachmentCreateManyUserInputEnvelope
     connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+  }
+
+  export type AppConnectionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AppConnectionCreateWithoutUserInput, AppConnectionUncheckedCreateWithoutUserInput> | AppConnectionCreateWithoutUserInput[] | AppConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutUserInput | AppConnectionCreateOrConnectWithoutUserInput[]
+    createMany?: AppConnectionCreateManyUserInputEnvelope
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -18714,6 +22078,20 @@ export namespace Prisma {
     deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
   }
 
+  export type AppConnectionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AppConnectionCreateWithoutUserInput, AppConnectionUncheckedCreateWithoutUserInput> | AppConnectionCreateWithoutUserInput[] | AppConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutUserInput | AppConnectionCreateOrConnectWithoutUserInput[]
+    upsert?: AppConnectionUpsertWithWhereUniqueWithoutUserInput | AppConnectionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AppConnectionCreateManyUserInputEnvelope
+    set?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    disconnect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    delete?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    update?: AppConnectionUpdateWithWhereUniqueWithoutUserInput | AppConnectionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AppConnectionUpdateManyWithWhereWithoutUserInput | AppConnectionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -18794,6 +22172,20 @@ export namespace Prisma {
     deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
   }
 
+  export type AppConnectionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AppConnectionCreateWithoutUserInput, AppConnectionUncheckedCreateWithoutUserInput> | AppConnectionCreateWithoutUserInput[] | AppConnectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutUserInput | AppConnectionCreateOrConnectWithoutUserInput[]
+    upsert?: AppConnectionUpsertWithWhereUniqueWithoutUserInput | AppConnectionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AppConnectionCreateManyUserInputEnvelope
+    set?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    disconnect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    delete?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    update?: AppConnectionUpdateWithWhereUniqueWithoutUserInput | AppConnectionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AppConnectionUpdateManyWithWhereWithoutUserInput | AppConnectionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -18821,6 +22213,13 @@ export namespace Prisma {
     connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
   }
 
+  export type AppConnectionCreateNestedManyWithoutAccountInput = {
+    create?: XOR<AppConnectionCreateWithoutAccountInput, AppConnectionUncheckedCreateWithoutAccountInput> | AppConnectionCreateWithoutAccountInput[] | AppConnectionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutAccountInput | AppConnectionCreateOrConnectWithoutAccountInput[]
+    createMany?: AppConnectionCreateManyAccountInputEnvelope
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+  }
+
   export type ThreadUncheckedCreateNestedManyWithoutAccountInput = {
     create?: XOR<ThreadCreateWithoutAccountInput, ThreadUncheckedCreateWithoutAccountInput> | ThreadCreateWithoutAccountInput[] | ThreadUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutAccountInput | ThreadCreateOrConnectWithoutAccountInput[]
@@ -18840,6 +22239,13 @@ export namespace Prisma {
     connectOrCreate?: ChatAttachmentCreateOrConnectWithoutAccountInput | ChatAttachmentCreateOrConnectWithoutAccountInput[]
     createMany?: ChatAttachmentCreateManyAccountInputEnvelope
     connect?: ChatAttachmentWhereUniqueInput | ChatAttachmentWhereUniqueInput[]
+  }
+
+  export type AppConnectionUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<AppConnectionCreateWithoutAccountInput, AppConnectionUncheckedCreateWithoutAccountInput> | AppConnectionCreateWithoutAccountInput[] | AppConnectionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutAccountInput | AppConnectionCreateOrConnectWithoutAccountInput[]
+    createMany?: AppConnectionCreateManyAccountInputEnvelope
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
@@ -18892,6 +22298,20 @@ export namespace Prisma {
     deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
   }
 
+  export type AppConnectionUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<AppConnectionCreateWithoutAccountInput, AppConnectionUncheckedCreateWithoutAccountInput> | AppConnectionCreateWithoutAccountInput[] | AppConnectionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutAccountInput | AppConnectionCreateOrConnectWithoutAccountInput[]
+    upsert?: AppConnectionUpsertWithWhereUniqueWithoutAccountInput | AppConnectionUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: AppConnectionCreateManyAccountInputEnvelope
+    set?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    disconnect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    delete?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    update?: AppConnectionUpdateWithWhereUniqueWithoutAccountInput | AppConnectionUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: AppConnectionUpdateManyWithWhereWithoutAccountInput | AppConnectionUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
+  }
+
   export type ThreadUncheckedUpdateManyWithoutAccountNestedInput = {
     create?: XOR<ThreadCreateWithoutAccountInput, ThreadUncheckedCreateWithoutAccountInput> | ThreadCreateWithoutAccountInput[] | ThreadUncheckedCreateWithoutAccountInput[]
     connectOrCreate?: ThreadCreateOrConnectWithoutAccountInput | ThreadCreateOrConnectWithoutAccountInput[]
@@ -18932,6 +22352,20 @@ export namespace Prisma {
     update?: ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput | ChatAttachmentUpdateWithWhereUniqueWithoutAccountInput[]
     updateMany?: ChatAttachmentUpdateManyWithWhereWithoutAccountInput | ChatAttachmentUpdateManyWithWhereWithoutAccountInput[]
     deleteMany?: ChatAttachmentScalarWhereInput | ChatAttachmentScalarWhereInput[]
+  }
+
+  export type AppConnectionUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<AppConnectionCreateWithoutAccountInput, AppConnectionUncheckedCreateWithoutAccountInput> | AppConnectionCreateWithoutAccountInput[] | AppConnectionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutAccountInput | AppConnectionCreateOrConnectWithoutAccountInput[]
+    upsert?: AppConnectionUpsertWithWhereUniqueWithoutAccountInput | AppConnectionUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: AppConnectionCreateManyAccountInputEnvelope
+    set?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    disconnect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    delete?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+    update?: AppConnectionUpdateWithWhereUniqueWithoutAccountInput | AppConnectionUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: AppConnectionUpdateManyWithWhereWithoutAccountInput | AppConnectionUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
   }
 
   export type ThreadCreateparticipantIdsInput = {
@@ -19638,6 +23072,109 @@ export namespace Prisma {
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutChatAttachmentsInput, AccountUpdateWithoutChatAttachmentsInput>, AccountUncheckedUpdateWithoutChatAttachmentsInput>
   }
 
+  export type UserCreateNestedOneWithoutAppConnectionsInput = {
+    create?: XOR<UserCreateWithoutAppConnectionsInput, UserUncheckedCreateWithoutAppConnectionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAppConnectionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type AccountCreateNestedOneWithoutAppConnectionsInput = {
+    create?: XOR<AccountCreateWithoutAppConnectionsInput, AccountUncheckedCreateWithoutAppConnectionsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutAppConnectionsInput
+    connect?: AccountWhereUniqueInput
+  }
+
+  export type SyncedItemCreateNestedManyWithoutConnectionInput = {
+    create?: XOR<SyncedItemCreateWithoutConnectionInput, SyncedItemUncheckedCreateWithoutConnectionInput> | SyncedItemCreateWithoutConnectionInput[] | SyncedItemUncheckedCreateWithoutConnectionInput[]
+    connectOrCreate?: SyncedItemCreateOrConnectWithoutConnectionInput | SyncedItemCreateOrConnectWithoutConnectionInput[]
+    createMany?: SyncedItemCreateManyConnectionInputEnvelope
+    connect?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+  }
+
+  export type SyncedItemUncheckedCreateNestedManyWithoutConnectionInput = {
+    create?: XOR<SyncedItemCreateWithoutConnectionInput, SyncedItemUncheckedCreateWithoutConnectionInput> | SyncedItemCreateWithoutConnectionInput[] | SyncedItemUncheckedCreateWithoutConnectionInput[]
+    connectOrCreate?: SyncedItemCreateOrConnectWithoutConnectionInput | SyncedItemCreateOrConnectWithoutConnectionInput[]
+    createMany?: SyncedItemCreateManyConnectionInputEnvelope
+    connect?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutAppConnectionsNestedInput = {
+    create?: XOR<UserCreateWithoutAppConnectionsInput, UserUncheckedCreateWithoutAppConnectionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAppConnectionsInput
+    upsert?: UserUpsertWithoutAppConnectionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAppConnectionsInput, UserUpdateWithoutAppConnectionsInput>, UserUncheckedUpdateWithoutAppConnectionsInput>
+  }
+
+  export type AccountUpdateOneWithoutAppConnectionsNestedInput = {
+    create?: XOR<AccountCreateWithoutAppConnectionsInput, AccountUncheckedCreateWithoutAppConnectionsInput>
+    connectOrCreate?: AccountCreateOrConnectWithoutAppConnectionsInput
+    upsert?: AccountUpsertWithoutAppConnectionsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
+    connect?: AccountWhereUniqueInput
+    update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutAppConnectionsInput, AccountUpdateWithoutAppConnectionsInput>, AccountUncheckedUpdateWithoutAppConnectionsInput>
+  }
+
+  export type SyncedItemUpdateManyWithoutConnectionNestedInput = {
+    create?: XOR<SyncedItemCreateWithoutConnectionInput, SyncedItemUncheckedCreateWithoutConnectionInput> | SyncedItemCreateWithoutConnectionInput[] | SyncedItemUncheckedCreateWithoutConnectionInput[]
+    connectOrCreate?: SyncedItemCreateOrConnectWithoutConnectionInput | SyncedItemCreateOrConnectWithoutConnectionInput[]
+    upsert?: SyncedItemUpsertWithWhereUniqueWithoutConnectionInput | SyncedItemUpsertWithWhereUniqueWithoutConnectionInput[]
+    createMany?: SyncedItemCreateManyConnectionInputEnvelope
+    set?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    disconnect?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    delete?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    connect?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    update?: SyncedItemUpdateWithWhereUniqueWithoutConnectionInput | SyncedItemUpdateWithWhereUniqueWithoutConnectionInput[]
+    updateMany?: SyncedItemUpdateManyWithWhereWithoutConnectionInput | SyncedItemUpdateManyWithWhereWithoutConnectionInput[]
+    deleteMany?: SyncedItemScalarWhereInput | SyncedItemScalarWhereInput[]
+  }
+
+  export type SyncedItemUncheckedUpdateManyWithoutConnectionNestedInput = {
+    create?: XOR<SyncedItemCreateWithoutConnectionInput, SyncedItemUncheckedCreateWithoutConnectionInput> | SyncedItemCreateWithoutConnectionInput[] | SyncedItemUncheckedCreateWithoutConnectionInput[]
+    connectOrCreate?: SyncedItemCreateOrConnectWithoutConnectionInput | SyncedItemCreateOrConnectWithoutConnectionInput[]
+    upsert?: SyncedItemUpsertWithWhereUniqueWithoutConnectionInput | SyncedItemUpsertWithWhereUniqueWithoutConnectionInput[]
+    createMany?: SyncedItemCreateManyConnectionInputEnvelope
+    set?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    disconnect?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    delete?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    connect?: SyncedItemWhereUniqueInput | SyncedItemWhereUniqueInput[]
+    update?: SyncedItemUpdateWithWhereUniqueWithoutConnectionInput | SyncedItemUpdateWithWhereUniqueWithoutConnectionInput[]
+    updateMany?: SyncedItemUpdateManyWithWhereWithoutConnectionInput | SyncedItemUpdateManyWithWhereWithoutConnectionInput[]
+    deleteMany?: SyncedItemScalarWhereInput | SyncedItemScalarWhereInput[]
+  }
+
+  export type SyncedItemCreateembeddingsInput = {
+    set: number[]
+  }
+
+  export type AppConnectionCreateNestedOneWithoutSyncedItemsInput = {
+    create?: XOR<AppConnectionCreateWithoutSyncedItemsInput, AppConnectionUncheckedCreateWithoutSyncedItemsInput>
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutSyncedItemsInput
+    connect?: AppConnectionWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type SyncedItemUpdateembeddingsInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type AppConnectionUpdateOneRequiredWithoutSyncedItemsNestedInput = {
+    create?: XOR<AppConnectionCreateWithoutSyncedItemsInput, AppConnectionUncheckedCreateWithoutSyncedItemsInput>
+    connectOrCreate?: AppConnectionCreateOrConnectWithoutSyncedItemsInput
+    upsert?: AppConnectionUpsertWithoutSyncedItemsInput
+    connect?: AppConnectionWhereUniqueInput
+    update?: XOR<XOR<AppConnectionUpdateToOneWithWhereWithoutSyncedItemsInput, AppConnectionUpdateWithoutSyncedItemsInput>, AppConnectionUncheckedUpdateWithoutSyncedItemsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -19943,6 +23480,22 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateWithoutUserInput = {
     id?: string
     accessToken: string
@@ -19954,6 +23507,7 @@ export namespace Prisma {
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutUserInput = {
@@ -19967,6 +23521,7 @@ export namespace Prisma {
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutUserInput = {
@@ -20137,6 +23692,50 @@ export namespace Prisma {
 
   export type ChatAttachmentCreateManyUserInputEnvelope = {
     data: ChatAttachmentCreateManyUserInput | ChatAttachmentCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AppConnectionCreateWithoutUserInput = {
+    id?: string
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    account?: AccountCreateNestedOneWithoutAppConnectionsInput
+    syncedItems?: SyncedItemCreateNestedManyWithoutConnectionInput
+  }
+
+  export type AppConnectionUncheckedCreateWithoutUserInput = {
+    id?: string
+    accountId?: string | null
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    syncedItems?: SyncedItemUncheckedCreateNestedManyWithoutConnectionInput
+  }
+
+  export type AppConnectionCreateOrConnectWithoutUserInput = {
+    where: AppConnectionWhereUniqueInput
+    create: XOR<AppConnectionCreateWithoutUserInput, AppConnectionUncheckedCreateWithoutUserInput>
+  }
+
+  export type AppConnectionCreateManyUserInputEnvelope = {
+    data: AppConnectionCreateManyUserInput | AppConnectionCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -20328,6 +23927,42 @@ export namespace Prisma {
     indexedAt?: DateTimeNullableFilter<"ChatAttachment"> | Date | string | null
   }
 
+  export type AppConnectionUpsertWithWhereUniqueWithoutUserInput = {
+    where: AppConnectionWhereUniqueInput
+    update: XOR<AppConnectionUpdateWithoutUserInput, AppConnectionUncheckedUpdateWithoutUserInput>
+    create: XOR<AppConnectionCreateWithoutUserInput, AppConnectionUncheckedCreateWithoutUserInput>
+  }
+
+  export type AppConnectionUpdateWithWhereUniqueWithoutUserInput = {
+    where: AppConnectionWhereUniqueInput
+    data: XOR<AppConnectionUpdateWithoutUserInput, AppConnectionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AppConnectionUpdateManyWithWhereWithoutUserInput = {
+    where: AppConnectionScalarWhereInput
+    data: XOR<AppConnectionUpdateManyMutationInput, AppConnectionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AppConnectionScalarWhereInput = {
+    AND?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
+    OR?: AppConnectionScalarWhereInput[]
+    NOT?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
+    id?: StringFilter<"AppConnection"> | string
+    userId?: StringFilter<"AppConnection"> | string
+    accountId?: StringNullableFilter<"AppConnection"> | string | null
+    appType?: StringFilter<"AppConnection"> | string
+    appName?: StringFilter<"AppConnection"> | string
+    accessToken?: StringFilter<"AppConnection"> | string
+    refreshToken?: StringNullableFilter<"AppConnection"> | string | null
+    expiresAt?: DateTimeNullableFilter<"AppConnection"> | Date | string | null
+    connectedAt?: DateTimeFilter<"AppConnection"> | Date | string
+    lastSyncedAt?: DateTimeNullableFilter<"AppConnection"> | Date | string | null
+    syncStatus?: StringFilter<"AppConnection"> | string
+    syncError?: StringNullableFilter<"AppConnection"> | string | null
+    enabled?: BoolFilter<"AppConnection"> | boolean
+    syncFrequency?: StringFilter<"AppConnection"> | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id: string
     emailAddress: string
@@ -20339,6 +23974,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -20352,6 +23988,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -20469,6 +24106,50 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AppConnectionCreateWithoutAccountInput = {
+    id?: string
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    user: UserCreateNestedOneWithoutAppConnectionsInput
+    syncedItems?: SyncedItemCreateNestedManyWithoutConnectionInput
+  }
+
+  export type AppConnectionUncheckedCreateWithoutAccountInput = {
+    id?: string
+    userId: string
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    syncedItems?: SyncedItemUncheckedCreateNestedManyWithoutConnectionInput
+  }
+
+  export type AppConnectionCreateOrConnectWithoutAccountInput = {
+    where: AppConnectionWhereUniqueInput
+    create: XOR<AppConnectionCreateWithoutAccountInput, AppConnectionUncheckedCreateWithoutAccountInput>
+  }
+
+  export type AppConnectionCreateManyAccountInputEnvelope = {
+    data: AppConnectionCreateManyAccountInput | AppConnectionCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutAccountsInput = {
     update: XOR<UserUpdateWithoutAccountsInput, UserUncheckedUpdateWithoutAccountsInput>
     create: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
@@ -20491,6 +24172,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -20504,6 +24186,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithWhereUniqueWithoutAccountInput = {
@@ -20582,6 +24265,22 @@ export namespace Prisma {
     data: XOR<ChatAttachmentUpdateManyMutationInput, ChatAttachmentUncheckedUpdateManyWithoutAccountInput>
   }
 
+  export type AppConnectionUpsertWithWhereUniqueWithoutAccountInput = {
+    where: AppConnectionWhereUniqueInput
+    update: XOR<AppConnectionUpdateWithoutAccountInput, AppConnectionUncheckedUpdateWithoutAccountInput>
+    create: XOR<AppConnectionCreateWithoutAccountInput, AppConnectionUncheckedCreateWithoutAccountInput>
+  }
+
+  export type AppConnectionUpdateWithWhereUniqueWithoutAccountInput = {
+    where: AppConnectionWhereUniqueInput
+    data: XOR<AppConnectionUpdateWithoutAccountInput, AppConnectionUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type AppConnectionUpdateManyWithWhereWithoutAccountInput = {
+    where: AppConnectionScalarWhereInput
+    data: XOR<AppConnectionUpdateManyMutationInput, AppConnectionUncheckedUpdateManyWithoutAccountInput>
+  }
+
   export type AccountCreateWithoutThreadsInput = {
     id?: string
     accessToken: string
@@ -20593,6 +24292,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutAccountsInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutThreadsInput = {
@@ -20606,6 +24306,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutThreadsInput = {
@@ -20713,6 +24414,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutThreadsInput = {
@@ -20726,6 +24428,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type EmailUpsertWithWhereUniqueWithoutThreadInput = {
@@ -21537,6 +25240,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutAccountsInput
     threads?: ThreadCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutEmailAddressesInput = {
@@ -21550,6 +25254,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutEmailAddressesInput = {
@@ -21659,6 +25364,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutEmailAddressesInput = {
@@ -21672,6 +25378,7 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type EmailCreateWithoutAttachmentsInput = {
@@ -21837,6 +25544,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatbotInteractionsInput = {
@@ -21850,6 +25558,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatbotInteractionsInput = {
@@ -21879,6 +25588,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatbotInteractionsInput = {
@@ -21892,6 +25602,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStripeSubscriptionInput = {
@@ -21905,6 +25616,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStripeSubscriptionInput = {
@@ -21918,6 +25630,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStripeSubscriptionInput = {
@@ -21947,6 +25660,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStripeSubscriptionInput = {
@@ -21960,6 +25674,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutChatFeedbackInput = {
@@ -21973,6 +25688,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatFeedbackInput = {
@@ -21986,6 +25702,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatFeedbackInput = {
@@ -22015,6 +25732,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatFeedbackInput = {
@@ -22028,6 +25746,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutInstantReplyFeedbackInput = {
@@ -22041,6 +25760,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInstantReplyFeedbackInput = {
@@ -22054,6 +25774,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInstantReplyFeedbackInput = {
@@ -22083,6 +25804,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInstantReplyFeedbackInput = {
@@ -22096,6 +25818,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutChatAttachmentsInput = {
@@ -22109,6 +25832,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatAttachmentsInput = {
@@ -22122,6 +25846,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatAttachmentsInput = {
@@ -22140,6 +25865,7 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutAccountsInput
     threads?: ThreadCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionCreateNestedManyWithoutAccountInput
   }
 
   export type AccountUncheckedCreateWithoutChatAttachmentsInput = {
@@ -22153,6 +25879,7 @@ export namespace Prisma {
     qaCacheIndex?: string | null
     threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
     emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutAccountInput
   }
 
   export type AccountCreateOrConnectWithoutChatAttachmentsInput = {
@@ -22182,6 +25909,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatAttachmentsInput = {
@@ -22195,6 +25923,7 @@ export namespace Prisma {
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutChatAttachmentsInput = {
@@ -22219,6 +25948,7 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutAccountsNestedInput
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutChatAttachmentsInput = {
@@ -22232,6 +25962,307 @@ export namespace Prisma {
     qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type UserCreateWithoutAppConnectionsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAppConnectionsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAppConnectionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAppConnectionsInput, UserUncheckedCreateWithoutAppConnectionsInput>
+  }
+
+  export type AccountCreateWithoutAppConnectionsInput = {
+    id?: string
+    accessToken: string
+    emailAddress: string
+    name: string
+    nextDeltaToken?: string | null
+    oramaIndex?: string | null
+    qaCacheIndex?: string | null
+    user: UserCreateNestedOneWithoutAccountsInput
+    threads?: ThreadCreateNestedManyWithoutAccountInput
+    emailAddresses?: EmailAddressCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountUncheckedCreateWithoutAppConnectionsInput = {
+    id?: string
+    userId: string
+    accessToken: string
+    emailAddress: string
+    name: string
+    nextDeltaToken?: string | null
+    oramaIndex?: string | null
+    qaCacheIndex?: string | null
+    threads?: ThreadUncheckedCreateNestedManyWithoutAccountInput
+    emailAddresses?: EmailAddressUncheckedCreateNestedManyWithoutAccountInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type AccountCreateOrConnectWithoutAppConnectionsInput = {
+    where: AccountWhereUniqueInput
+    create: XOR<AccountCreateWithoutAppConnectionsInput, AccountUncheckedCreateWithoutAppConnectionsInput>
+  }
+
+  export type SyncedItemCreateWithoutConnectionInput = {
+    id?: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url?: string | null
+    mimeType?: string | null
+    size?: number | null
+    modifiedAt?: Date | string | null
+    indexedAt?: Date | string | null
+    embeddings?: SyncedItemCreateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUncheckedCreateWithoutConnectionInput = {
+    id?: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url?: string | null
+    mimeType?: string | null
+    size?: number | null
+    modifiedAt?: Date | string | null
+    indexedAt?: Date | string | null
+    embeddings?: SyncedItemCreateembeddingsInput | number[]
+  }
+
+  export type SyncedItemCreateOrConnectWithoutConnectionInput = {
+    where: SyncedItemWhereUniqueInput
+    create: XOR<SyncedItemCreateWithoutConnectionInput, SyncedItemUncheckedCreateWithoutConnectionInput>
+  }
+
+  export type SyncedItemCreateManyConnectionInputEnvelope = {
+    data: SyncedItemCreateManyConnectionInput | SyncedItemCreateManyConnectionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutAppConnectionsInput = {
+    update: XOR<UserUpdateWithoutAppConnectionsInput, UserUncheckedUpdateWithoutAppConnectionsInput>
+    create: XOR<UserCreateWithoutAppConnectionsInput, UserUncheckedCreateWithoutAppConnectionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAppConnectionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAppConnectionsInput, UserUncheckedUpdateWithoutAppConnectionsInput>
+  }
+
+  export type UserUpdateWithoutAppConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAppConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type AccountUpsertWithoutAppConnectionsInput = {
+    update: XOR<AccountUpdateWithoutAppConnectionsInput, AccountUncheckedUpdateWithoutAppConnectionsInput>
+    create: XOR<AccountCreateWithoutAppConnectionsInput, AccountUncheckedCreateWithoutAppConnectionsInput>
+    where?: AccountWhereInput
+  }
+
+  export type AccountUpdateToOneWithWhereWithoutAppConnectionsInput = {
+    where?: AccountWhereInput
+    data: XOR<AccountUpdateWithoutAppConnectionsInput, AccountUncheckedUpdateWithoutAppConnectionsInput>
+  }
+
+  export type AccountUpdateWithoutAppConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneRequiredWithoutAccountsNestedInput
+    threads?: ThreadUpdateManyWithoutAccountNestedInput
+    emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
+  }
+
+  export type AccountUncheckedUpdateWithoutAppConnectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
+    oramaIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    qaCacheIndex?: NullableStringFieldUpdateOperationsInput | string | null
+    threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
+    emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type SyncedItemUpsertWithWhereUniqueWithoutConnectionInput = {
+    where: SyncedItemWhereUniqueInput
+    update: XOR<SyncedItemUpdateWithoutConnectionInput, SyncedItemUncheckedUpdateWithoutConnectionInput>
+    create: XOR<SyncedItemCreateWithoutConnectionInput, SyncedItemUncheckedCreateWithoutConnectionInput>
+  }
+
+  export type SyncedItemUpdateWithWhereUniqueWithoutConnectionInput = {
+    where: SyncedItemWhereUniqueInput
+    data: XOR<SyncedItemUpdateWithoutConnectionInput, SyncedItemUncheckedUpdateWithoutConnectionInput>
+  }
+
+  export type SyncedItemUpdateManyWithWhereWithoutConnectionInput = {
+    where: SyncedItemScalarWhereInput
+    data: XOR<SyncedItemUpdateManyMutationInput, SyncedItemUncheckedUpdateManyWithoutConnectionInput>
+  }
+
+  export type SyncedItemScalarWhereInput = {
+    AND?: SyncedItemScalarWhereInput | SyncedItemScalarWhereInput[]
+    OR?: SyncedItemScalarWhereInput[]
+    NOT?: SyncedItemScalarWhereInput | SyncedItemScalarWhereInput[]
+    id?: StringFilter<"SyncedItem"> | string
+    connectionId?: StringFilter<"SyncedItem"> | string
+    externalId?: StringFilter<"SyncedItem"> | string
+    itemType?: StringFilter<"SyncedItem"> | string
+    title?: StringFilter<"SyncedItem"> | string
+    content?: StringFilter<"SyncedItem"> | string
+    url?: StringNullableFilter<"SyncedItem"> | string | null
+    mimeType?: StringNullableFilter<"SyncedItem"> | string | null
+    size?: IntNullableFilter<"SyncedItem"> | number | null
+    modifiedAt?: DateTimeNullableFilter<"SyncedItem"> | Date | string | null
+    indexedAt?: DateTimeNullableFilter<"SyncedItem"> | Date | string | null
+    embeddings?: FloatNullableListFilter<"SyncedItem">
+  }
+
+  export type AppConnectionCreateWithoutSyncedItemsInput = {
+    id?: string
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+    user: UserCreateNestedOneWithoutAppConnectionsInput
+    account?: AccountCreateNestedOneWithoutAppConnectionsInput
+  }
+
+  export type AppConnectionUncheckedCreateWithoutSyncedItemsInput = {
+    id?: string
+    userId: string
+    accountId?: string | null
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+  }
+
+  export type AppConnectionCreateOrConnectWithoutSyncedItemsInput = {
+    where: AppConnectionWhereUniqueInput
+    create: XOR<AppConnectionCreateWithoutSyncedItemsInput, AppConnectionUncheckedCreateWithoutSyncedItemsInput>
+  }
+
+  export type AppConnectionUpsertWithoutSyncedItemsInput = {
+    update: XOR<AppConnectionUpdateWithoutSyncedItemsInput, AppConnectionUncheckedUpdateWithoutSyncedItemsInput>
+    create: XOR<AppConnectionCreateWithoutSyncedItemsInput, AppConnectionUncheckedCreateWithoutSyncedItemsInput>
+    where?: AppConnectionWhereInput
+  }
+
+  export type AppConnectionUpdateToOneWithWhereWithoutSyncedItemsInput = {
+    where?: AppConnectionWhereInput
+    data: XOR<AppConnectionUpdateWithoutSyncedItemsInput, AppConnectionUncheckedUpdateWithoutSyncedItemsInput>
+  }
+
+  export type AppConnectionUpdateWithoutSyncedItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutAppConnectionsNestedInput
+    account?: AccountUpdateOneWithoutAppConnectionsNestedInput
+  }
+
+  export type AppConnectionUncheckedUpdateWithoutSyncedItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
   }
 
   export type AccountCreateManyUserInput = {
@@ -22293,6 +26324,22 @@ export namespace Prisma {
     indexedAt?: Date | string | null
   }
 
+  export type AppConnectionCreateManyUserInput = {
+    id?: string
+    accountId?: string | null
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
+  }
+
   export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
@@ -22304,6 +26351,7 @@ export namespace Prisma {
     threads?: ThreadUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateWithoutUserInput = {
@@ -22317,6 +26365,7 @@ export namespace Prisma {
     threads?: ThreadUncheckedUpdateManyWithoutAccountNestedInput
     emailAddresses?: EmailAddressUncheckedUpdateManyWithoutAccountNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutAccountNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type AccountUncheckedUpdateManyWithoutUserInput = {
@@ -22476,6 +26525,56 @@ export namespace Prisma {
     indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type AppConnectionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    account?: AccountUpdateOneWithoutAppConnectionsNestedInput
+    syncedItems?: SyncedItemUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type AppConnectionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    syncedItems?: SyncedItemUncheckedUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type AppConnectionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: NullableStringFieldUpdateOperationsInput | string | null
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+  }
+
   export type ThreadCreateManyAccountInput = {
     id?: string
     subject: string
@@ -22508,6 +26607,22 @@ export namespace Prisma {
     inKnowledgeBase?: boolean
     uploadedAt?: Date | string
     indexedAt?: Date | string | null
+  }
+
+  export type AppConnectionCreateManyAccountInput = {
+    id?: string
+    userId: string
+    appType: string
+    appName: string
+    accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    connectedAt?: Date | string
+    lastSyncedAt?: Date | string | null
+    syncStatus?: string
+    syncError?: string | null
+    enabled?: boolean
+    syncFrequency?: string
   }
 
   export type ThreadUpdateWithoutAccountInput = {
@@ -22622,6 +26737,56 @@ export namespace Prisma {
     inKnowledgeBase?: BoolFieldUpdateOperationsInput | boolean
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type AppConnectionUpdateWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutAppConnectionsNestedInput
+    syncedItems?: SyncedItemUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type AppConnectionUncheckedUpdateWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
+    syncedItems?: SyncedItemUncheckedUpdateManyWithoutConnectionNestedInput
+  }
+
+  export type AppConnectionUncheckedUpdateManyWithoutAccountInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    appType?: StringFieldUpdateOperationsInput | string
+    appName?: StringFieldUpdateOperationsInput | string
+    accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    connectedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    syncStatus?: StringFieldUpdateOperationsInput | string
+    syncError?: NullableStringFieldUpdateOperationsInput | string | null
+    enabled?: BoolFieldUpdateOperationsInput | boolean
+    syncFrequency?: StringFieldUpdateOperationsInput | string
   }
 
   export type EmailCreateManyThreadInput = {
@@ -23438,6 +27603,62 @@ export namespace Prisma {
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SyncedItemCreateManyConnectionInput = {
+    id?: string
+    externalId: string
+    itemType: string
+    title: string
+    content: string
+    url?: string | null
+    mimeType?: string | null
+    size?: number | null
+    modifiedAt?: Date | string | null
+    indexedAt?: Date | string | null
+    embeddings?: SyncedItemCreateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUpdateWithoutConnectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUncheckedUpdateWithoutConnectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
+  }
+
+  export type SyncedItemUncheckedUpdateManyWithoutConnectionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalId?: StringFieldUpdateOperationsInput | string
+    itemType?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    url?: NullableStringFieldUpdateOperationsInput | string | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
+    size?: NullableIntFieldUpdateOperationsInput | number | null
+    modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    embeddings?: SyncedItemUpdateembeddingsInput | number[]
   }
 
 

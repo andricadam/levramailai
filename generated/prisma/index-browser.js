@@ -267,6 +267,38 @@ exports.Prisma.ChatAttachmentScalarFieldEnum = {
   indexedAt: 'indexedAt'
 };
 
+exports.Prisma.AppConnectionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accountId: 'accountId',
+  appType: 'appType',
+  appName: 'appName',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  expiresAt: 'expiresAt',
+  connectedAt: 'connectedAt',
+  lastSyncedAt: 'lastSyncedAt',
+  syncStatus: 'syncStatus',
+  syncError: 'syncError',
+  enabled: 'enabled',
+  syncFrequency: 'syncFrequency'
+};
+
+exports.Prisma.SyncedItemScalarFieldEnum = {
+  id: 'id',
+  connectionId: 'connectionId',
+  externalId: 'externalId',
+  itemType: 'itemType',
+  title: 'title',
+  content: 'content',
+  url: 'url',
+  mimeType: 'mimeType',
+  size: 'size',
+  modifiedAt: 'modifiedAt',
+  indexedAt: 'indexedAt',
+  embeddings: 'embeddings'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -332,7 +364,9 @@ exports.Prisma.ModelName = {
   StripeSubscription: 'StripeSubscription',
   ChatFeedback: 'ChatFeedback',
   InstantReplyFeedback: 'InstantReplyFeedback',
-  ChatAttachment: 'ChatAttachment'
+  ChatAttachment: 'ChatAttachment',
+  AppConnection: 'AppConnection',
+  SyncedItem: 'SyncedItem'
 };
 
 /**

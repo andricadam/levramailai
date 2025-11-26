@@ -183,11 +183,11 @@ Guidelines:
         // ===== STAGE 2: Expensive Model Flow (Original RAG System) =====
         // Track sources used in the response
         type SourceInfo = {
-            type: 'email' | 'attachment' | 'web'
+            type: 'email' | 'attachment' | 'web' | 'google_drive' | 'google_calendar' | 'sharepoint'
             id: string
             title: string
             threadId?: string
-            url?: string // For web sources
+            url?: string // For web and integration sources
         }
         const sources: SourceInfo[] = []
 
@@ -401,6 +401,19 @@ Guidelines:
                     title: doc.fileName || doc.subject || 'File',
                 })
             }
+            // Track integration sources (google_drive, google_calendar, sharepoint)
+            if (doc?.source && ['google_drive', 'google_calendar', 'sharepoint'].includes(doc.source) && doc?.sourceId) {
+                const existingSource = sources.find(s => s.id === doc.sourceId && s.type === doc.source)
+                if (!existingSource) {
+                    // Add integration source (URL will be fetched if needed, but for now just add basic info)
+                    sources.push({
+                        type: doc.source as 'google_drive' | 'google_calendar' | 'sharepoint',
+                        id: doc.sourceId,
+                        title: doc.fileName || doc.subject || 'Item',
+                        // URL will be available from the synced item if indexed properly
+                    })
+                }
+            }
         })
         
         // Extract retrieved email identifiers for feedback tracking
@@ -449,6 +462,42 @@ Guidelines:
         } else {
             contextText = vectorContextText || 'No relevant email context found.'
         }
+
+        // Perform web search if enabled
+        let webSearchText = ''
+        if (webSearch && lastMessageContent) {
+            try {
+                console.log('Performing web search for:', lastMessageContent)
+                const webResults = await searchWeb(lastMessageContent, 5) // Max 5 results
+                
+                if (webResults && webResults.results.length > 0) {
+                    webSearchText = formatWebSearchResults(webResults.results)
+                    
+                    // Add web search sources
+                    webResults.results.forEach((result, index) => {
+                        sources.push({
+                            type: 'web',
+                            id: `web-${index}`,
+                            title: result.title,
+                            url: result.url,
+                        })
+                    })
+                    
+                    console.log(`Found ${webResults.results.length} web search results`)
+                } else {
+                    console.log('No web search results found')
+                }
+            } catch (error) {
+                console.error('Web search error:', error)
+                // Continue without web search if it fails
+            }
+        }
+
+        // Combine all context including web search
+        const finalContextText = [
+            contextText,
+            webSearchText ? `\n\n---\n\nWEB SEARCH RESULTS:\n\n${webSearchText}` : ''
+        ].filter(Boolean).join('')
 
         // Create a more concise system prompt to save tokens
         const prompt = {

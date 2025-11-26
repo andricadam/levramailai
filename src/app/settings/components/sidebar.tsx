@@ -6,6 +6,7 @@ import {
     User,
     Shield,
     CreditCard,
+    Plug,
 } from "lucide-react"
 import { useLocalStorage } from 'usehooks-ts'
 import { useLanguage } from '@/contexts/language-context'
@@ -56,6 +57,13 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                         icon: CreditCard,
                         variant: currentView === "billing" ? "default" : "ghost",
                         viewKey: "billing",
+                    },
+                    {
+                        title: t('settings.integrations') || 'Integrations',
+                        label: undefined,
+                        icon: Plug,
+                        variant: currentView === "integrations" ? "default" : "ghost",
+                        viewKey: "integrations",
                     },
                 ]}
             />

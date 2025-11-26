@@ -24,6 +24,7 @@ model User {
     chatFeedback ChatFeedback[]
     instantReplyFeedback InstantReplyFeedback[]
     chatAttachments ChatAttachment[]
+    appConnections AppConnection[]
 }
 
 model Account {
@@ -42,6 +43,7 @@ model Account {
     threads Thread[]
     emailAddresses EmailAddress[]
     chatAttachments ChatAttachment[]
+    appConnections AppConnection[]
 }
 
 model Thread {
@@ -279,4 +281,67 @@ model ChatAttachment {
     @@index([userId, accountId])
     @@index([inKnowledgeBase])
     @@index([uploadedAt])
+}
+
+// App Integration Models
+model AppConnection {
+    id String @id @default(cuid())
+    userId String
+    accountId String? // Optional: link to email account if relevant
+    
+    appType String // 'sharepoint' | 'google_drive' | 'google_calendar'
+    appName String // Display name
+    
+    // OAuth tokens (encrypted in production)
+    accessToken String
+    refreshToken String?
+    expiresAt DateTime?
+    
+    // Connection metadata
+    connectedAt DateTime @default(now())
+    lastSyncedAt DateTime?
+    syncStatus String @default("pending") // 'pending' | 'syncing' | 'synced' | 'error'
+    syncError String?
+    
+    // Settings
+    enabled Boolean @default(true)
+    syncFrequency String @default("daily") // 'hourly' | 'daily' | 'weekly'
+    
+    user User @relation(fields: [userId], references: [id])
+    account Account? @relation(fields: [accountId], references: [id])
+    
+    syncedItems SyncedItem[]
+    
+    @@unique([userId, appType])
+    @@index([userId])
+    @@index([appType])
+    @@index([syncStatus])
+}
+
+model SyncedItem {
+    id String @id @default(cuid())
+    connectionId String
+    
+    // Item identification
+    externalId String // ID from the external app
+    itemType String // 'file' | 'document' | 'event' | 'folder'
+    title String
+    content String // Extracted text content
+    url String? // Link to original item
+    
+    // Metadata
+    mimeType String?
+    size Int?
+    modifiedAt DateTime?
+    
+    // Indexing
+    indexedAt DateTime?
+    embeddings Float[] // For vector search
+    
+    connection AppConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+    
+    @@unique([connectionId, externalId])
+    @@index([connectionId])
+    @@index([itemType])
+    @@index([indexedAt])
 }
