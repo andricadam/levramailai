@@ -24,6 +24,7 @@ const ComposeButton = () => {
     const [toValues, setToValues] = React.useState<{ label: string; value: string; }[]>([])
     const [ccValues, setCcValues] = React.useState<{ label: string; value: string; }[]>([])
     const [subject, setSubject] = React.useState<string>('')
+    const [instantReplyFeedbackId, setInstantReplyFeedbackId] = React.useState<string | null>(null)
     
     // Only query when accountId is valid (non-empty string)
     const isValidAccountId = Boolean(accountId && typeof accountId === 'string' && accountId.trim().length > 0)
@@ -65,9 +66,11 @@ const ComposeButton = () => {
             cc: ccValues.map(cc => ({ name: cc.value, address: cc.value })),
             replyTo: [{ name: account.name ?? 'Me', address: account.emailAddress ?? 'me@example.com' }],
             inReplyTo: undefined,
+            instantReplyFeedbackId: instantReplyFeedbackId ?? undefined, // Pass feedback ID
         }, {
             onSuccess: () => {
                 toast.success("Email sent")
+                setInstantReplyFeedbackId(null) // Reset
                 setOpen(false)
             },
             onError: (error) => {
@@ -102,6 +105,7 @@ const ComposeButton = () => {
 
                         handleSend={handleSend}
                         isSending={sendEmail.isPending}
+                        onFeedbackIdChange={setInstantReplyFeedbackId}
                     />
                 </DrawerHeader>
             </DrawerContent>

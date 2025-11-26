@@ -223,12 +223,16 @@ model InstantReplyFeedback {
     accountId String
     threadId String?
     
+    // Type of generation: "instant-reply" or "compose"
+    type String @default("instant-reply") // "instant-reply" or "compose"
+    
     // Context used for generation
     emailContext String
+    userPrompt String? // For compose: the user's description/prompt
     originalEmailId String?
     
     // Generated vs actual
-    generatedReply String // The AI-generated reply
+    generatedReply String // The AI-generated reply/email
     finalSentReply String? // The actual reply that was sent (after user edits)
     
     // Metadata
@@ -244,4 +248,5 @@ model InstantReplyFeedback {
     @@index([userId, accountId])
     @@index([threadId])
     @@index([createdAt])
+    @@index([type])
 }

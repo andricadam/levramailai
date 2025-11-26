@@ -12606,7 +12606,9 @@ export namespace Prisma {
     userId: string | null
     accountId: string | null
     threadId: string | null
+    type: string | null
     emailContext: string | null
+    userPrompt: string | null
     originalEmailId: string | null
     generatedReply: string | null
     finalSentReply: string | null
@@ -12622,7 +12624,9 @@ export namespace Prisma {
     userId: string | null
     accountId: string | null
     threadId: string | null
+    type: string | null
     emailContext: string | null
+    userPrompt: string | null
     originalEmailId: string | null
     generatedReply: string | null
     finalSentReply: string | null
@@ -12638,7 +12642,9 @@ export namespace Prisma {
     userId: number
     accountId: number
     threadId: number
+    type: number
     emailContext: number
+    userPrompt: number
     originalEmailId: number
     generatedReply: number
     finalSentReply: number
@@ -12664,7 +12670,9 @@ export namespace Prisma {
     userId?: true
     accountId?: true
     threadId?: true
+    type?: true
     emailContext?: true
+    userPrompt?: true
     originalEmailId?: true
     generatedReply?: true
     finalSentReply?: true
@@ -12680,7 +12688,9 @@ export namespace Prisma {
     userId?: true
     accountId?: true
     threadId?: true
+    type?: true
     emailContext?: true
+    userPrompt?: true
     originalEmailId?: true
     generatedReply?: true
     finalSentReply?: true
@@ -12696,7 +12706,9 @@ export namespace Prisma {
     userId?: true
     accountId?: true
     threadId?: true
+    type?: true
     emailContext?: true
+    userPrompt?: true
     originalEmailId?: true
     generatedReply?: true
     finalSentReply?: true
@@ -12799,7 +12811,9 @@ export namespace Prisma {
     userId: string
     accountId: string
     threadId: string | null
+    type: string
     emailContext: string
+    userPrompt: string | null
     originalEmailId: string | null
     generatedReply: string
     finalSentReply: string | null
@@ -12834,7 +12848,9 @@ export namespace Prisma {
     userId?: boolean
     accountId?: boolean
     threadId?: boolean
+    type?: boolean
     emailContext?: boolean
+    userPrompt?: boolean
     originalEmailId?: boolean
     generatedReply?: boolean
     finalSentReply?: boolean
@@ -12851,7 +12867,9 @@ export namespace Prisma {
     userId?: boolean
     accountId?: boolean
     threadId?: boolean
+    type?: boolean
     emailContext?: boolean
+    userPrompt?: boolean
     originalEmailId?: boolean
     generatedReply?: boolean
     finalSentReply?: boolean
@@ -12868,7 +12886,9 @@ export namespace Prisma {
     userId?: boolean
     accountId?: boolean
     threadId?: boolean
+    type?: boolean
     emailContext?: boolean
+    userPrompt?: boolean
     originalEmailId?: boolean
     generatedReply?: boolean
     finalSentReply?: boolean
@@ -12885,7 +12905,9 @@ export namespace Prisma {
     userId?: boolean
     accountId?: boolean
     threadId?: boolean
+    type?: boolean
     emailContext?: boolean
+    userPrompt?: boolean
     originalEmailId?: boolean
     generatedReply?: boolean
     finalSentReply?: boolean
@@ -12896,7 +12918,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InstantReplyFeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accountId" | "threadId" | "emailContext" | "originalEmailId" | "generatedReply" | "finalSentReply" | "wasEdited" | "editSimilarity" | "modelVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["instantReplyFeedback"]>
+  export type InstantReplyFeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accountId" | "threadId" | "type" | "emailContext" | "userPrompt" | "originalEmailId" | "generatedReply" | "finalSentReply" | "wasEdited" | "editSimilarity" | "modelVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["instantReplyFeedback"]>
   export type InstantReplyFeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -12917,7 +12939,9 @@ export namespace Prisma {
       userId: string
       accountId: string
       threadId: string | null
+      type: string
       emailContext: string
+      userPrompt: string | null
       originalEmailId: string | null
       generatedReply: string
       finalSentReply: string | null
@@ -13354,7 +13378,9 @@ export namespace Prisma {
     readonly userId: FieldRef<"InstantReplyFeedback", 'String'>
     readonly accountId: FieldRef<"InstantReplyFeedback", 'String'>
     readonly threadId: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly type: FieldRef<"InstantReplyFeedback", 'String'>
     readonly emailContext: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly userPrompt: FieldRef<"InstantReplyFeedback", 'String'>
     readonly originalEmailId: FieldRef<"InstantReplyFeedback", 'String'>
     readonly generatedReply: FieldRef<"InstantReplyFeedback", 'String'>
     readonly finalSentReply: FieldRef<"InstantReplyFeedback", 'String'>
@@ -13935,7 +13961,9 @@ export namespace Prisma {
     userId: 'userId',
     accountId: 'accountId',
     threadId: 'threadId',
+    type: 'type',
     emailContext: 'emailContext',
+    userPrompt: 'userPrompt',
     originalEmailId: 'originalEmailId',
     generatedReply: 'generatedReply',
     finalSentReply: 'finalSentReply',
@@ -14901,7 +14929,9 @@ export namespace Prisma {
     userId?: StringFilter<"InstantReplyFeedback"> | string
     accountId?: StringFilter<"InstantReplyFeedback"> | string
     threadId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    type?: StringFilter<"InstantReplyFeedback"> | string
     emailContext?: StringFilter<"InstantReplyFeedback"> | string
+    userPrompt?: StringNullableFilter<"InstantReplyFeedback"> | string | null
     originalEmailId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
     generatedReply?: StringFilter<"InstantReplyFeedback"> | string
     finalSentReply?: StringNullableFilter<"InstantReplyFeedback"> | string | null
@@ -14918,7 +14948,9 @@ export namespace Prisma {
     userId?: SortOrder
     accountId?: SortOrder
     threadId?: SortOrderInput | SortOrder
+    type?: SortOrder
     emailContext?: SortOrder
+    userPrompt?: SortOrderInput | SortOrder
     originalEmailId?: SortOrderInput | SortOrder
     generatedReply?: SortOrder
     finalSentReply?: SortOrderInput | SortOrder
@@ -14938,7 +14970,9 @@ export namespace Prisma {
     userId?: StringFilter<"InstantReplyFeedback"> | string
     accountId?: StringFilter<"InstantReplyFeedback"> | string
     threadId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    type?: StringFilter<"InstantReplyFeedback"> | string
     emailContext?: StringFilter<"InstantReplyFeedback"> | string
+    userPrompt?: StringNullableFilter<"InstantReplyFeedback"> | string | null
     originalEmailId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
     generatedReply?: StringFilter<"InstantReplyFeedback"> | string
     finalSentReply?: StringNullableFilter<"InstantReplyFeedback"> | string | null
@@ -14955,7 +14989,9 @@ export namespace Prisma {
     userId?: SortOrder
     accountId?: SortOrder
     threadId?: SortOrderInput | SortOrder
+    type?: SortOrder
     emailContext?: SortOrder
+    userPrompt?: SortOrderInput | SortOrder
     originalEmailId?: SortOrderInput | SortOrder
     generatedReply?: SortOrder
     finalSentReply?: SortOrderInput | SortOrder
@@ -14979,7 +15015,9 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
     accountId?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
     threadId?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
+    type?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
     emailContext?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
+    userPrompt?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
     originalEmailId?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
     generatedReply?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
     finalSentReply?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
@@ -15841,7 +15879,9 @@ export namespace Prisma {
     id?: string
     accountId: string
     threadId?: string | null
+    type?: string
     emailContext: string
+    userPrompt?: string | null
     originalEmailId?: string | null
     generatedReply: string
     finalSentReply?: string | null
@@ -15858,7 +15898,9 @@ export namespace Prisma {
     userId: string
     accountId: string
     threadId?: string | null
+    type?: string
     emailContext: string
+    userPrompt?: string | null
     originalEmailId?: string | null
     generatedReply: string
     finalSentReply?: string | null
@@ -15873,7 +15915,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15890,7 +15934,9 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15906,7 +15952,9 @@ export namespace Prisma {
     userId: string
     accountId: string
     threadId?: string | null
+    type?: string
     emailContext: string
+    userPrompt?: string | null
     originalEmailId?: string | null
     generatedReply: string
     finalSentReply?: string | null
@@ -15921,7 +15969,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15937,7 +15987,9 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16708,7 +16760,9 @@ export namespace Prisma {
     userId?: SortOrder
     accountId?: SortOrder
     threadId?: SortOrder
+    type?: SortOrder
     emailContext?: SortOrder
+    userPrompt?: SortOrder
     originalEmailId?: SortOrder
     generatedReply?: SortOrder
     finalSentReply?: SortOrder
@@ -16728,7 +16782,9 @@ export namespace Prisma {
     userId?: SortOrder
     accountId?: SortOrder
     threadId?: SortOrder
+    type?: SortOrder
     emailContext?: SortOrder
+    userPrompt?: SortOrder
     originalEmailId?: SortOrder
     generatedReply?: SortOrder
     finalSentReply?: SortOrder
@@ -16744,7 +16800,9 @@ export namespace Prisma {
     userId?: SortOrder
     accountId?: SortOrder
     threadId?: SortOrder
+    type?: SortOrder
     emailContext?: SortOrder
+    userPrompt?: SortOrder
     originalEmailId?: SortOrder
     generatedReply?: SortOrder
     finalSentReply?: SortOrder
@@ -18139,7 +18197,9 @@ export namespace Prisma {
     id?: string
     accountId: string
     threadId?: string | null
+    type?: string
     emailContext: string
+    userPrompt?: string | null
     originalEmailId?: string | null
     generatedReply: string
     finalSentReply?: string | null
@@ -18154,7 +18214,9 @@ export namespace Prisma {
     id?: string
     accountId: string
     threadId?: string | null
+    type?: string
     emailContext: string
+    userPrompt?: string | null
     originalEmailId?: string | null
     generatedReply: string
     finalSentReply?: string | null
@@ -18315,7 +18377,9 @@ export namespace Prisma {
     userId?: StringFilter<"InstantReplyFeedback"> | string
     accountId?: StringFilter<"InstantReplyFeedback"> | string
     threadId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    type?: StringFilter<"InstantReplyFeedback"> | string
     emailContext?: StringFilter<"InstantReplyFeedback"> | string
+    userPrompt?: StringNullableFilter<"InstantReplyFeedback"> | string | null
     originalEmailId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
     generatedReply?: StringFilter<"InstantReplyFeedback"> | string
     finalSentReply?: StringNullableFilter<"InstantReplyFeedback"> | string | null
@@ -20037,7 +20101,9 @@ export namespace Prisma {
     id?: string
     accountId: string
     threadId?: string | null
+    type?: string
     emailContext: string
+    userPrompt?: string | null
     originalEmailId?: string | null
     generatedReply: string
     finalSentReply?: string | null
@@ -20137,7 +20203,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20152,7 +20220,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20167,7 +20237,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     accountId?: StringFieldUpdateOperationsInput | string
     threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     emailContext?: StringFieldUpdateOperationsInput | string
+    userPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
     generatedReply?: StringFieldUpdateOperationsInput | string
     finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null

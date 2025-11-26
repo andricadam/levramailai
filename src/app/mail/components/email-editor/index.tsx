@@ -158,6 +158,7 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
                     <AIComposeButton
                         isComposing={defaultToolbarExpand}
                         onGenerate={setGeneration}
+                        onFeedbackIdChange={onFeedbackIdChange}
                     />
                 </div>
             </div>

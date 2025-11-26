@@ -22,13 +22,14 @@ import { toast } from 'sonner'
 type Props = {
     onGenerate: (value: string) => void
     isComposing?: boolean
+    onFeedbackIdChange?: (feedbackId: string | null) => void // Callback for feedback ID
 }
 
 const AIComposeButton = (props: Props) => {
     const [prompt, setPrompt] = React.useState('')
     const [open, setOpen] = React.useState(false)
     const [isGenerating, setIsGenerating] = React.useState(false)
-    const { account, threads } = useThreads()
+    const { account, threads, accountId } = useThreads()
     const [threadId] = useThread();
     const thread = threads?.find(t => t.id === threadId)
     const aiGenerate = async (prompt: string) => {
@@ -45,7 +46,17 @@ const AIComposeButton = (props: Props) => {
             }
 
             const fullContext = context ? `${context}\n\nMy name is: ${account?.name ?? ''}` : `My name is: ${account?.name ?? ''}`
-            const { output } = await generateEmail(fullContext, prompt)
+            
+            // Pass metadata for feedback tracking
+            const { output, feedbackId } = await generateEmail(fullContext, prompt, {
+                accountId: accountId ?? undefined,
+                threadId: threadId ?? undefined,
+            })
+
+            // Notify parent component of feedback ID
+            if (feedbackId && props.onFeedbackIdChange) {
+                props.onFeedbackIdChange(feedbackId);
+            }
 
             let accumulatedText = ''
             for await (const delta of readStreamableValue(output as any)) {

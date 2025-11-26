@@ -8,4 +8,5 @@ datasets==2.14.6
 accelerate==0.24.1
 bitsandbytes==0.41.3
 sentencepiece==0.1.99
+pyarrow==14.0.2  # Pin to version compatible with datasets 2.14.6 (has PyExtensionType)
 

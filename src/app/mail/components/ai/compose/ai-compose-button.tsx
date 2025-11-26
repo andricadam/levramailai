@@ -22,12 +22,13 @@ import { useThread } from "../../../use-thread"
 type Props = {
     onGenerate: (value: string) => void
     isComposing?: boolean
+    onFeedbackIdChange?: (feedbackId: string | null) => void // Callback for feedback ID
 }
 
 const AIComposeButton = (props: Props) => {
     const [prompt, setPrompt] = React.useState('')
     const [open, setOpen] = React.useState(false)
-    const { account, threads } = useThreads()
+    const { account, threads, accountId } = useThreads()
     const [threadId] = useThread();
     const thread = threads?.find(t => t.id === threadId)
     const aiGenerate = async (prompt: string) => {
@@ -48,7 +49,16 @@ Body: ${turndown.turndown(email.body ?? email.bodySnippet ?? "")}
 My name is ${account?.name} and my email is ${account?.emailAddress}.
 `
 
-        const { output } = await generateEmail(context, prompt)
+        // Pass metadata for feedback tracking
+        const { output, feedbackId } = await generateEmail(context, prompt, {
+            accountId: accountId ?? undefined,
+            threadId: threadId ?? undefined,
+        })
+
+        // Notify parent component of feedback ID
+        if (feedbackId && props.onFeedbackIdChange) {
+            props.onFeedbackIdChange(feedbackId);
+        }
 
         let accumulatedText = ''
         for await (const delta of readStreamableValue(output)) {
