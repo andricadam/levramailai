@@ -35,6 +35,7 @@ model Account {
 
   nextDeltaToken String?
   oramaIndex     String?
+  qaCacheIndex   String?
 
   user           User           @relation(fields: [userId], references: [id])
   threads        Thread[]

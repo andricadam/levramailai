@@ -3,10 +3,11 @@ import { createOpenAI } from "@ai-sdk/openai";
 
 import { NextResponse } from "next/server";
 import { OramaClient } from "@/lib/orama";
+import { QACacheClient } from "@/lib/qa-cache";
 import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
 import { getSubscriptionStatus } from "@/lib/stripe-actions";
-import { FREE_CREDITS_PER_DAY } from "@/app/constants";
+import { FREE_CREDITS_PER_DAY, QA_CACHE_SIMILARITY_THRESHOLD, SMALL_MODEL, LARGE_MODEL } from "@/app/constants";
 
 // export const runtime = "edge";
 
@@ -90,6 +91,92 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid message format" }, { status: 400 });
         }
 
+        // ===== STAGE 1: Check Q&A Cache =====
+        let cachedQA = null;
+        try {
+            const qaCache = new QACacheClient(accountId);
+            await qaCache.initialize();
+            cachedQA = await qaCache.searchSimilarQuery(lastMessageContent, QA_CACHE_SIMILARITY_THRESHOLD);
+            
+            if (cachedQA) {
+                console.log("Found similar Q&A in cache, using small model");
+                
+                // Use small model (GPT-3.5-turbo) to adapt the cached response
+                const result = await streamText({
+                    model: openai(SMALL_MODEL),
+                    messages: [
+                        {
+                            role: "system",
+                            content: `You are an AI assistant. Adapt the following previous answer to better match the user's new question. Keep the core information but adjust the wording and details to be more relevant to the new query.
+
+PREVIOUS QUESTION: ${cachedQA.document?.query || ''}
+PREVIOUS ANSWER: ${cachedQA.document?.response || ''}
+NEW USER QUESTION: ${lastMessageContent}
+
+Guidelines:
+- Keep the essential information from the previous answer
+- Adjust wording to better match the new question
+- Don't invent new information not in the previous answer
+- Be concise and helpful
+- If the new question is very different, acknowledge that and provide what you can from the previous answer`
+                        },
+                        {
+                            role: "user",
+                            content: lastMessageContent
+                        }
+                    ],
+                    onFinish: async (result) => {
+                        // Update subscription count for free users
+                        if (!isSubscribed) {
+                            try {
+                                await db.chatbotInteraction.update({
+                                    where: {
+                                        day_userId: {
+                                            userId,
+                                            day: today
+                                        }
+                                    },
+                                    data: {
+                                        count: {
+                                            increment: 1
+                                        }
+                                    }
+                                });
+                            } catch (error) {
+                                console.error("Failed to update chatbot interaction count:", error);
+                            }
+                        }
+                        
+                        // Log interaction for feedback loop
+                        try {
+                            await db.chatFeedback.create({
+                                data: {
+                                    userId,
+                                    accountId,
+                                    query: lastMessageContent,
+                                    response: result.text || '',
+                                    retrievedEmails: [],
+                                    helpful: null, // Will be updated when user gives explicit feedback
+                                    interactionType: 'implicit'
+                                }
+                            });
+                        } catch (feedbackError) {
+                            console.error("Failed to log feedback:", feedbackError);
+                        }
+                    }
+                });
+                
+                console.log("Small model response completed, returning cached response");
+                const response = result.toUIMessageStreamResponse();
+                response.headers.set('X-Accel-Buffering', 'no');
+                return response;
+            }
+        } catch (qaError) {
+            console.error("Q&A cache error:", qaError);
+            // Continue to expensive model if cache fails
+        }
+
+        // ===== STAGE 2: Expensive Model Flow (Original RAG System) =====
         let context;
         try {
             console.log("Initializing OramaClient with accountId:", accountId);
@@ -170,7 +257,7 @@ GUIDELINES:
         try {
             console.log("Calling streamText with", formattedMessages.length, "messages");
             const result = await streamText({
-                model: openai("gpt-4"),
+                model: openai(LARGE_MODEL),
                 messages: [
                     prompt,
                     ...formattedMessages,
@@ -213,6 +300,16 @@ GUIDELINES:
                     } catch (feedbackError) {
                         // Don't fail the request if feedback logging fails
                         console.error("Failed to log feedback:", feedbackError);
+                    }
+                    
+                    // Add new Q&A to cache for future use (async, don't block)
+                    try {
+                        const qaCache = new QACacheClient(accountId);
+                        await qaCache.initialize();
+                        await qaCache.addQA(lastMessageContent, result.text || '', null);
+                        console.log("Added new Q&A to cache");
+                    } catch (cacheError) {
+                        console.error("Failed to add Q&A to cache:", cacheError);
                     }
                 },
             });
