@@ -53,7 +53,13 @@ export class OramaClient {
         }
     }
 
-    async vectorSearch({ term }: { term: string }) {
+    async vectorSearch({ 
+        term, 
+        preferredEmailIds 
+    }: { 
+        term: string
+        preferredEmailIds?: string[]
+    }) {
         const embeddings = await getEmbeddings(term)
         const results = await search(this.orama, {
             mode: 'hybrid',
@@ -63,8 +69,13 @@ export class OramaClient {
                 property: 'embeddings'
             },
             similarity: 0.8,
-            limit: 10
+            limit: 20 // Get more results to allow for filtering/prioritization
         })
+        
+        // Note: preferredEmailIds are handled in the API route by fetching emails directly from DB
+        // This allows us to include exact email content even if it's not in the top vector results
+        // The API route will combine context emails with vector search results
+        
         return results
     }
 

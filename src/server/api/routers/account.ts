@@ -434,6 +434,89 @@ export const accountRouter = createTRPCRouter({
         const results = await orama.search({ term: input.query })
         return results
     }),
+    searchThreadsForContext: privateProcedure.input(z.object({
+        accountId: z.string(),
+        search: z.string().optional(),
+        limit: z.number().min(1).max(50).default(20)
+    })).query(async ({ctx, input})=>{
+        const account = await authoriseAccess(input.accountId, ctx.auth.userId)
+        
+        // Build search filter
+        const where: any = {
+            accountId: account.id,
+        }
+
+        // Add search filter if query provided
+        if (input.search && input.search.trim().length > 0) {
+            const searchTerm = input.search.trim()
+            where.OR = [
+                {
+                    subject: {
+                        contains: searchTerm,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    emails: {
+                        some: {
+                            OR: [
+                                {
+                                    subject: {
+                                        contains: searchTerm,
+                                        mode: 'insensitive'
+                                    }
+                                },
+                                {
+                                    from: {
+                                        name: {
+                                            contains: searchTerm,
+                                            mode: 'insensitive'
+                                        }
+                                    }
+                                },
+                                {
+                                    from: {
+                                        address: {
+                                            contains: searchTerm,
+                                            mode: 'insensitive'
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+
+        return await ctx.db.thread.findMany({
+            where,
+            include: {
+                emails: {
+                    orderBy: {
+                        sentAt: 'desc'
+                    },
+                    take: 1, // Only get the latest email
+                    select: {
+                        id: true,
+                        subject: true,
+                        bodySnippet: true,
+                        sentAt: true,
+                        from: {
+                            select: {
+                                name: true,
+                                address: true
+                            }
+                        }
+                    }
+                }
+            },
+            take: input.limit,
+            orderBy: {
+                lastMessageDate: 'desc'
+            }
+        })
+    }),
     getChatbotInteractions: privateProcedure.input(z.object({
         accountId: z.string(),
     })).query(async ({ctx, input})=>{

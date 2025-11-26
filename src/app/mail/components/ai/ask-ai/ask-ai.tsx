@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { SparklesIcon } from '@heroicons/react/24/solid';
 import { toast } from 'sonner';
 import { api } from '@/trpc/react';
+import { EmailContextSelector, type EmailContext } from './email-context-selector';
 
 const transitionDebug = {
     type: "tween" as const,
@@ -24,6 +25,7 @@ const AskAI = ({ onClose }: AskAIProps) => {
     const [accountId] = useLocalStorage('accountId', '')
     const utils = api.useUtils()
     const [input, setInput] = useState('')
+    const [selectedEmailContext, setSelectedEmailContext] = useState<EmailContext[]>([])
     const [feedbackGiven, setFeedbackGiven] = useState<Set<string>>(new Set())
     const messageTimestamps = useRef<Map<string, number>>(new Map())
     
@@ -32,6 +34,9 @@ const AskAI = ({ onClose }: AskAIProps) => {
             api: "/api/chat",
             body: {
                 accountId,
+                emailContext: selectedEmailContext.length > 0 
+                    ? { emailIds: selectedEmailContext.map(e => e.emailId) }
+                    : undefined,
             },
         }),
         onError: (error: Error) => {
@@ -318,6 +323,19 @@ const AskAI = ({ onClose }: AskAIProps) => {
 
                 {/* Input Area */}
                 <div className="border-t p-4 flex-shrink-0 bg-background">
+                    {/* Email Context Selector */}
+                    {accountId && (
+                        <EmailContextSelector
+                            accountId={accountId}
+                            selectedEmails={selectedEmailContext}
+                            onSelect={(email) => {
+                                setSelectedEmailContext(prev => [...prev, email])
+                            }}
+                            onRemove={(emailId) => {
+                                setSelectedEmailContext(prev => prev.filter(e => e.emailId !== emailId))
+                            }}
+                        />
+                    )}
                     <form 
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -328,6 +346,8 @@ const AskAI = ({ onClose }: AskAIProps) => {
                             if (input.trim()) {
                                 sendMessage({ role: 'user', parts: [{ type: 'text', text: input }] } as any);
                                 setInput('');
+                                // Clear email context after sending
+                                setSelectedEmailContext([]);
                             }
                         }} 
                         className="flex items-end gap-2"

@@ -8,6 +8,7 @@ import { db } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
 import { getSubscriptionStatus } from "@/lib/stripe-actions";
 import { FREE_CREDITS_PER_DAY, QA_CACHE_SIMILARITY_THRESHOLD, SMALL_MODEL, LARGE_MODEL } from "@/app/constants";
+import { turndown } from "@/lib/turndown";
 
 // export const runtime = "edge";
 
@@ -58,9 +59,9 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
         
-        const { messages, accountId } = body;
+        const { messages, accountId, emailContext } = body;
         
-        console.log("Extracted values - messages:", messages?.length, "accountId:", accountId);
+        console.log("Extracted values - messages:", messages?.length, "accountId:", accountId, "emailContext:", emailContext);
         
         if (!messages || !Array.isArray(messages) || messages.length === 0) {
             console.error("Invalid messages:", messages);
@@ -177,13 +178,54 @@ Guidelines:
         }
 
         // ===== STAGE 2: Expensive Model Flow (Original RAG System) =====
+        // Extract email IDs from context if provided
+        const contextEmailIds = emailContext?.emailIds || []
+        let contextEmailsText = ''
+        let contextEmailIdsForTracking: string[] = []
+
+        // Fetch specific emails if context provided
+        if (contextEmailIds.length > 0) {
+            try {
+                console.log(`Fetching ${contextEmailIds.length} context emails`);
+                const contextEmails = await db.email.findMany({
+                    where: {
+                        id: { in: contextEmailIds },
+                        thread: { accountId }
+                    },
+                    include: { 
+                        from: true,
+                        thread: true
+                    },
+                    orderBy: { sentAt: 'asc' }
+                })
+
+                if (contextEmails.length > 0) {
+                    contextEmailsText = contextEmails.map(email => {
+                        const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
+                        return `Subject: ${email.subject}\nFrom: ${email.from.name || email.from.address}\nDate: ${new Date(email.sentAt).toLocaleString()}\nBody: ${body}`
+                    }).join('\n\n---\n\n')
+                    contextEmailIdsForTracking = contextEmails.map(e => e.id)
+                    console.log(`Fetched ${contextEmails.length} context emails`);
+                }
+            } catch (error) {
+                console.error("Error fetching context emails:", error);
+                // Continue without context emails if fetch fails
+            }
+        }
+
+        // Perform vector search
         let context;
         try {
             console.log("Initializing OramaClient with accountId:", accountId);
             const oramaManager = new OramaClient(accountId)
             await oramaManager.initialize()
             console.log("OramaClient initialized successfully");
-            context = await oramaManager.vectorSearch({ term: lastMessageContent })
+            
+            // If context emails provided, prioritize them in search
+            context = await oramaManager.vectorSearch({ 
+                term: lastMessageContent,
+                preferredEmailIds: contextEmailIds.length > 0 ? contextEmailIds : undefined
+            })
             console.log("Vector search completed");
         } catch (oramaError) {
             console.error("Orama error:", oramaError);
@@ -198,13 +240,18 @@ Guidelines:
         const MAX_CONTEXT_HITS = 2; // Reduced to 2 to save tokens
         const MAX_CONTEXT_LENGTH = 1500; // characters per document - reduced to save tokens
         
-        const limitedHits = context.hits.slice(0, MAX_CONTEXT_HITS);
-        console.log(`Using ${limitedHits.length} context hits (limited from ${context.hits.length})`);
+        // If context emails provided, use fewer vector search results to make room
+        const maxVectorHits = contextEmailIds.length > 0 ? Math.max(1, MAX_CONTEXT_HITS - 1) : MAX_CONTEXT_HITS
+        const limitedHits = context.hits.slice(0, maxVectorHits);
+        console.log(`Using ${limitedHits.length} vector search hits (limited from ${context.hits.length})`);
         
         // Extract retrieved email identifiers for feedback tracking
-        const retrievedEmailIds = limitedHits.map((hit: any) => 
-            hit.document?.threadId || hit.document?.subject || ''
-        ).filter(Boolean);
+        const retrievedEmailIds = [
+            ...contextEmailIdsForTracking,
+            ...limitedHits.map((hit: any) => 
+                hit.document?.threadId || hit.document?.subject || ''
+            ).filter(Boolean)
+        ];
         
         // Truncate context documents to prevent exceeding token limits
         const formatContextDocument = (doc: any) => {
@@ -217,12 +264,18 @@ Guidelines:
             return truncated;
         };
         
-        const contextText = limitedHits.length > 0
+        // Combine context emails with vector search results
+        const vectorContextText = limitedHits.length > 0
             ? limitedHits.map((hit) => {
                 const doc = formatContextDocument(hit.document);
                 return `Subject: ${doc.subject}\nFrom: ${doc.from}\nDate: ${doc.sentAt}\nBody: ${doc.body}`;
             }).join('\n\n---\n\n')
-            : 'No relevant email context found.';
+            : '';
+
+        // Combine context emails (prioritized) with vector search results
+        const contextText = contextEmailsText 
+            ? (contextEmailsText + (vectorContextText ? '\n\n---\n\nADDITIONAL RELEVANT EMAILS:\n\n' + vectorContextText : ''))
+            : (vectorContextText || 'No relevant email context found.');
 
         // Create a more concise system prompt to save tokens
         const prompt = {
