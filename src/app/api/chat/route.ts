@@ -183,7 +183,7 @@ Guidelines:
         // ===== STAGE 2: Expensive Model Flow (Original RAG System) =====
         // Track sources used in the response
         type SourceInfo = {
-            type: 'email' | 'attachment' | 'web' | 'google_drive' | 'google_calendar' | 'sharepoint'
+            type: 'email' | 'attachment' | 'web' | 'google_drive' | 'google_calendar' | 'sharepoint' | 'ui_help'
             id: string
             title: string
             threadId?: string
@@ -414,6 +414,15 @@ Guidelines:
                     })
                 }
             }
+            // Track UI help sources
+            if (doc?.source === 'ui_help' && doc?.sourceId && !sources.find(s => s.id === doc.sourceId && s.type === 'ui_help')) {
+                sources.push({
+                    type: 'ui_help',
+                    id: doc.sourceId,
+                    title: doc.subject || doc.fileName || 'UI Help',
+                    url: doc.fileName ? `/help/${doc.fileName}` : undefined,
+                })
+            }
         })
         
         // Extract retrieved email identifiers for feedback tracking
@@ -512,10 +521,12 @@ ${finalContextText}
 GUIDELINES:
 - Use context to answer questions
 - Use web search results for current information or general knowledge
+- Use UI help documentation to answer questions about how to use the app
+- If the user asks "how to" or "where is" questions, prioritize UI help content
 - If context is insufficient, say so politely
 - Be concise and helpful
 - Don't invent information not in the context
-- At the end of your response, mention which sources you used (emails/attachments/web)`
+- At the end of your response, mention which sources you used (emails/attachments/web/ui help)`
         };
 
         // Convert messages to format expected by streamText

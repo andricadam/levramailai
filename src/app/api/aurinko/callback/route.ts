@@ -4,6 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { Account } from "@/lib/acount";
 import { syncEmailsToDatabase } from "@/lib/sync-emails";
+import { initializeUIKnowledgeForAccount, isUIKnowledgeInitialized } from "@/lib/init-ui-knowledge";
 
 export const GET = async (req: NextRequest) => {
     try {
@@ -153,6 +154,19 @@ export const GET = async (req: NextRequest) => {
                 } catch (error) {
                     console.error('Error syncing emails to database:', error);
                     // Don't fail the whole flow if sync fails - account is already saved
+                }
+                
+                // Initialize UI knowledge for this account (if not already initialized)
+                try {
+                    const isInitialized = await isUIKnowledgeInitialized(token.accountId.toString());
+                    if (!isInitialized) {
+                        console.log('Initializing UI knowledge for new account...');
+                        await initializeUIKnowledgeForAccount(token.accountId.toString());
+                        console.log('UI knowledge initialized successfully');
+                    }
+                } catch (error) {
+                    console.error('Error initializing UI knowledge:', error);
+                    // Don't fail the whole flow if UI knowledge init fails
                 }
                 
                 console.log('Initial sync triggered', { success: true });

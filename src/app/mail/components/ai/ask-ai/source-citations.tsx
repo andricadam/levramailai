@@ -1,10 +1,10 @@
 'use client'
-import { Mail, FileText, ExternalLink, Globe, FolderOpen, Calendar } from 'lucide-react'
+import { Mail, FileText, ExternalLink, Globe, FolderOpen, Calendar, HelpCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 export type Source = {
-  type: 'email' | 'attachment' | 'web' | 'google_drive' | 'google_calendar' | 'sharepoint'
+  type: 'email' | 'attachment' | 'web' | 'google_drive' | 'google_calendar' | 'sharepoint' | 'ui_help'
   id: string
   title: string
   threadId?: string // For emails
@@ -44,6 +44,24 @@ export function SourceCitations({ sources, accountId }: SourceCitationsProps) {
                 <span className="truncate max-w-[200px]">{source.title}</span>
                 <ExternalLink className="size-3 opacity-50" />
               </a>
+            )
+          }
+
+          // Handle UI help sources
+          if (source.type === 'ui_help') {
+            return (
+              <div
+                key={`${source.type}-${source.id}`}
+                className={cn(
+                  "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs",
+                  "bg-blue-500/10 hover:bg-blue-500/20 transition-colors",
+                  "border border-blue-500/20"
+                )}
+                title="UI Help Documentation"
+              >
+                <HelpCircle className="size-3 text-blue-500" />
+                <span className="truncate max-w-[200px]">{source.title}</span>
+              </div>
             )
           }
 

@@ -90,6 +90,26 @@ export class OramaClient {
             term,
         })
     }
+    
+    async searchBySource({ term, source }: { term: string, source: string }) {
+        const embeddings = await getEmbeddings(term)
+        const results = await search(this.orama, {
+            mode: 'hybrid',
+            term: term,
+            vector: {
+                value: embeddings,
+                property: 'embeddings'
+            },
+            similarity: 0.8,
+            limit: 20
+        })
+        
+        // Filter by source after search (Orama doesn't support where clause in hybrid search)
+        return {
+            ...results,
+            hits: results.hits.filter((hit: any) => hit.document?.source === source)
+        }
+    }
     async insert(document: any) {
         await insert(this.orama, document)
         await this.saveIndex()
