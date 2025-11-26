@@ -34,9 +34,10 @@ type EmailEditorProps = {
 
     defaultToolbarExpand?: boolean;
     initialDraft?: string | null;
+    onFeedbackIdChange?: (feedbackId: string | null) => void; // Callback for instant reply feedback ID
 }
 
-const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, isSending, onToChange, onCcChange, defaultToolbarExpand, initialDraft }: EmailEditorProps) => {
+const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, isSending, onToChange, onCcChange, defaultToolbarExpand, initialDraft, onFeedbackIdChange }: EmailEditorProps) => {
 
     const [ref] = useAutoAnimate();
     const [accountId] = useLocalStorage('accountId', '');
@@ -152,6 +153,7 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
                     <InstantReplyButton
                         isComposing={false}
                         onGenerate={setGeneration}
+                        onFeedbackIdChange={onFeedbackIdChange}
                     />
                     <AIComposeButton
                         isComposing={defaultToolbarExpand}

@@ -265,6 +265,7 @@ export const accountRouter = createTRPCRouter({
         inReplyTo: z.string().optional(),
         threadId: z.string().optional(),
         references: z.array(z.string()).optional(),
+        instantReplyFeedbackId: z.string().optional(), // Link to generated reply
     })).mutation(async ({ ctx, input }) => {
         const account = await authoriseAccess(input.accountId, ctx.auth.userId)
         const acc = new Account(account.accessToken as string)
@@ -280,6 +281,52 @@ export const accountRouter = createTRPCRouter({
             threadId: input.threadId,
             references: input.references
         })
+
+        // FEEDBACK LOOP: Compare generated vs final and store for fine-tuning
+        if (input.instantReplyFeedbackId && ctx.auth.userId) {
+            try {
+                const { calculateSimilarity } = await import('@/lib/text-comparison');
+                const { logDraftFinalPair, triggerFineTuning } = await import('@/lib/tone-of-voice-client');
+
+                const feedback = await ctx.db.instantReplyFeedback.findUnique({
+                    where: { id: input.instantReplyFeedbackId }
+                });
+
+                if (feedback && feedback.userId === ctx.auth.userId) {
+                    const generated = feedback.generatedReply.trim();
+                    const final = input.body.trim();
+                    const wasEdited = generated !== final;
+                    const similarity = calculateSimilarity(generated, final);
+
+                    // Update feedback record
+                    await ctx.db.instantReplyFeedback.update({
+                        where: { id: input.instantReplyFeedbackId },
+                        data: {
+                            finalSentReply: final,
+                            wasEdited,
+                            editSimilarity: similarity,
+                        }
+                    });
+
+                    // LOG FOR FINE-TUNING: Send to Python service
+                    if (wasEdited || similarity < 0.95) {
+                        // Only log if user made meaningful changes
+                        await logDraftFinalPair({
+                            draft: generated,
+                            final: final,
+                            userId: ctx.auth.userId,
+                            accountId: input.accountId,
+                        });
+
+                        // Trigger fine-tuning check (async, don't block)
+                        triggerFineTuning(ctx.auth.userId, input.accountId).catch(console.error);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to update instant reply feedback:', error);
+                // Don't fail the email send if feedback tracking fails
+            }
+        }
     }),
     deleteAccount: privateProcedure.input(z.object({
         accountId: z.string(),

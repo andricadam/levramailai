@@ -15,6 +15,7 @@ type Thread = RouterOutputs["account"]["getThreads"][number]
 type Props = {
     onGenerate: (value: string) => void
     isComposing?: boolean
+    onFeedbackIdChange?: (feedbackId: string | null) => void // Callback for feedback ID
 }
 
 const InstantReplyButton = (props: Props) => {
@@ -48,7 +49,13 @@ const InstantReplyButton = (props: Props) => {
         setIsGenerating(true)
         try {
             let context: string | undefined = ''
+            let originalEmailId: string | undefined = undefined
+            
             if (!props.isComposing && activeThread?.emails) {
+                // Get the most recent email (the one being replied to)
+                const mostRecentEmail = activeThread.emails[activeThread.emails.length - 1];
+                originalEmailId = mostRecentEmail.id;
+                
                 for (const email of activeThread.emails) {
                     const content = `
 Subject: ${email.subject}
@@ -76,7 +83,17 @@ Body: ${turndown.turndown(email.body ?? email.bodySnippet ?? "")}
 My name is ${account?.name} and my email is ${account?.emailAddress}.
 `
 
-            const { output } = await generateInstantReply(context)
+            // Pass metadata for feedback tracking
+            const { output, feedbackId } = await generateInstantReply(context, {
+                accountId: accountId ?? undefined,
+                threadId: threadId ?? undefined,
+                originalEmailId,
+            })
+
+            // Notify parent component of feedback ID
+            if (feedbackId && props.onFeedbackIdChange) {
+                props.onFeedbackIdChange(feedbackId);
+            }
 
             let accumulatedText = ''
             for await (const delta of readStreamableValue(output)) {

@@ -56,6 +56,7 @@ const Component = ({ replyDetails, onSent }: { replyDetails: RouterOutputs['acco
         })
     )
     const [isSending, setIsSending] = useState(false)
+    const [instantReplyFeedbackId, setInstantReplyFeedbackId] = React.useState<string | null>(null)
 
     const sendEmail = api.account.sendEmail.useMutation()
 
@@ -70,10 +71,12 @@ const Component = ({ replyDetails, onSent }: { replyDetails: RouterOutputs['acco
             to: replyDetails.to.map(to => ({ address: to.address, name: to.name ?? "" })),
             cc: replyDetails.cc.map(cc => ({ address: cc.address, name: cc.name ?? "" })),
             replyTo: [replyDetails.from],
-            inReplyTo: replyDetails.id
+            inReplyTo: replyDetails.id,
+            instantReplyFeedbackId: instantReplyFeedbackId ?? undefined, // Pass feedback ID
         }, {
             onSuccess: () => {
                 toast.success('Email sent successfully')
+                setInstantReplyFeedbackId(null) // Reset
                 onSent?.()
             },
             onError: (error) => {
@@ -99,6 +102,7 @@ const Component = ({ replyDetails, onSent }: { replyDetails: RouterOutputs['acco
                 isSending={isSending}
                 defaultToolbarExpanded={false}
                 initialDraft={replyDetails.autoReplyDraft}
+                onFeedbackIdChange={setInstantReplyFeedbackId}
             />
         </div>
     )

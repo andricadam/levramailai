@@ -58,6 +58,11 @@ export type StripeSubscription = $Result.DefaultSelection<Prisma.$StripeSubscrip
  * 
  */
 export type ChatFeedback = $Result.DefaultSelection<Prisma.$ChatFeedbackPayload>
+/**
+ * Model InstantReplyFeedback
+ * 
+ */
+export type InstantReplyFeedback = $Result.DefaultSelection<Prisma.$InstantReplyFeedbackPayload>
 
 /**
  * Enums
@@ -328,6 +333,16 @@ export class PrismaClient<
     * ```
     */
   get chatFeedback(): Prisma.ChatFeedbackDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.instantReplyFeedback`: Exposes CRUD operations for the **InstantReplyFeedback** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InstantReplyFeedbacks
+    * const instantReplyFeedbacks = await prisma.instantReplyFeedback.findMany()
+    * ```
+    */
+  get instantReplyFeedback(): Prisma.InstantReplyFeedbackDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -777,7 +792,8 @@ export namespace Prisma {
     EmailAttachment: 'EmailAttachment',
     ChatbotInteraction: 'ChatbotInteraction',
     StripeSubscription: 'StripeSubscription',
-    ChatFeedback: 'ChatFeedback'
+    ChatFeedback: 'ChatFeedback',
+    InstantReplyFeedback: 'InstantReplyFeedback'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -796,7 +812,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback"
+      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1466,6 +1482,80 @@ export namespace Prisma {
           }
         }
       }
+      InstantReplyFeedback: {
+        payload: Prisma.$InstantReplyFeedbackPayload<ExtArgs>
+        fields: Prisma.InstantReplyFeedbackFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InstantReplyFeedbackFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InstantReplyFeedbackFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>
+          }
+          findFirst: {
+            args: Prisma.InstantReplyFeedbackFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InstantReplyFeedbackFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>
+          }
+          findMany: {
+            args: Prisma.InstantReplyFeedbackFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>[]
+          }
+          create: {
+            args: Prisma.InstantReplyFeedbackCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>
+          }
+          createMany: {
+            args: Prisma.InstantReplyFeedbackCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InstantReplyFeedbackCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>[]
+          }
+          delete: {
+            args: Prisma.InstantReplyFeedbackDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>
+          }
+          update: {
+            args: Prisma.InstantReplyFeedbackUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>
+          }
+          deleteMany: {
+            args: Prisma.InstantReplyFeedbackDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InstantReplyFeedbackUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InstantReplyFeedbackUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>[]
+          }
+          upsert: {
+            args: Prisma.InstantReplyFeedbackUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstantReplyFeedbackPayload>
+          }
+          aggregate: {
+            args: Prisma.InstantReplyFeedbackAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInstantReplyFeedback>
+          }
+          groupBy: {
+            args: Prisma.InstantReplyFeedbackGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InstantReplyFeedbackGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InstantReplyFeedbackCountArgs<ExtArgs>
+            result: $Utils.Optional<InstantReplyFeedbackCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1571,6 +1661,7 @@ export namespace Prisma {
     chatbotInteraction?: ChatbotInteractionOmit
     stripeSubscription?: StripeSubscriptionOmit
     chatFeedback?: ChatFeedbackOmit
+    instantReplyFeedback?: InstantReplyFeedbackOmit
   }
 
   /* Types for Logging */
@@ -1654,12 +1745,14 @@ export namespace Prisma {
     accounts: number
     chatbotInteractions: number
     chatFeedback: number
+    instantReplyFeedback: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     chatbotInteractions?: boolean | UserCountOutputTypeCountChatbotInteractionsArgs
     chatFeedback?: boolean | UserCountOutputTypeCountChatFeedbackArgs
+    instantReplyFeedback?: boolean | UserCountOutputTypeCountInstantReplyFeedbackArgs
   }
 
   // Custom InputTypes
@@ -1692,6 +1785,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountChatFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ChatFeedbackWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountInstantReplyFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InstantReplyFeedbackWhereInput
   }
 
 
@@ -2072,6 +2172,7 @@ export namespace Prisma {
     stripeSubscription?: boolean | User$stripeSubscriptionArgs<ExtArgs>
     chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
     chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
+    instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2105,6 +2206,7 @@ export namespace Prisma {
     stripeSubscription?: boolean | User$stripeSubscriptionArgs<ExtArgs>
     chatbotInteractions?: boolean | User$chatbotInteractionsArgs<ExtArgs>
     chatFeedback?: boolean | User$chatFeedbackArgs<ExtArgs>
+    instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2117,6 +2219,7 @@ export namespace Prisma {
       stripeSubscription: Prisma.$StripeSubscriptionPayload<ExtArgs> | null
       chatbotInteractions: Prisma.$ChatbotInteractionPayload<ExtArgs>[]
       chatFeedback: Prisma.$ChatFeedbackPayload<ExtArgs>[]
+      instantReplyFeedback: Prisma.$InstantReplyFeedbackPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2522,6 +2625,7 @@ export namespace Prisma {
     stripeSubscription<T extends User$stripeSubscriptionArgs<ExtArgs> = {}>(args?: Subset<T, User$stripeSubscriptionArgs<ExtArgs>>): Prisma__StripeSubscriptionClient<$Result.GetResult<Prisma.$StripeSubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     chatbotInteractions<T extends User$chatbotInteractionsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatbotInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatbotInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatFeedback<T extends User$chatFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$chatFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    instantReplyFeedback<T extends User$instantReplyFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$instantReplyFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3032,6 +3136,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ChatFeedbackScalarFieldEnum | ChatFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * User.instantReplyFeedback
+   */
+  export type User$instantReplyFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    where?: InstantReplyFeedbackWhereInput
+    orderBy?: InstantReplyFeedbackOrderByWithRelationInput | InstantReplyFeedbackOrderByWithRelationInput[]
+    cursor?: InstantReplyFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InstantReplyFeedbackScalarFieldEnum | InstantReplyFeedbackScalarFieldEnum[]
   }
 
   /**
@@ -12454,6 +12582,1202 @@ export namespace Prisma {
 
 
   /**
+   * Model InstantReplyFeedback
+   */
+
+  export type AggregateInstantReplyFeedback = {
+    _count: InstantReplyFeedbackCountAggregateOutputType | null
+    _avg: InstantReplyFeedbackAvgAggregateOutputType | null
+    _sum: InstantReplyFeedbackSumAggregateOutputType | null
+    _min: InstantReplyFeedbackMinAggregateOutputType | null
+    _max: InstantReplyFeedbackMaxAggregateOutputType | null
+  }
+
+  export type InstantReplyFeedbackAvgAggregateOutputType = {
+    editSimilarity: number | null
+  }
+
+  export type InstantReplyFeedbackSumAggregateOutputType = {
+    editSimilarity: number | null
+  }
+
+  export type InstantReplyFeedbackMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    threadId: string | null
+    emailContext: string | null
+    originalEmailId: string | null
+    generatedReply: string | null
+    finalSentReply: string | null
+    wasEdited: boolean | null
+    editSimilarity: number | null
+    modelVersion: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InstantReplyFeedbackMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    accountId: string | null
+    threadId: string | null
+    emailContext: string | null
+    originalEmailId: string | null
+    generatedReply: string | null
+    finalSentReply: string | null
+    wasEdited: boolean | null
+    editSimilarity: number | null
+    modelVersion: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InstantReplyFeedbackCountAggregateOutputType = {
+    id: number
+    userId: number
+    accountId: number
+    threadId: number
+    emailContext: number
+    originalEmailId: number
+    generatedReply: number
+    finalSentReply: number
+    wasEdited: number
+    editSimilarity: number
+    modelVersion: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InstantReplyFeedbackAvgAggregateInputType = {
+    editSimilarity?: true
+  }
+
+  export type InstantReplyFeedbackSumAggregateInputType = {
+    editSimilarity?: true
+  }
+
+  export type InstantReplyFeedbackMinAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    threadId?: true
+    emailContext?: true
+    originalEmailId?: true
+    generatedReply?: true
+    finalSentReply?: true
+    wasEdited?: true
+    editSimilarity?: true
+    modelVersion?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InstantReplyFeedbackMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    threadId?: true
+    emailContext?: true
+    originalEmailId?: true
+    generatedReply?: true
+    finalSentReply?: true
+    wasEdited?: true
+    editSimilarity?: true
+    modelVersion?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InstantReplyFeedbackCountAggregateInputType = {
+    id?: true
+    userId?: true
+    accountId?: true
+    threadId?: true
+    emailContext?: true
+    originalEmailId?: true
+    generatedReply?: true
+    finalSentReply?: true
+    wasEdited?: true
+    editSimilarity?: true
+    modelVersion?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InstantReplyFeedbackAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InstantReplyFeedback to aggregate.
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstantReplyFeedbacks to fetch.
+     */
+    orderBy?: InstantReplyFeedbackOrderByWithRelationInput | InstantReplyFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InstantReplyFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstantReplyFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstantReplyFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InstantReplyFeedbacks
+    **/
+    _count?: true | InstantReplyFeedbackCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InstantReplyFeedbackAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InstantReplyFeedbackSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InstantReplyFeedbackMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InstantReplyFeedbackMaxAggregateInputType
+  }
+
+  export type GetInstantReplyFeedbackAggregateType<T extends InstantReplyFeedbackAggregateArgs> = {
+        [P in keyof T & keyof AggregateInstantReplyFeedback]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInstantReplyFeedback[P]>
+      : GetScalarType<T[P], AggregateInstantReplyFeedback[P]>
+  }
+
+
+
+
+  export type InstantReplyFeedbackGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InstantReplyFeedbackWhereInput
+    orderBy?: InstantReplyFeedbackOrderByWithAggregationInput | InstantReplyFeedbackOrderByWithAggregationInput[]
+    by: InstantReplyFeedbackScalarFieldEnum[] | InstantReplyFeedbackScalarFieldEnum
+    having?: InstantReplyFeedbackScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InstantReplyFeedbackCountAggregateInputType | true
+    _avg?: InstantReplyFeedbackAvgAggregateInputType
+    _sum?: InstantReplyFeedbackSumAggregateInputType
+    _min?: InstantReplyFeedbackMinAggregateInputType
+    _max?: InstantReplyFeedbackMaxAggregateInputType
+  }
+
+  export type InstantReplyFeedbackGroupByOutputType = {
+    id: string
+    userId: string
+    accountId: string
+    threadId: string | null
+    emailContext: string
+    originalEmailId: string | null
+    generatedReply: string
+    finalSentReply: string | null
+    wasEdited: boolean
+    editSimilarity: number | null
+    modelVersion: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InstantReplyFeedbackCountAggregateOutputType | null
+    _avg: InstantReplyFeedbackAvgAggregateOutputType | null
+    _sum: InstantReplyFeedbackSumAggregateOutputType | null
+    _min: InstantReplyFeedbackMinAggregateOutputType | null
+    _max: InstantReplyFeedbackMaxAggregateOutputType | null
+  }
+
+  type GetInstantReplyFeedbackGroupByPayload<T extends InstantReplyFeedbackGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InstantReplyFeedbackGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InstantReplyFeedbackGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InstantReplyFeedbackGroupByOutputType[P]>
+            : GetScalarType<T[P], InstantReplyFeedbackGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InstantReplyFeedbackSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    threadId?: boolean
+    emailContext?: boolean
+    originalEmailId?: boolean
+    generatedReply?: boolean
+    finalSentReply?: boolean
+    wasEdited?: boolean
+    editSimilarity?: boolean
+    modelVersion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["instantReplyFeedback"]>
+
+  export type InstantReplyFeedbackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    threadId?: boolean
+    emailContext?: boolean
+    originalEmailId?: boolean
+    generatedReply?: boolean
+    finalSentReply?: boolean
+    wasEdited?: boolean
+    editSimilarity?: boolean
+    modelVersion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["instantReplyFeedback"]>
+
+  export type InstantReplyFeedbackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    threadId?: boolean
+    emailContext?: boolean
+    originalEmailId?: boolean
+    generatedReply?: boolean
+    finalSentReply?: boolean
+    wasEdited?: boolean
+    editSimilarity?: boolean
+    modelVersion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["instantReplyFeedback"]>
+
+  export type InstantReplyFeedbackSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    accountId?: boolean
+    threadId?: boolean
+    emailContext?: boolean
+    originalEmailId?: boolean
+    generatedReply?: boolean
+    finalSentReply?: boolean
+    wasEdited?: boolean
+    editSimilarity?: boolean
+    modelVersion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InstantReplyFeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accountId" | "threadId" | "emailContext" | "originalEmailId" | "generatedReply" | "finalSentReply" | "wasEdited" | "editSimilarity" | "modelVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["instantReplyFeedback"]>
+  export type InstantReplyFeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type InstantReplyFeedbackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type InstantReplyFeedbackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $InstantReplyFeedbackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InstantReplyFeedback"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      accountId: string
+      threadId: string | null
+      emailContext: string
+      originalEmailId: string | null
+      generatedReply: string
+      finalSentReply: string | null
+      wasEdited: boolean
+      editSimilarity: number | null
+      modelVersion: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["instantReplyFeedback"]>
+    composites: {}
+  }
+
+  type InstantReplyFeedbackGetPayload<S extends boolean | null | undefined | InstantReplyFeedbackDefaultArgs> = $Result.GetResult<Prisma.$InstantReplyFeedbackPayload, S>
+
+  type InstantReplyFeedbackCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InstantReplyFeedbackFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InstantReplyFeedbackCountAggregateInputType | true
+    }
+
+  export interface InstantReplyFeedbackDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InstantReplyFeedback'], meta: { name: 'InstantReplyFeedback' } }
+    /**
+     * Find zero or one InstantReplyFeedback that matches the filter.
+     * @param {InstantReplyFeedbackFindUniqueArgs} args - Arguments to find a InstantReplyFeedback
+     * @example
+     * // Get one InstantReplyFeedback
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InstantReplyFeedbackFindUniqueArgs>(args: SelectSubset<T, InstantReplyFeedbackFindUniqueArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InstantReplyFeedback that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InstantReplyFeedbackFindUniqueOrThrowArgs} args - Arguments to find a InstantReplyFeedback
+     * @example
+     * // Get one InstantReplyFeedback
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InstantReplyFeedbackFindUniqueOrThrowArgs>(args: SelectSubset<T, InstantReplyFeedbackFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InstantReplyFeedback that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackFindFirstArgs} args - Arguments to find a InstantReplyFeedback
+     * @example
+     * // Get one InstantReplyFeedback
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InstantReplyFeedbackFindFirstArgs>(args?: SelectSubset<T, InstantReplyFeedbackFindFirstArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InstantReplyFeedback that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackFindFirstOrThrowArgs} args - Arguments to find a InstantReplyFeedback
+     * @example
+     * // Get one InstantReplyFeedback
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InstantReplyFeedbackFindFirstOrThrowArgs>(args?: SelectSubset<T, InstantReplyFeedbackFindFirstOrThrowArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InstantReplyFeedbacks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InstantReplyFeedbacks
+     * const instantReplyFeedbacks = await prisma.instantReplyFeedback.findMany()
+     * 
+     * // Get first 10 InstantReplyFeedbacks
+     * const instantReplyFeedbacks = await prisma.instantReplyFeedback.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const instantReplyFeedbackWithIdOnly = await prisma.instantReplyFeedback.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InstantReplyFeedbackFindManyArgs>(args?: SelectSubset<T, InstantReplyFeedbackFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InstantReplyFeedback.
+     * @param {InstantReplyFeedbackCreateArgs} args - Arguments to create a InstantReplyFeedback.
+     * @example
+     * // Create one InstantReplyFeedback
+     * const InstantReplyFeedback = await prisma.instantReplyFeedback.create({
+     *   data: {
+     *     // ... data to create a InstantReplyFeedback
+     *   }
+     * })
+     * 
+     */
+    create<T extends InstantReplyFeedbackCreateArgs>(args: SelectSubset<T, InstantReplyFeedbackCreateArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InstantReplyFeedbacks.
+     * @param {InstantReplyFeedbackCreateManyArgs} args - Arguments to create many InstantReplyFeedbacks.
+     * @example
+     * // Create many InstantReplyFeedbacks
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InstantReplyFeedbackCreateManyArgs>(args?: SelectSubset<T, InstantReplyFeedbackCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InstantReplyFeedbacks and returns the data saved in the database.
+     * @param {InstantReplyFeedbackCreateManyAndReturnArgs} args - Arguments to create many InstantReplyFeedbacks.
+     * @example
+     * // Create many InstantReplyFeedbacks
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InstantReplyFeedbacks and only return the `id`
+     * const instantReplyFeedbackWithIdOnly = await prisma.instantReplyFeedback.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InstantReplyFeedbackCreateManyAndReturnArgs>(args?: SelectSubset<T, InstantReplyFeedbackCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InstantReplyFeedback.
+     * @param {InstantReplyFeedbackDeleteArgs} args - Arguments to delete one InstantReplyFeedback.
+     * @example
+     * // Delete one InstantReplyFeedback
+     * const InstantReplyFeedback = await prisma.instantReplyFeedback.delete({
+     *   where: {
+     *     // ... filter to delete one InstantReplyFeedback
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InstantReplyFeedbackDeleteArgs>(args: SelectSubset<T, InstantReplyFeedbackDeleteArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InstantReplyFeedback.
+     * @param {InstantReplyFeedbackUpdateArgs} args - Arguments to update one InstantReplyFeedback.
+     * @example
+     * // Update one InstantReplyFeedback
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InstantReplyFeedbackUpdateArgs>(args: SelectSubset<T, InstantReplyFeedbackUpdateArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InstantReplyFeedbacks.
+     * @param {InstantReplyFeedbackDeleteManyArgs} args - Arguments to filter InstantReplyFeedbacks to delete.
+     * @example
+     * // Delete a few InstantReplyFeedbacks
+     * const { count } = await prisma.instantReplyFeedback.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InstantReplyFeedbackDeleteManyArgs>(args?: SelectSubset<T, InstantReplyFeedbackDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InstantReplyFeedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InstantReplyFeedbacks
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InstantReplyFeedbackUpdateManyArgs>(args: SelectSubset<T, InstantReplyFeedbackUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InstantReplyFeedbacks and returns the data updated in the database.
+     * @param {InstantReplyFeedbackUpdateManyAndReturnArgs} args - Arguments to update many InstantReplyFeedbacks.
+     * @example
+     * // Update many InstantReplyFeedbacks
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InstantReplyFeedbacks and only return the `id`
+     * const instantReplyFeedbackWithIdOnly = await prisma.instantReplyFeedback.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InstantReplyFeedbackUpdateManyAndReturnArgs>(args: SelectSubset<T, InstantReplyFeedbackUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InstantReplyFeedback.
+     * @param {InstantReplyFeedbackUpsertArgs} args - Arguments to update or create a InstantReplyFeedback.
+     * @example
+     * // Update or create a InstantReplyFeedback
+     * const instantReplyFeedback = await prisma.instantReplyFeedback.upsert({
+     *   create: {
+     *     // ... data to create a InstantReplyFeedback
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InstantReplyFeedback we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InstantReplyFeedbackUpsertArgs>(args: SelectSubset<T, InstantReplyFeedbackUpsertArgs<ExtArgs>>): Prisma__InstantReplyFeedbackClient<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InstantReplyFeedbacks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackCountArgs} args - Arguments to filter InstantReplyFeedbacks to count.
+     * @example
+     * // Count the number of InstantReplyFeedbacks
+     * const count = await prisma.instantReplyFeedback.count({
+     *   where: {
+     *     // ... the filter for the InstantReplyFeedbacks we want to count
+     *   }
+     * })
+    **/
+    count<T extends InstantReplyFeedbackCountArgs>(
+      args?: Subset<T, InstantReplyFeedbackCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InstantReplyFeedbackCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InstantReplyFeedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InstantReplyFeedbackAggregateArgs>(args: Subset<T, InstantReplyFeedbackAggregateArgs>): Prisma.PrismaPromise<GetInstantReplyFeedbackAggregateType<T>>
+
+    /**
+     * Group by InstantReplyFeedback.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstantReplyFeedbackGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InstantReplyFeedbackGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InstantReplyFeedbackGroupByArgs['orderBy'] }
+        : { orderBy?: InstantReplyFeedbackGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InstantReplyFeedbackGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInstantReplyFeedbackGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InstantReplyFeedback model
+   */
+  readonly fields: InstantReplyFeedbackFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InstantReplyFeedback.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InstantReplyFeedbackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InstantReplyFeedback model
+   */
+  interface InstantReplyFeedbackFieldRefs {
+    readonly id: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly userId: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly accountId: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly threadId: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly emailContext: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly originalEmailId: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly generatedReply: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly finalSentReply: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly wasEdited: FieldRef<"InstantReplyFeedback", 'Boolean'>
+    readonly editSimilarity: FieldRef<"InstantReplyFeedback", 'Float'>
+    readonly modelVersion: FieldRef<"InstantReplyFeedback", 'String'>
+    readonly createdAt: FieldRef<"InstantReplyFeedback", 'DateTime'>
+    readonly updatedAt: FieldRef<"InstantReplyFeedback", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InstantReplyFeedback findUnique
+   */
+  export type InstantReplyFeedbackFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which InstantReplyFeedback to fetch.
+     */
+    where: InstantReplyFeedbackWhereUniqueInput
+  }
+
+  /**
+   * InstantReplyFeedback findUniqueOrThrow
+   */
+  export type InstantReplyFeedbackFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which InstantReplyFeedback to fetch.
+     */
+    where: InstantReplyFeedbackWhereUniqueInput
+  }
+
+  /**
+   * InstantReplyFeedback findFirst
+   */
+  export type InstantReplyFeedbackFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which InstantReplyFeedback to fetch.
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstantReplyFeedbacks to fetch.
+     */
+    orderBy?: InstantReplyFeedbackOrderByWithRelationInput | InstantReplyFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InstantReplyFeedbacks.
+     */
+    cursor?: InstantReplyFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstantReplyFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstantReplyFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InstantReplyFeedbacks.
+     */
+    distinct?: InstantReplyFeedbackScalarFieldEnum | InstantReplyFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * InstantReplyFeedback findFirstOrThrow
+   */
+  export type InstantReplyFeedbackFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which InstantReplyFeedback to fetch.
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstantReplyFeedbacks to fetch.
+     */
+    orderBy?: InstantReplyFeedbackOrderByWithRelationInput | InstantReplyFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InstantReplyFeedbacks.
+     */
+    cursor?: InstantReplyFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstantReplyFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstantReplyFeedbacks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InstantReplyFeedbacks.
+     */
+    distinct?: InstantReplyFeedbackScalarFieldEnum | InstantReplyFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * InstantReplyFeedback findMany
+   */
+  export type InstantReplyFeedbackFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter, which InstantReplyFeedbacks to fetch.
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstantReplyFeedbacks to fetch.
+     */
+    orderBy?: InstantReplyFeedbackOrderByWithRelationInput | InstantReplyFeedbackOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InstantReplyFeedbacks.
+     */
+    cursor?: InstantReplyFeedbackWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstantReplyFeedbacks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstantReplyFeedbacks.
+     */
+    skip?: number
+    distinct?: InstantReplyFeedbackScalarFieldEnum | InstantReplyFeedbackScalarFieldEnum[]
+  }
+
+  /**
+   * InstantReplyFeedback create
+   */
+  export type InstantReplyFeedbackCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InstantReplyFeedback.
+     */
+    data: XOR<InstantReplyFeedbackCreateInput, InstantReplyFeedbackUncheckedCreateInput>
+  }
+
+  /**
+   * InstantReplyFeedback createMany
+   */
+  export type InstantReplyFeedbackCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InstantReplyFeedbacks.
+     */
+    data: InstantReplyFeedbackCreateManyInput | InstantReplyFeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InstantReplyFeedback createManyAndReturn
+   */
+  export type InstantReplyFeedbackCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to create many InstantReplyFeedbacks.
+     */
+    data: InstantReplyFeedbackCreateManyInput | InstantReplyFeedbackCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InstantReplyFeedback update
+   */
+  export type InstantReplyFeedbackUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InstantReplyFeedback.
+     */
+    data: XOR<InstantReplyFeedbackUpdateInput, InstantReplyFeedbackUncheckedUpdateInput>
+    /**
+     * Choose, which InstantReplyFeedback to update.
+     */
+    where: InstantReplyFeedbackWhereUniqueInput
+  }
+
+  /**
+   * InstantReplyFeedback updateMany
+   */
+  export type InstantReplyFeedbackUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InstantReplyFeedbacks.
+     */
+    data: XOR<InstantReplyFeedbackUpdateManyMutationInput, InstantReplyFeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which InstantReplyFeedbacks to update
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * Limit how many InstantReplyFeedbacks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InstantReplyFeedback updateManyAndReturn
+   */
+  export type InstantReplyFeedbackUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * The data used to update InstantReplyFeedbacks.
+     */
+    data: XOR<InstantReplyFeedbackUpdateManyMutationInput, InstantReplyFeedbackUncheckedUpdateManyInput>
+    /**
+     * Filter which InstantReplyFeedbacks to update
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * Limit how many InstantReplyFeedbacks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InstantReplyFeedback upsert
+   */
+  export type InstantReplyFeedbackUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InstantReplyFeedback to update in case it exists.
+     */
+    where: InstantReplyFeedbackWhereUniqueInput
+    /**
+     * In case the InstantReplyFeedback found by the `where` argument doesn't exist, create a new InstantReplyFeedback with this data.
+     */
+    create: XOR<InstantReplyFeedbackCreateInput, InstantReplyFeedbackUncheckedCreateInput>
+    /**
+     * In case the InstantReplyFeedback was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InstantReplyFeedbackUpdateInput, InstantReplyFeedbackUncheckedUpdateInput>
+  }
+
+  /**
+   * InstantReplyFeedback delete
+   */
+  export type InstantReplyFeedbackDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+    /**
+     * Filter which InstantReplyFeedback to delete.
+     */
+    where: InstantReplyFeedbackWhereUniqueInput
+  }
+
+  /**
+   * InstantReplyFeedback deleteMany
+   */
+  export type InstantReplyFeedbackDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InstantReplyFeedbacks to delete
+     */
+    where?: InstantReplyFeedbackWhereInput
+    /**
+     * Limit how many InstantReplyFeedbacks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InstantReplyFeedback without action
+   */
+  export type InstantReplyFeedbackDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstantReplyFeedback
+     */
+    select?: InstantReplyFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstantReplyFeedback
+     */
+    omit?: InstantReplyFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstantReplyFeedbackInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12604,6 +13928,25 @@ export namespace Prisma {
   };
 
   export type ChatFeedbackScalarFieldEnum = (typeof ChatFeedbackScalarFieldEnum)[keyof typeof ChatFeedbackScalarFieldEnum]
+
+
+  export const InstantReplyFeedbackScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    accountId: 'accountId',
+    threadId: 'threadId',
+    emailContext: 'emailContext',
+    originalEmailId: 'originalEmailId',
+    generatedReply: 'generatedReply',
+    finalSentReply: 'finalSentReply',
+    wasEdited: 'wasEdited',
+    editSimilarity: 'editSimilarity',
+    modelVersion: 'modelVersion',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InstantReplyFeedbackScalarFieldEnum = (typeof InstantReplyFeedbackScalarFieldEnum)[keyof typeof InstantReplyFeedbackScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -12808,6 +14151,7 @@ export namespace Prisma {
     stripeSubscription?: XOR<StripeSubscriptionNullableScalarRelationFilter, StripeSubscriptionWhereInput> | null
     chatbotInteractions?: ChatbotInteractionListRelationFilter
     chatFeedback?: ChatFeedbackListRelationFilter
+    instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -12820,6 +14164,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionOrderByWithRelationInput
     chatbotInteractions?: ChatbotInteractionOrderByRelationAggregateInput
     chatFeedback?: ChatFeedbackOrderByRelationAggregateInput
+    instantReplyFeedback?: InstantReplyFeedbackOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -12835,6 +14180,7 @@ export namespace Prisma {
     stripeSubscription?: XOR<StripeSubscriptionNullableScalarRelationFilter, StripeSubscriptionWhereInput> | null
     chatbotInteractions?: ChatbotInteractionListRelationFilter
     chatFeedback?: ChatFeedbackListRelationFilter
+    instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
   }, "id" | "emailAddress">
 
   export type UserOrderByWithAggregationInput = {
@@ -13547,6 +14893,103 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ChatFeedback"> | Date | string
   }
 
+  export type InstantReplyFeedbackWhereInput = {
+    AND?: InstantReplyFeedbackWhereInput | InstantReplyFeedbackWhereInput[]
+    OR?: InstantReplyFeedbackWhereInput[]
+    NOT?: InstantReplyFeedbackWhereInput | InstantReplyFeedbackWhereInput[]
+    id?: StringFilter<"InstantReplyFeedback"> | string
+    userId?: StringFilter<"InstantReplyFeedback"> | string
+    accountId?: StringFilter<"InstantReplyFeedback"> | string
+    threadId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    emailContext?: StringFilter<"InstantReplyFeedback"> | string
+    originalEmailId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    generatedReply?: StringFilter<"InstantReplyFeedback"> | string
+    finalSentReply?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    wasEdited?: BoolFilter<"InstantReplyFeedback"> | boolean
+    editSimilarity?: FloatNullableFilter<"InstantReplyFeedback"> | number | null
+    modelVersion?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    createdAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
+    updatedAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type InstantReplyFeedbackOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    threadId?: SortOrderInput | SortOrder
+    emailContext?: SortOrder
+    originalEmailId?: SortOrderInput | SortOrder
+    generatedReply?: SortOrder
+    finalSentReply?: SortOrderInput | SortOrder
+    wasEdited?: SortOrder
+    editSimilarity?: SortOrderInput | SortOrder
+    modelVersion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type InstantReplyFeedbackWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InstantReplyFeedbackWhereInput | InstantReplyFeedbackWhereInput[]
+    OR?: InstantReplyFeedbackWhereInput[]
+    NOT?: InstantReplyFeedbackWhereInput | InstantReplyFeedbackWhereInput[]
+    userId?: StringFilter<"InstantReplyFeedback"> | string
+    accountId?: StringFilter<"InstantReplyFeedback"> | string
+    threadId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    emailContext?: StringFilter<"InstantReplyFeedback"> | string
+    originalEmailId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    generatedReply?: StringFilter<"InstantReplyFeedback"> | string
+    finalSentReply?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    wasEdited?: BoolFilter<"InstantReplyFeedback"> | boolean
+    editSimilarity?: FloatNullableFilter<"InstantReplyFeedback"> | number | null
+    modelVersion?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    createdAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
+    updatedAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type InstantReplyFeedbackOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    threadId?: SortOrderInput | SortOrder
+    emailContext?: SortOrder
+    originalEmailId?: SortOrderInput | SortOrder
+    generatedReply?: SortOrder
+    finalSentReply?: SortOrderInput | SortOrder
+    wasEdited?: SortOrder
+    editSimilarity?: SortOrderInput | SortOrder
+    modelVersion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InstantReplyFeedbackCountOrderByAggregateInput
+    _avg?: InstantReplyFeedbackAvgOrderByAggregateInput
+    _max?: InstantReplyFeedbackMaxOrderByAggregateInput
+    _min?: InstantReplyFeedbackMinOrderByAggregateInput
+    _sum?: InstantReplyFeedbackSumOrderByAggregateInput
+  }
+
+  export type InstantReplyFeedbackScalarWhereWithAggregatesInput = {
+    AND?: InstantReplyFeedbackScalarWhereWithAggregatesInput | InstantReplyFeedbackScalarWhereWithAggregatesInput[]
+    OR?: InstantReplyFeedbackScalarWhereWithAggregatesInput[]
+    NOT?: InstantReplyFeedbackScalarWhereWithAggregatesInput | InstantReplyFeedbackScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
+    userId?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
+    accountId?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
+    threadId?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
+    emailContext?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
+    originalEmailId?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
+    generatedReply?: StringWithAggregatesFilter<"InstantReplyFeedback"> | string
+    finalSentReply?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
+    wasEdited?: BoolWithAggregatesFilter<"InstantReplyFeedback"> | boolean
+    editSimilarity?: FloatNullableWithAggregatesFilter<"InstantReplyFeedback"> | number | null
+    modelVersion?: StringNullableWithAggregatesFilter<"InstantReplyFeedback"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InstantReplyFeedback"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InstantReplyFeedback"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     emailAddress: string
@@ -13557,6 +15000,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -13569,6 +15013,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -13581,6 +15026,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -13593,6 +15039,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -14390,6 +15837,117 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type InstantReplyFeedbackCreateInput = {
+    id?: string
+    accountId: string
+    threadId?: string | null
+    emailContext: string
+    originalEmailId?: string | null
+    generatedReply: string
+    finalSentReply?: string | null
+    wasEdited?: boolean
+    editSimilarity?: number | null
+    modelVersion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutInstantReplyFeedbackInput
+  }
+
+  export type InstantReplyFeedbackUncheckedCreateInput = {
+    id?: string
+    userId: string
+    accountId: string
+    threadId?: string | null
+    emailContext: string
+    originalEmailId?: string | null
+    generatedReply: string
+    finalSentReply?: string | null
+    wasEdited?: boolean
+    editSimilarity?: number | null
+    modelVersion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstantReplyFeedbackUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutInstantReplyFeedbackNestedInput
+  }
+
+  export type InstantReplyFeedbackUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstantReplyFeedbackCreateManyInput = {
+    id?: string
+    userId: string
+    accountId: string
+    threadId?: string | null
+    emailContext: string
+    originalEmailId?: string | null
+    generatedReply: string
+    finalSentReply?: string | null
+    wasEdited?: boolean
+    editSimilarity?: number | null
+    modelVersion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstantReplyFeedbackUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstantReplyFeedbackUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -14443,6 +16001,12 @@ export namespace Prisma {
     none?: ChatFeedbackWhereInput
   }
 
+  export type InstantReplyFeedbackListRelationFilter = {
+    every?: InstantReplyFeedbackWhereInput
+    some?: InstantReplyFeedbackWhereInput
+    none?: InstantReplyFeedbackWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -14457,6 +16021,10 @@ export namespace Prisma {
   }
 
   export type ChatFeedbackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InstantReplyFeedbackOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15124,6 +16692,89 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type InstantReplyFeedbackCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    threadId?: SortOrder
+    emailContext?: SortOrder
+    originalEmailId?: SortOrder
+    generatedReply?: SortOrder
+    finalSentReply?: SortOrder
+    wasEdited?: SortOrder
+    editSimilarity?: SortOrder
+    modelVersion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InstantReplyFeedbackAvgOrderByAggregateInput = {
+    editSimilarity?: SortOrder
+  }
+
+  export type InstantReplyFeedbackMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    threadId?: SortOrder
+    emailContext?: SortOrder
+    originalEmailId?: SortOrder
+    generatedReply?: SortOrder
+    finalSentReply?: SortOrder
+    wasEdited?: SortOrder
+    editSimilarity?: SortOrder
+    modelVersion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InstantReplyFeedbackMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    accountId?: SortOrder
+    threadId?: SortOrder
+    emailContext?: SortOrder
+    originalEmailId?: SortOrder
+    generatedReply?: SortOrder
+    finalSentReply?: SortOrder
+    wasEdited?: SortOrder
+    editSimilarity?: SortOrder
+    modelVersion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InstantReplyFeedbackSumOrderByAggregateInput = {
+    editSimilarity?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -15151,6 +16802,13 @@ export namespace Prisma {
     connect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
   }
 
+  export type InstantReplyFeedbackCreateNestedManyWithoutUserInput = {
+    create?: XOR<InstantReplyFeedbackCreateWithoutUserInput, InstantReplyFeedbackUncheckedCreateWithoutUserInput> | InstantReplyFeedbackCreateWithoutUserInput[] | InstantReplyFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InstantReplyFeedbackCreateOrConnectWithoutUserInput | InstantReplyFeedbackCreateOrConnectWithoutUserInput[]
+    createMany?: InstantReplyFeedbackCreateManyUserInputEnvelope
+    connect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -15176,6 +16834,13 @@ export namespace Prisma {
     connectOrCreate?: ChatFeedbackCreateOrConnectWithoutUserInput | ChatFeedbackCreateOrConnectWithoutUserInput[]
     createMany?: ChatFeedbackCreateManyUserInputEnvelope
     connect?: ChatFeedbackWhereUniqueInput | ChatFeedbackWhereUniqueInput[]
+  }
+
+  export type InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<InstantReplyFeedbackCreateWithoutUserInput, InstantReplyFeedbackUncheckedCreateWithoutUserInput> | InstantReplyFeedbackCreateWithoutUserInput[] | InstantReplyFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InstantReplyFeedbackCreateOrConnectWithoutUserInput | InstantReplyFeedbackCreateOrConnectWithoutUserInput[]
+    createMany?: InstantReplyFeedbackCreateManyUserInputEnvelope
+    connect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -15238,6 +16903,20 @@ export namespace Prisma {
     deleteMany?: ChatFeedbackScalarWhereInput | ChatFeedbackScalarWhereInput[]
   }
 
+  export type InstantReplyFeedbackUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InstantReplyFeedbackCreateWithoutUserInput, InstantReplyFeedbackUncheckedCreateWithoutUserInput> | InstantReplyFeedbackCreateWithoutUserInput[] | InstantReplyFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InstantReplyFeedbackCreateOrConnectWithoutUserInput | InstantReplyFeedbackCreateOrConnectWithoutUserInput[]
+    upsert?: InstantReplyFeedbackUpsertWithWhereUniqueWithoutUserInput | InstantReplyFeedbackUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InstantReplyFeedbackCreateManyUserInputEnvelope
+    set?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    disconnect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    delete?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    connect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    update?: InstantReplyFeedbackUpdateWithWhereUniqueWithoutUserInput | InstantReplyFeedbackUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InstantReplyFeedbackUpdateManyWithWhereWithoutUserInput | InstantReplyFeedbackUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InstantReplyFeedbackScalarWhereInput | InstantReplyFeedbackScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -15288,6 +16967,20 @@ export namespace Prisma {
     update?: ChatFeedbackUpdateWithWhereUniqueWithoutUserInput | ChatFeedbackUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ChatFeedbackUpdateManyWithWhereWithoutUserInput | ChatFeedbackUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ChatFeedbackScalarWhereInput | ChatFeedbackScalarWhereInput[]
+  }
+
+  export type InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<InstantReplyFeedbackCreateWithoutUserInput, InstantReplyFeedbackUncheckedCreateWithoutUserInput> | InstantReplyFeedbackCreateWithoutUserInput[] | InstantReplyFeedbackUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: InstantReplyFeedbackCreateOrConnectWithoutUserInput | InstantReplyFeedbackCreateOrConnectWithoutUserInput[]
+    upsert?: InstantReplyFeedbackUpsertWithWhereUniqueWithoutUserInput | InstantReplyFeedbackUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: InstantReplyFeedbackCreateManyUserInputEnvelope
+    set?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    disconnect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    delete?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    connect?: InstantReplyFeedbackWhereUniqueInput | InstantReplyFeedbackWhereUniqueInput[]
+    update?: InstantReplyFeedbackUpdateWithWhereUniqueWithoutUserInput | InstantReplyFeedbackUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: InstantReplyFeedbackUpdateManyWithWhereWithoutUserInput | InstantReplyFeedbackUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: InstantReplyFeedbackScalarWhereInput | InstantReplyFeedbackScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -16029,6 +17722,28 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutChatFeedbackInput, UserUpdateWithoutChatFeedbackInput>, UserUncheckedUpdateWithoutChatFeedbackInput>
   }
 
+  export type UserCreateNestedOneWithoutInstantReplyFeedbackInput = {
+    create?: XOR<UserCreateWithoutInstantReplyFeedbackInput, UserUncheckedCreateWithoutInstantReplyFeedbackInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInstantReplyFeedbackInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutInstantReplyFeedbackNestedInput = {
+    create?: XOR<UserCreateWithoutInstantReplyFeedbackInput, UserUncheckedCreateWithoutInstantReplyFeedbackInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInstantReplyFeedbackInput
+    upsert?: UserUpsertWithoutInstantReplyFeedbackInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInstantReplyFeedbackInput, UserUpdateWithoutInstantReplyFeedbackInput>, UserUncheckedUpdateWithoutInstantReplyFeedbackInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16282,6 +17997,33 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type AccountCreateWithoutUserInput = {
     id?: string
     accessToken: string
@@ -16390,6 +18132,46 @@ export namespace Prisma {
 
   export type ChatFeedbackCreateManyUserInputEnvelope = {
     data: ChatFeedbackCreateManyUserInput | ChatFeedbackCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InstantReplyFeedbackCreateWithoutUserInput = {
+    id?: string
+    accountId: string
+    threadId?: string | null
+    emailContext: string
+    originalEmailId?: string | null
+    generatedReply: string
+    finalSentReply?: string | null
+    wasEdited?: boolean
+    editSimilarity?: number | null
+    modelVersion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstantReplyFeedbackUncheckedCreateWithoutUserInput = {
+    id?: string
+    accountId: string
+    threadId?: string | null
+    emailContext: string
+    originalEmailId?: string | null
+    generatedReply: string
+    finalSentReply?: string | null
+    wasEdited?: boolean
+    editSimilarity?: number | null
+    modelVersion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstantReplyFeedbackCreateOrConnectWithoutUserInput = {
+    where: InstantReplyFeedbackWhereUniqueInput
+    create: XOR<InstantReplyFeedbackCreateWithoutUserInput, InstantReplyFeedbackUncheckedCreateWithoutUserInput>
+  }
+
+  export type InstantReplyFeedbackCreateManyUserInputEnvelope = {
+    data: InstantReplyFeedbackCreateManyUserInput | InstantReplyFeedbackCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -16509,6 +18291,41 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ChatFeedback"> | Date | string
   }
 
+  export type InstantReplyFeedbackUpsertWithWhereUniqueWithoutUserInput = {
+    where: InstantReplyFeedbackWhereUniqueInput
+    update: XOR<InstantReplyFeedbackUpdateWithoutUserInput, InstantReplyFeedbackUncheckedUpdateWithoutUserInput>
+    create: XOR<InstantReplyFeedbackCreateWithoutUserInput, InstantReplyFeedbackUncheckedCreateWithoutUserInput>
+  }
+
+  export type InstantReplyFeedbackUpdateWithWhereUniqueWithoutUserInput = {
+    where: InstantReplyFeedbackWhereUniqueInput
+    data: XOR<InstantReplyFeedbackUpdateWithoutUserInput, InstantReplyFeedbackUncheckedUpdateWithoutUserInput>
+  }
+
+  export type InstantReplyFeedbackUpdateManyWithWhereWithoutUserInput = {
+    where: InstantReplyFeedbackScalarWhereInput
+    data: XOR<InstantReplyFeedbackUpdateManyMutationInput, InstantReplyFeedbackUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type InstantReplyFeedbackScalarWhereInput = {
+    AND?: InstantReplyFeedbackScalarWhereInput | InstantReplyFeedbackScalarWhereInput[]
+    OR?: InstantReplyFeedbackScalarWhereInput[]
+    NOT?: InstantReplyFeedbackScalarWhereInput | InstantReplyFeedbackScalarWhereInput[]
+    id?: StringFilter<"InstantReplyFeedback"> | string
+    userId?: StringFilter<"InstantReplyFeedback"> | string
+    accountId?: StringFilter<"InstantReplyFeedback"> | string
+    threadId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    emailContext?: StringFilter<"InstantReplyFeedback"> | string
+    originalEmailId?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    generatedReply?: StringFilter<"InstantReplyFeedback"> | string
+    finalSentReply?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    wasEdited?: BoolFilter<"InstantReplyFeedback"> | boolean
+    editSimilarity?: FloatNullableFilter<"InstantReplyFeedback"> | number | null
+    modelVersion?: StringNullableFilter<"InstantReplyFeedback"> | string | null
+    createdAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
+    updatedAt?: DateTimeFilter<"InstantReplyFeedback"> | Date | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id: string
     emailAddress: string
@@ -16518,6 +18335,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -16529,6 +18347,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -16628,6 +18447,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -16639,6 +18459,7 @@ export namespace Prisma {
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithWhereUniqueWithoutAccountInput = {
@@ -17938,6 +19759,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatbotInteractionsInput = {
@@ -17949,6 +19771,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatbotInteractionsInput = {
@@ -17976,6 +19799,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatbotInteractionsInput = {
@@ -17987,6 +19811,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStripeSubscriptionInput = {
@@ -17998,6 +19823,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStripeSubscriptionInput = {
@@ -18009,6 +19835,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStripeSubscriptionInput = {
@@ -18036,6 +19863,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStripeSubscriptionInput = {
@@ -18047,6 +19875,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutChatFeedbackInput = {
@@ -18058,6 +19887,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatFeedbackInput = {
@@ -18069,6 +19899,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
     chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatFeedbackInput = {
@@ -18096,6 +19927,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatFeedbackInput = {
@@ -18107,6 +19939,71 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
     chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutInstantReplyFeedbackInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutInstantReplyFeedbackInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutInstantReplyFeedbackInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutInstantReplyFeedbackInput, UserUncheckedCreateWithoutInstantReplyFeedbackInput>
+  }
+
+  export type UserUpsertWithoutInstantReplyFeedbackInput = {
+    update: XOR<UserUpdateWithoutInstantReplyFeedbackInput, UserUncheckedUpdateWithoutInstantReplyFeedbackInput>
+    create: XOR<UserCreateWithoutInstantReplyFeedbackInput, UserUncheckedCreateWithoutInstantReplyFeedbackInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutInstantReplyFeedbackInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutInstantReplyFeedbackInput, UserUncheckedUpdateWithoutInstantReplyFeedbackInput>
+  }
+
+  export type UserUpdateWithoutInstantReplyFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutInstantReplyFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -18134,6 +20031,21 @@ export namespace Prisma {
     correctedQuery?: string | null
     interactionType?: string
     createdAt?: Date | string
+  }
+
+  export type InstantReplyFeedbackCreateManyUserInput = {
+    id?: string
+    accountId: string
+    threadId?: string | null
+    emailContext: string
+    originalEmailId?: string | null
+    generatedReply: string
+    finalSentReply?: string | null
+    wasEdited?: boolean
+    editSimilarity?: number | null
+    modelVersion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -18219,6 +20131,51 @@ export namespace Prisma {
     correctedQuery?: NullableStringFieldUpdateOperationsInput | string | null
     interactionType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstantReplyFeedbackUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstantReplyFeedbackUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstantReplyFeedbackUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    accountId?: StringFieldUpdateOperationsInput | string
+    threadId?: NullableStringFieldUpdateOperationsInput | string | null
+    emailContext?: StringFieldUpdateOperationsInput | string
+    originalEmailId?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedReply?: StringFieldUpdateOperationsInput | string
+    finalSentReply?: NullableStringFieldUpdateOperationsInput | string | null
+    wasEdited?: BoolFieldUpdateOperationsInput | boolean
+    editSimilarity?: NullableFloatFieldUpdateOperationsInput | number | null
+    modelVersion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ThreadCreateManyAccountInput = {

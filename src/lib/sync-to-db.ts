@@ -87,17 +87,24 @@ async function upsertEmail(email: EmailMessage, index: number, accountId: string
         // Determine priority for inbox emails only
         let emailPriority: 'high' | 'medium' | 'low' = 'medium';
         if (emailLabelType === 'inbox') {
-            try {
-                emailPriority = await determineEmailPriority(
-                    email.body ?? email.bodySnippet ?? '',
-                    email.subject,
-                    email.from.name || email.from.address,
-                    new Date(email.sentAt).toLocaleString()
-                );
-            } catch (error) {
-                console.error(`Error determining priority for email ${email.id}:`, error);
-                // Default to medium on error
-                emailPriority = 'medium';
+            // Check if Gmail has marked this email as important
+            // If so, automatically set priority to high
+            if (email.sysLabels.includes('important')) {
+                emailPriority = 'high';
+            } else {
+                // Otherwise, use AI to determine priority
+                try {
+                    emailPriority = await determineEmailPriority(
+                        email.body ?? email.bodySnippet ?? '',
+                        email.subject,
+                        email.from.name || email.from.address,
+                        new Date(email.sentAt).toLocaleString()
+                    );
+                } catch (error) {
+                    console.error(`Error determining priority for email ${email.id}:`, error);
+                    // Default to medium on error
+                    emailPriority = 'medium';
+                }
             }
         }
 

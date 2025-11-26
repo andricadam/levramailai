@@ -233,6 +233,22 @@ exports.Prisma.ChatFeedbackScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.InstantReplyFeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  accountId: 'accountId',
+  threadId: 'threadId',
+  emailContext: 'emailContext',
+  originalEmailId: 'originalEmailId',
+  generatedReply: 'generatedReply',
+  finalSentReply: 'finalSentReply',
+  wasEdited: 'wasEdited',
+  editSimilarity: 'editSimilarity',
+  modelVersion: 'modelVersion',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -296,7 +312,8 @@ exports.Prisma.ModelName = {
   EmailAttachment: 'EmailAttachment',
   ChatbotInteraction: 'ChatbotInteraction',
   StripeSubscription: 'StripeSubscription',
-  ChatFeedback: 'ChatFeedback'
+  ChatFeedback: 'ChatFeedback',
+  InstantReplyFeedback: 'InstantReplyFeedback'
 };
 
 /**

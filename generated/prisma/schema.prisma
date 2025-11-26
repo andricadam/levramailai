@@ -13,15 +13,16 @@ datasource db {
 }
 
 model User {
-  id                  String               @id // Using Clerk's user ID, no default needed
-  emailAddress        String               @unique
-  firstName           String
-  lastName            String
-  imageUrl            String?
-  accounts            Account[]
-  stripeSubscription  StripeSubscription?
-  chatbotInteractions ChatbotInteraction[]
-  chatFeedback        ChatFeedback[]
+  id                   String                 @id // Using Clerk's user ID, no default needed
+  emailAddress         String                 @unique
+  firstName            String
+  lastName             String
+  imageUrl             String?
+  accounts             Account[]
+  stripeSubscription   StripeSubscription?
+  chatbotInteractions  ChatbotInteraction[]
+  chatFeedback         ChatFeedback[]
+  instantReplyFeedback InstantReplyFeedback[]
 }
 
 model Account {
@@ -214,4 +215,33 @@ model ChatFeedback {
   @@index([helpful])
   @@index([createdAt])
   @@index([interactionType])
+}
+
+model InstantReplyFeedback {
+  id        String  @id @default(cuid())
+  userId    String
+  accountId String
+  threadId  String?
+
+  // Context used for generation
+  emailContext    String
+  originalEmailId String?
+
+  // Generated vs actual
+  generatedReply String // The AI-generated reply
+  finalSentReply String? // The actual reply that was sent (after user edits)
+
+  // Metadata
+  wasEdited      Boolean @default(false)
+  editSimilarity Float?
+  modelVersion   String? // Which model version generated this
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, accountId])
+  @@index([threadId])
+  @@index([createdAt])
 }
