@@ -8,7 +8,7 @@ import { AllgemeinView } from './allgemein-view'
 import { KontoView } from './konto-view'
 import { DatenschutzView } from './datenschutz-view'
 import { AbrechnungView } from './abrechnung-view'
-import { IntegrationsView } from './integrations-view'
+import { KnowledgebaseView } from './knowledgebase-view'
 
 export function SettingsContent() {
     const [mounted, setMounted] = React.useState(false)
@@ -31,7 +31,7 @@ export function SettingsContent() {
                 {currentView === "account" && <KontoView />}
                 {currentView === "privacy" && <DatenschutzView />}
                 {currentView === "billing" && <AbrechnungView />}
-                {currentView === "integrations" && <IntegrationsView />}
+                {currentView === "knowledgebase" && <KnowledgebaseView />}
             </div>
         </div>
     )

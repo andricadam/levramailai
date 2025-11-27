@@ -4,7 +4,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { NextResponse } from "next/server";
 import { OramaClient } from "@/lib/orama";
 import { QACacheClient } from "@/lib/qa-cache";
-import { db } from "@/server/db";
+import { db, retryDbOperation } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
 import { getSubscriptionStatus } from "@/lib/stripe-actions";
 import { FREE_CREDITS_PER_DAY, QA_CACHE_SIMILARITY_THRESHOLD, SMALL_MODEL, LARGE_MODEL } from "@/app/constants";
@@ -29,26 +29,40 @@ export async function POST(req: Request) {
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-        const isSubscribed = await getSubscriptionStatus()
+        
+        // getSubscriptionStatus already has retry logic built in
+        const isSubscribed = await getSubscriptionStatus().catch(() => false);
         const today = new Date().toDateString();
         
         if (!isSubscribed) {
-            const chatbotInteraction = await db.chatbotInteraction.findUnique({
-                where: {
-                    day_userId: {
-                        day: today,
-                        userId
+            // Use retry logic for free tier limit checks to handle connection pool exhaustion
+            const chatbotInteraction = await retryDbOperation(
+                () => db.chatbotInteraction.findUnique({
+                    where: {
+                        day_userId: {
+                            day: today,
+                            userId
+                        }
                     }
-                }
-            })
+                }),
+                3,
+                500
+            ).catch(() => null);
+            
             if (!chatbotInteraction) {
-                await db.chatbotInteraction.create({
-                    data: {
-                        day: today,
-                        count: 0,
-                        userId
-                    }
-                })
+                await retryDbOperation(
+                    () => db.chatbotInteraction.create({
+                        data: {
+                            day: today,
+                            count: 0,
+                            userId
+                        }
+                    }),
+                    3,
+                    500
+                ).catch((error) => {
+                    console.error("Failed to create chatbot interaction:", error);
+                });
             } else if (chatbotInteraction.count >= FREE_CREDITS_PER_DAY) {
                 return NextResponse.json({ error: "Limit reached" }, { status: 429 });
             }

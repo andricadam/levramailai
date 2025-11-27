@@ -59,11 +59,11 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                         viewKey: "billing",
                     },
                     {
-                        title: t('settings.integrations') || 'Integrations',
+                        title: t('settings.knowledgebase') || 'Knowledgebase',
                         label: undefined,
                         icon: Plug,
-                        variant: currentView === "integrations" ? "default" : "ghost",
-                        viewKey: "integrations",
+                        variant: currentView === "knowledgebase" ? "default" : "ghost",
+                        viewKey: "knowledgebase",
                     },
                 ]}
             />

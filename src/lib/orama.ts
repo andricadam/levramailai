@@ -112,6 +112,14 @@ export class OramaClient {
     }
     async insert(document: any) {
         await insert(this.orama, document)
+        // Don't save index after every insert - batch saves instead
+    }
+
+    async insertBatch(documents: any[]) {
+        for (const document of documents) {
+            await insert(this.orama, document)
+        }
+        // Save index once after batch insert
         await this.saveIndex()
     }
 }

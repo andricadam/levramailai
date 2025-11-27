@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { SyncResponse, SyncUpdatedResponse, EmailMessage, EmailAddress } from "@/types";
-import { db } from "@/server/db";
+import { db, retryDbOperation } from "@/server/db";
 import { syncEmailsToDatabase } from "./sync-to-db";
 
 
@@ -124,11 +124,34 @@ export class Account {
             await syncEmailsToDatabase(allEmails, account.id)
         } catch (error) {
             console.error('Error syncing emails to database:', error);
+            // Don't throw here - we still want to update the delta token if possible
         }
-        await db.account.update({
-            where: { id: account.id },
-            data: { nextDeltaToken: storedDeltaToken }
-        })
+
+        // Add a delay before updating account to let database locks clear
+        // This helps prevent timeout errors after large sync operations
+        console.log('Waiting 2 seconds before updating account delta token...');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Use retry logic with exponential backoff for the account update
+        // This handles statement timeout errors (PostgreSQL error code 57014)
+        try {
+            await retryDbOperation(
+                async () => {
+                    return await db.account.update({
+                        where: { id: account.id },
+                        data: { nextDeltaToken: storedDeltaToken }
+                    });
+                },
+                5, // max retries
+                2000 // base delay of 2 seconds
+            );
+            console.log('Successfully updated account delta token');
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            console.error('Failed to update account delta token after retries:', errorMessage);
+            // Log the error but don't throw - the sync was successful, just the token update failed
+            // The next sync will use the same delta token and should work
+        }
 
         return {
             emails: allEmails,

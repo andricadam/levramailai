@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { authoriseAccess } from "./account";
+import { retryDbOperation } from "@/server/db";
 
 export const mailRouter = createTRPCRouter({
     getNumThreads: privateProcedure
@@ -32,9 +33,16 @@ export const mailRouter = createTRPCRouter({
                 where.junkStatus = true;
             }
 
-            const count = await ctx.db.thread.count({
-                where,
-            });
+            // Use retry logic to handle connection pool timeouts
+            const count = await retryDbOperation(
+                async () => {
+                    return await ctx.db.thread.count({
+                        where,
+                    });
+                },
+                3, // max retries
+                1000 // base delay of 1 second
+            );
 
             return count;
         }),

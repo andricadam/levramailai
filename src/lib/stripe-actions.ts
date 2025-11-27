@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { stripe } from "./stripe";
 import { redirect } from "next/navigation";
-import { db } from "@/server/db";
+import { db, retryDbOperation } from "@/server/db";
 
 export async function createCheckoutSession() {
     const { userId } = await auth();
@@ -52,9 +52,15 @@ export async function getSubscriptionStatus() {
     if (!userId) {
         return false
     }
-    const subscription = await db.stripeSubscription.findUnique({
-        where: { userId: userId },
-    });
+    // Use retry logic to handle connection pool exhaustion
+    const subscription = await retryDbOperation(
+        () => db.stripeSubscription.findUnique({
+            where: { userId: userId },
+        }),
+        3, // max retries
+        500 // base delay in ms
+    ).catch(() => null);
+    
     if (!subscription) {
         return false;
     }

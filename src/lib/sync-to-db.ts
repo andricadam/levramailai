@@ -15,11 +15,16 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
     const orama = new OramaClient(accountId)
     await orama.initialize()
     try {
+        // Batch Orama inserts to avoid saving index after every email
+        const oramaDocuments: any[] = []
+        
         // Sync emails to database
         for (const [index, email] of emails.entries()) {
             const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
             const embeddings = await getEmbeddings(body)
-            await orama.insert({
+            
+            // Collect Orama documents for batch insert
+            oramaDocuments.push({
                 subject: email.subject,
                 body: body,
                 from: email.from.address,
@@ -29,7 +34,13 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
                 threadId: email.threadId,
                 embeddings
             })
+            
             await upsertEmail(email, index, accountId);
+        }
+
+        // Batch insert all Orama documents and save index once
+        if (oramaDocuments.length > 0) {
+            await orama.insertBatch(oramaDocuments)
         }
 
         // TODO: Implement Orama sync when modules are available
@@ -356,20 +367,26 @@ My name is ${account.name} and my email is ${account.emailAddress}.
 
 async function upsertEmailAddress(address: EmailAddress, accountId: string) {
     try {
-        const existingAddress = await db.emailAddress.findUnique({
-            where: { accountId_address: { accountId: accountId, address: address.address ?? "" } },
+        // Use single upsert operation instead of findUnique + update/create
+        // This reduces database queries from 2 to 1 per address
+        return await db.emailAddress.upsert({
+            where: { 
+                accountId_address: { 
+                    accountId: accountId, 
+                    address: address.address ?? "" 
+                } 
+            },
+            update: { 
+                name: address.name, 
+                raw: address.raw 
+            },
+            create: { 
+                address: address.address ?? "", 
+                name: address.name, 
+                raw: address.raw, 
+                accountId 
+            },
         });
-
-        if (existingAddress) {
-            return await db.emailAddress.update({
-                where: { id: existingAddress.id },
-                data: { name: address.name, raw: address.raw },
-            });
-        } else {
-            return await db.emailAddress.create({
-                data: { address: address.address ?? "", name: address.name, raw: address.raw, accountId },
-            });
-        }
     } catch (error) {
         console.log(`Failed to upsert email address: ${error}`);
         return null;

@@ -22,6 +22,7 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.account': 'Account',
     'settings.privacy': 'Privacy',
     'settings.billing': 'Billing',
+    'settings.knowledgebase': 'Knowledgebase',
     
     // General/Profile
     'profile.title': 'Profile',
@@ -54,6 +55,7 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.account': 'Konto',
     'settings.privacy': 'Datenschutz',
     'settings.billing': 'Abrechnung',
+    'settings.knowledgebase': 'Wissensdatenbank',
     
     // General/Profile
     'profile.title': 'Profil',
@@ -86,6 +88,7 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.account': 'Compte',
     'settings.privacy': 'Confidentialité',
     'settings.billing': 'Facturation',
+    'settings.knowledgebase': 'Base de connaissances',
     
     // General/Profile
     'profile.title': 'Profil',
@@ -118,6 +121,7 @@ const translations: Record<Language, Record<string, string>> = {
     'settings.account': 'Account',
     'settings.privacy': 'Privacy',
     'settings.billing': 'Fatturazione',
+    'settings.knowledgebase': 'Base di conoscenza',
     
     // General/Profile
     'profile.title': 'Profilo',

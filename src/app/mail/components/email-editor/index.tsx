@@ -16,7 +16,6 @@ import TagInput from "./tag-input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useLocalStorage } from "usehooks-ts";
 import AIComposeButton from "./ai/compose/ai-compose-button";
-import { InstantReplyButton } from "../ai/instant-reply";
 import { Loader2 } from "lucide-react";
 
 type EmailEditorProps = {
@@ -34,7 +33,7 @@ type EmailEditorProps = {
 
     defaultToolbarExpand?: boolean;
     initialDraft?: string | null;
-    onFeedbackIdChange?: (feedbackId: string | null) => void; // Callback for instant reply feedback ID
+    onFeedbackIdChange?: (feedbackId: string | null) => void; // Callback for AI compose feedback ID
 }
 
 const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, isSending, onToChange, onCcChange, defaultToolbarExpand, initialDraft, onFeedbackIdChange }: EmailEditorProps) => {
@@ -150,11 +149,6 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
                             to {to.join(', ')}
                         </span>
                     </div>
-                    <InstantReplyButton
-                        isComposing={false}
-                        onGenerate={setGeneration}
-                        onFeedbackIdChange={onFeedbackIdChange}
-                    />
                     <AIComposeButton
                         isComposing={defaultToolbarExpand}
                         onGenerate={setGeneration}

@@ -1,8 +1,6 @@
 'use client'
 import { useState, useRef } from 'react'
-import { Paperclip, X, FileText, Loader2, Database } from 'lucide-react'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
+import { Paperclip, X, FileText, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
@@ -32,7 +30,6 @@ export function FileAttachmentSelector({
 }: FileAttachmentSelectorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
-  const [addToKnowledgeBase, setAddToKnowledgeBase] = useState(false) // Default: false
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -68,7 +65,7 @@ export function FileAttachmentSelector({
         size: file.size,
         mimeType: file.type,
         status: 'uploading',
-        inKnowledgeBase: addToKnowledgeBase,
+        inKnowledgeBase: false, // Always false for RAG attachments
       }
 
       onSelect(tempFile)
@@ -78,7 +75,7 @@ export function FileAttachmentSelector({
         const formData = new FormData()
         formData.append('file', file)
         formData.append('accountId', accountId)
-        formData.append('addToKnowledgeBase', String(addToKnowledgeBase))
+        formData.append('addToKnowledgeBase', 'false') // Always false for RAG
 
         const response = await fetch('/api/chat/upload', {
           method: 'POST',
@@ -97,12 +94,10 @@ export function FileAttachmentSelector({
           ...tempFile,
           id: data.id,
           status: 'ready',
-          inKnowledgeBase: data.inKnowledgeBase || false,
+          inKnowledgeBase: false, // Always false for RAG
         })
 
-        toast.success(
-          `File "${file.name}" uploaded${addToKnowledgeBase ? ' and added to knowledge base' : ''}`
-        )
+        toast.success(`File "${file.name}" uploaded`)
       } catch (error) {
         console.error('Upload error:', error)
         onRemove(tempFile.id)
@@ -127,23 +122,6 @@ export function FileAttachmentSelector({
 
   return (
     <div className="space-y-2 mb-2">
-      {/* Toggle for Knowledge Base */}
-      <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-muted/50">
-        <Database className="size-4 text-muted-foreground" />
-        <Label htmlFor="kb-toggle" className="text-xs text-muted-foreground cursor-pointer">
-          Add to knowledge base
-        </Label>
-        <Switch
-          id="kb-toggle"
-          checked={addToKnowledgeBase}
-          onCheckedChange={setAddToKnowledgeBase}
-          disabled={uploading}
-        />
-        <span className="text-xs text-muted-foreground">
-          (Default: temporary only)
-        </span>
-      </div>
-
       {/* Selected file chips */}
       <div className="flex flex-wrap gap-2">
         {selectedFiles.map((file) => (
@@ -167,9 +145,6 @@ export function FileAttachmentSelector({
             <span className="text-xs text-muted-foreground">
               ({formatFileSize(file.size)})
             </span>
-            {file.inKnowledgeBase && (
-              <Database className="size-3 text-primary" title="In knowledge base" />
-            )}
             {file.status === 'ready' && (
               <button
                 onClick={() => onRemove(file.id)}

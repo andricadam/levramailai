@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
-import { db } from "@/server/db";
+import { db, retryDbOperation } from "@/server/db";
 import { emailAddressSchema } from "@/types";
 import { Account } from "@/lib/acount";
 import { syncEmailsToDatabase } from "@/lib/sync-emails";
@@ -91,9 +91,16 @@ export const accountRouter = createTRPCRouter({
             where.junkStatus = true;
         }
 
-        return await ctx.db.thread.count({
-            where
-        })
+        // Use retry logic to handle connection pool timeouts
+        return await retryDbOperation(
+            async () => {
+                return await ctx.db.thread.count({
+                    where
+                });
+            },
+            3, // max retries
+            1000 // base delay of 1 second
+        )
     }),
     getThreads: privateProcedure.input(z.object({
         accountId: z.string(),
