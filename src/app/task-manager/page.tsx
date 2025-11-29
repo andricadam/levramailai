@@ -3,10 +3,17 @@
 import ThemeToggle from '@/components/theme-toggle'
 import dynamic from 'next/dynamic'
 import React, { Suspense } from 'react'
-import { UserButton } from '@clerk/nextjs'
 import { useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { AppNav } from '@/components/app-nav'
+
+const UserButton = dynamic(
+  () => import('@clerk/nextjs').then((mod) => ({ default: mod.UserButton })),
+  {
+    ssr: false,
+    loading: () => <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+  }
+)
 
 const TaskManagerView = dynamic(() => import('./components/task-manager'), {
   ssr: false,

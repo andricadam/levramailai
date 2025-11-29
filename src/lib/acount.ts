@@ -100,7 +100,10 @@ export class Account {
             };
         } else if (account.provider === 'microsoft') {
             const graph = new MicrosoftGraphAPI(this.token);
-            const response = await graph.listMessages(undefined, deltaToken, pageToken);
+            // For Microsoft Graph, use 'Inbox' folder if no deltaToken (for regular syncs)
+            // Delta queries work on all messages, so folderId is not needed
+            const folderId = deltaToken ? undefined : 'Inbox'
+            const response = await graph.listMessages(folderId, deltaToken, pageToken);
             return {
                 records: response.messages,
                 nextPageToken: response.nextPageToken,

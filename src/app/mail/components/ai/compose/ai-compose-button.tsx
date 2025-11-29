@@ -71,8 +71,8 @@ My name is ${account?.name} and my email is ${account?.emailAddress}.
     }
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger>
-                <Button onClick={() => setOpen(true)} size='icon' variant={'outline'}>
+            <DialogTrigger asChild>
+                <Button size='icon' variant={'outline'}>
                     <Sparkles className="size-5" />
                 </Button>
             </DialogTrigger>

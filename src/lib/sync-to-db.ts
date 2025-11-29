@@ -21,7 +21,9 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
         // Sync emails to database
         for (const [index, email] of emails.entries()) {
             const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
-            const embeddings = await getEmbeddings(body)
+            // Generate embeddings from full email context (subject + body + sender) for better search
+            const emailText = `Subject: ${email.subject}\nFrom: ${email.from.name || email.from.address}\nBody: ${body}`
+            const embeddings = await getEmbeddings(emailText)
             
             // Collect Orama documents for batch insert
             oramaDocuments.push({
@@ -32,6 +34,8 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
                 to: email.to.map(to => to.address),
                 sentAt: email.sentAt.toLocaleString(),
                 threadId: email.threadId,
+                source: 'email', // CRITICAL: Add source field to identify as email
+                sourceId: email.id, // CRITICAL: Add sourceId to link back to email
                 embeddings
             })
             

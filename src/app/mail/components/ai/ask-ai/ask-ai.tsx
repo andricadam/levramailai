@@ -77,10 +77,28 @@ const AskAI = ({ onClose }: AskAIProps) => {
             }
             
             // Extract sources from response if available
-            // Note: We'll need to fetch sources from the API response or store them separately
-            // For now, we'll extract from the current context
             if (options.message?.id && !options.isAbort && !options.isError) {
-                // Build sources from current context
+                let sourcesFromResponse: Source[] = [];
+                
+                // Try to extract sources from message content (appended as HTML comment)
+                const messageContent = options.message.content || '';
+                const sourcesMatch = messageContent.match(/<!--SOURCES_START:(.+?):SOURCES_END-->/);
+                if (sourcesMatch) {
+                    try {
+                        const parsedSources = JSON.parse(sourcesMatch[1]);
+                        sourcesFromResponse = parsedSources.map((s: any) => ({
+                            type: s.type as 'email' | 'attachment' | 'web' | 'google_drive' | 'google_calendar' | 'sharepoint' | 'ui_help',
+                            id: s.id,
+                            title: s.title,
+                            threadId: s.threadId,
+                        }));
+                        console.log('Extracted sources from response:', sourcesFromResponse);
+                    } catch (e) {
+                        console.error('Failed to parse sources from response:', e);
+                    }
+                }
+                
+                // Also include manually selected context
                 const currentSources: Source[] = [
                     ...selectedEmailContext.map(email => ({
                         type: 'email' as const,
@@ -93,10 +111,16 @@ const AskAI = ({ onClose }: AskAIProps) => {
                         id: file.id,
                         title: file.fileName,
                     })),
+                    ...sourcesFromResponse, // Add sources from API response (vector search results)
                 ]
                 
-                if (currentSources.length > 0) {
-                    setMessageSources(prev => new Map(prev).set(options.message!.id, currentSources))
+                // Remove duplicates based on id and type
+                const uniqueSources = currentSources.filter((source, index, self) =>
+                    index === self.findIndex(s => s.id === source.id && s.type === source.type)
+                );
+                
+                if (uniqueSources.length > 0) {
+                    setMessageSources(prev => new Map(prev).set(options.message!.id, uniqueSources))
                 }
             }
             
@@ -292,6 +316,9 @@ const AskAI = ({ onClose }: AskAIProps) => {
                                 } else if (message.content && typeof message.content === 'string') {
                                     content = message.content;
                                 }
+                                
+                                // Remove sources marker from displayed content
+                                content = content.replace(/<!--SOURCES_START:.*?:SOURCES_END-->/g, '').trim();
                                 
                                 const role = message.role;
                                 

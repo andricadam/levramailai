@@ -378,6 +378,28 @@ Guidelines:
                 preferredEmailIds: contextEmailIds.length > 0 ? contextEmailIds : undefined
             })
             console.log("Vector search completed");
+            
+            // If vector search returns few results, try keyword search as fallback
+            if (context.hits.length < 3 && lastMessageContent) {
+                try {
+                    console.log("Vector search returned few results, trying keyword search fallback");
+                    const keywordSearch = await oramaManager.search({ 
+                        term: lastMessageContent 
+                    });
+                    
+                    // Merge keyword results with vector results, avoiding duplicates
+                    const existingIds = new Set(context.hits.map((h: any) => h.document?.threadId));
+                    const additionalHits = keywordSearch.hits
+                        .filter((hit: any) => hit.document?.threadId && !existingIds.has(hit.document.threadId))
+                        .slice(0, 3); // Add up to 3 additional results
+                    
+                    context.hits = [...context.hits, ...additionalHits];
+                    console.log(`Added ${additionalHits.length} keyword search results, total: ${context.hits.length}`);
+                } catch (keywordError) {
+                    console.error("Keyword search fallback error:", keywordError);
+                    // Continue with vector search results only
+                }
+            }
         } catch (oramaError) {
             console.error("Orama error:", oramaError);
             const oramaErrorMessage = oramaError instanceof Error ? oramaError.message : String(oramaError);
@@ -388,7 +410,7 @@ Guidelines:
         }
         
         // Limit context hits and truncate content to prevent context length issues
-        const MAX_CONTEXT_HITS = 2; // Reduced to 2 to save tokens
+        const MAX_CONTEXT_HITS = 5; // Increased from 2 to find more relevant emails
         const MAX_CONTEXT_LENGTH = 1500; // characters per document - reduced to save tokens
         
         // If context emails provided, use fewer vector search results to make room
@@ -399,10 +421,18 @@ Guidelines:
         // Add vector search results to sources
         limitedHits.forEach((hit: any) => {
             const doc = hit.document
-            if (doc?.threadId && !sources.find(s => s.id === doc.threadId && s.type === 'email')) {
+            // Check if it's an email (has threadId or source === 'email')
+            if (doc?.source === 'email' && doc?.sourceId && !sources.find(s => s.id === doc.sourceId && s.type === 'email')) {
                 sources.push({
                     type: 'email',
-                    id: doc.threadId,
+                    id: doc.sourceId,
+                    title: doc.subject || '(No subject)',
+                    threadId: doc.threadId,
+                })
+            } else if (doc?.threadId && !sources.find(s => s.id === doc.threadId && s.type === 'email')) {
+                sources.push({
+                    type: 'email',
+                    id: doc.sourceId || doc.threadId, // Use sourceId if available, fallback to threadId
                     title: doc.subject || '(No subject)',
                     threadId: doc.threadId,
                 })
@@ -537,7 +567,8 @@ GUIDELINES:
 - Use web search results for current information or general knowledge
 - Use UI help documentation to answer questions about how to use the app
 - If the user asks "how to" or "where is" questions, prioritize UI help content
-- If context is insufficient, say so politely
+- If context is insufficient, try to infer from available information or ask for clarification
+- Be proactive and helpful - provide what information you can even if context is limited
 - Be concise and helpful
 - Don't invent information not in the context
 - At the end of your response, mention which sources you used (emails/attachments/web/ui help)`
@@ -622,10 +653,53 @@ GUIDELINES:
 
             console.log("streamText completed, returning response");
             // Return response in format compatible with useChat hook
-            // toUIMessageStreamResponse() formats the response correctly for useChat with DefaultChatTransport
-            const response = result.toUIMessageStreamResponse();
-            // Ensure proper headers for streaming
+            // Wrap the stream to append sources at the end
+            const originalResponse = result.toUIMessageStreamResponse();
+            
+            // If we have sources, append them to the stream
+            if (sources.length > 0) {
+                const encoder = new TextEncoder();
+                const reader = originalResponse.body?.getReader();
+                
+                if (reader) {
+                    const streamController = new ReadableStream({
+                        async start(controller) {
+                            try {
+                                while (true) {
+                                    const { done, value } = await reader.read();
+                                    if (done) {
+                                        // Append sources as final chunk in a parseable format
+                                        const sourcesMarker = `\n\n<!--SOURCES_START:${JSON.stringify(sources)}:SOURCES_END-->`;
+                                        controller.enqueue(encoder.encode(sourcesMarker));
+                                        controller.close();
+                                        break;
+                                    }
+                                    controller.enqueue(value);
+                                }
+                            } catch (error) {
+                                controller.error(error);
+                            }
+                        }
+                    });
+                    
+                    const response = new Response(streamController, {
+                        headers: originalResponse.headers,
+                    });
+                    response.headers.set('X-Accel-Buffering', 'no');
+                    // Also add sources as header for easier access
+                    response.headers.set('X-Chat-Sources', JSON.stringify(sources));
+                    console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+                    console.log("Response status:", response.status);
+                    return response;
+                }
+            }
+            
+            // Fallback to original response if no sources or stream wrapping failed
+            const response = originalResponse;
             response.headers.set('X-Accel-Buffering', 'no');
+            if (sources.length > 0) {
+                response.headers.set('X-Chat-Sources', JSON.stringify(sources));
+            }
             console.log("Response headers:", Object.fromEntries(response.headers.entries()));
             console.log("Response status:", response.status);
             return response;

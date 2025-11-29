@@ -130,7 +130,12 @@ export async function GET(req: NextRequest) {
       // Trigger initial sync in background
       const gmail = new GmailAPI(tokens.access_token)
       gmail.performInitialSync(accountId).catch((error) => {
-        console.error('Background sync error:', error)
+        console.error('Background sync error for Google account:', error)
+        console.error('Error details:', {
+          accountId,
+          errorMessage: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined
+        })
       })
 
       // Initialize UI knowledge

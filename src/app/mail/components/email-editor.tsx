@@ -135,7 +135,7 @@ const EmailEditor = ({ subject, setSubject, toValues, setToValues, ccValues, set
             </div>
 
             {/* Compact Editor */}
-            <div className='prose prose-sm w-full px-2.5 py-1.5 min-h-[80px] overflow-y-auto'>
+            <div className='prose prose-sm w-full px-2.5 py-1.5 min-h-[80px] overflow-y-auto max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:text-left [&_.ProseMirror]:min-h-[60px] [&_.ProseMirror]:p-0 [&_.ProseMirror]:!text-left'>
                 <EditorContent editor={editor} />
             </div>
 

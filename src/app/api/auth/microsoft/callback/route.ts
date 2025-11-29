@@ -133,7 +133,12 @@ export async function GET(req: NextRequest) {
       // Trigger initial sync in background
       const graph = new MicrosoftGraphAPI(tokens.access_token)
       graph.performInitialSync(accountId).catch((error) => {
-        console.error('Background sync error:', error)
+        console.error('Background sync error for Microsoft account:', error)
+        console.error('Error details:', {
+          accountId,
+          errorMessage: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined
+        })
       })
 
       // Initialize UI knowledge

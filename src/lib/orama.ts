@@ -74,7 +74,7 @@ export class OramaClient {
                 value: embeddings,
                 property: 'embeddings'
             },
-            similarity: 0.8,
+            similarity: 0.6, // Lowered from 0.8 to find more relevant emails
             limit: 20 // Get more results to allow for filtering/prioritization
         })
         
@@ -100,7 +100,7 @@ export class OramaClient {
                 value: embeddings,
                 property: 'embeddings'
             },
-            similarity: 0.8,
+            similarity: 0.6, // Lowered from 0.8 to find more relevant emails
             limit: 20
         })
         

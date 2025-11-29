@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { 
   Globe, 
-  Calendar, 
   FolderOpen, 
   CheckCircle2, 
   XCircle, 
@@ -40,16 +39,6 @@ const INTEGRATIONS = [
     bgColor: 'bg-blue-500/10',
     borderColor: 'border-blue-500/20',
     beta: false,
-  },
-  {
-    id: 'google_calendar',
-    name: 'Google Calendar',
-    icon: Calendar,
-    description: 'Access your calendar events and meetings in AI search',
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
-    borderColor: 'border-green-500/20',
-    beta: true,
   },
   {
     id: 'sharepoint',

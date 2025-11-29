@@ -46,7 +46,7 @@ export class GmailAPI {
     this.accessToken = accessToken
   }
 
-  private async request<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+  private async request<T>(endpoint: string, params?: Record<string, string>, retries = 3): Promise<T> {
     const url = new URL(`${this.baseUrl}${endpoint}`)
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -54,13 +54,33 @@ export class GmailAPI {
       })
     }
 
-    const response = await axios.get<T>(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    })
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const response = await axios.get<T>(url.toString(), {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        })
 
-    return response.data
+        return response.data
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          // Rate limit exceeded
+          const retryAfter = error.response.headers['retry-after']
+            ? parseInt(error.response.headers['retry-after'])
+            : Math.pow(2, attempt) // Exponential backoff: 2s, 4s, 8s
+          
+          if (attempt < retries) {
+            console.warn(`Gmail API rate limit hit. Retrying after ${retryAfter}s (attempt ${attempt + 1}/${retries})...`)
+            await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
+            continue
+          }
+        }
+        throw error
+      }
+    }
+    
+    throw new Error('Max retries exceeded')
   }
 
   private async postRequest<T>(endpoint: string, data: any): Promise<T> {
@@ -252,23 +272,45 @@ export class GmailAPI {
     nextDeltaToken?: string
   }> {
     // First, list message IDs
+    const params: Record<string, string> = {
+      maxResults: maxResults.toString(),
+    }
+    
+    if (query) {
+      params.q = query
+    }
+    
+    if (pageToken) {
+      params.pageToken = pageToken
+    }
+
     const listResponse = await this.request<{
       messages?: Array<{ id: string; threadId: string }>
       nextPageToken?: string
-    }>('/users/me/messages', {
-      q: query || '',
-      maxResults: maxResults.toString(),
-      pageToken: pageToken || '',
-    })
+    }>('/users/me/messages', params)
 
     if (!listResponse.messages || listResponse.messages.length === 0) {
       return { messages: [], nextPageToken: listResponse.nextPageToken }
     }
 
-    // Fetch full message details (batch requests)
-    const messages = await Promise.all(
-      listResponse.messages.map(msg => this.getMessageDetails(msg.id))
-    )
+    // Fetch full message details in batches to avoid rate limits
+    // Gmail allows ~50 requests/second, so we'll do batches of 10 with 200ms delay
+    const BATCH_SIZE = 10
+    const BATCH_DELAY_MS = 200
+    const messages: EmailMessage[] = []
+
+    for (let i = 0; i < listResponse.messages.length; i += BATCH_SIZE) {
+      const batch = listResponse.messages.slice(i, i + BATCH_SIZE)
+      const batchMessages = await Promise.all(
+        batch.map(msg => this.getMessageDetails(msg.id))
+      )
+      messages.push(...batchMessages)
+
+      // Add delay between batches (except for the last batch)
+      if (i + BATCH_SIZE < listResponse.messages.length) {
+        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS))
+      }
+    }
 
     return {
       messages,
@@ -280,24 +322,46 @@ export class GmailAPI {
 
   async performInitialSync(accountId: string): Promise<void> {
     try {
+      console.log(`Starting Gmail initial sync for account ${accountId}`)
+      
       // Get messages from last 30 days
       const thirtyDaysAgo = new Date()
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+      // Gmail API accepts Unix timestamp in seconds for 'after:' query
       const query = `after:${Math.floor(thirtyDaysAgo.getTime() / 1000)}`
+      
+      console.log(`Gmail query: ${query}`)
 
       let allMessages: EmailMessage[] = []
       let nextPageToken: string | undefined
+      let pageCount = 0
+
+      // Use smaller page size to avoid rate limits
+      const PAGE_SIZE = 50
 
       do {
-        const response = await this.listMessages(query, nextPageToken, 100)
+        pageCount++
+        console.log(`Fetching Gmail page ${pageCount}...`)
+        const response = await this.listMessages(query, nextPageToken, PAGE_SIZE)
+        console.log(`Page ${pageCount}: Found ${response.messages.length} messages`)
         allMessages = allMessages.concat(response.messages)
         nextPageToken = response.nextPageToken
+        
+        // Add a small delay between pages to avoid rate limits
+        if (nextPageToken) {
+          await new Promise(resolve => setTimeout(resolve, 500))
+        }
       } while (nextPageToken)
 
-      console.log(`Fetched ${allMessages.length} emails from Gmail`)
+      console.log(`Fetched ${allMessages.length} emails from Gmail across ${pageCount} pages`)
+
+      if (allMessages.length === 0) {
+        console.warn(`No emails found for account ${accountId}. This might be normal if the account has no emails in the last 30 days.`)
+      }
 
       // Sync to database
       await syncEmailsToDatabase(accountId, allMessages)
+      console.log(`Synced ${allMessages.length} emails to database for account ${accountId}`)
 
       // Update account with historyId for future delta syncs
       const profile = await this.request<GmailProfile>('/users/me/profile')
@@ -306,9 +370,13 @@ export class GmailAPI {
         data: { nextDeltaToken: profile.historyId },
       })
 
-      console.log(`Successfully synced ${allMessages.length} emails for account ${accountId}`)
+      console.log(`Successfully completed Gmail initial sync for account ${accountId}`)
     } catch (error) {
       console.error('Error during Gmail initial sync:', error)
+      if (error instanceof Error) {
+        console.error('Error message:', error.message)
+        console.error('Error stack:', error.stack)
+      }
       throw error
     }
   }

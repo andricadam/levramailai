@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Image from 'next/image'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import AskAI from './ask-ai'
 
 const AskAIButton = () => {
@@ -28,6 +28,7 @@ const AskAIButton = () => {
         side="right"
         className="w-full sm:max-w-md p-0 overflow-hidden flex flex-col"
       >
+        <SheetTitle className="sr-only">New AI Chat</SheetTitle>
         <AskAI onClose={() => setOpen(false)} />
       </SheetContent>
     </Sheet>

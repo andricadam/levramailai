@@ -84,17 +84,30 @@ export class MicrosoftGraphAPI {
     const url = new URL(`${this.baseUrl}${endpoint}`)
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
+        // URL encode the value, especially important for $filter
         url.searchParams.append(key, value)
       })
     }
 
-    const response = await axios.get<T>(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    })
+    try {
+      const response = await axios.get<T>(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      })
 
-    return response.data
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Microsoft Graph API error:', {
+          url: url.toString(),
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+        })
+      }
+      throw error
+    }
   }
 
   private async postRequest<T>(endpoint: string, data: any): Promise<T> {
@@ -225,77 +238,148 @@ export class MicrosoftGraphAPI {
     folderId?: string,
     deltaToken?: string,
     pageToken?: string,
-    maxResults = 50
+    maxResults = 50,
+    dateFilter?: string
   ): Promise<{
     messages: EmailMessage[]
     nextPageToken?: string
     nextDeltaToken?: string
   }> {
-    let endpoint = '/me/messages'
-    if (deltaToken) {
-      endpoint = `/me/messages/delta?$deltatoken=${deltaToken}`
-    } else if (folderId) {
-      endpoint = `/me/mailFolders/${folderId}/messages`
-    }
+    let response: GraphMessageListResponse
 
-    const params: Record<string, string> = {
-      $top: maxResults.toString(),
-      $select: 'id,conversationId,subject,from,toRecipients,ccRecipients,bccRecipients,replyTo,sentDateTime,receivedDateTime,isRead,hasAttachments,importance,parentFolderId,internetMessageId,inReplyTo,bodyPreview',
-    }
+    // If pageToken is a full URL (from @odata.nextLink), use it directly
+    if (pageToken && pageToken.startsWith('http')) {
+      // Make a direct request to the nextLink URL
+      try {
+        const axiosResponse = await axios.get<GraphMessageListResponse>(pageToken, {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        })
+        response = axiosResponse.data
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('Microsoft Graph API error (nextLink):', {
+            url: pageToken,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+          })
+        }
+        throw error
+      }
+    } else {
+      // Build the endpoint and params normally
+      let endpoint = '/me/messages'
+      if (deltaToken) {
+        // Delta queries don't support $filter
+        endpoint = `/me/messages/delta?$deltatoken=${encodeURIComponent(deltaToken)}`
+      } else if (folderId) {
+        endpoint = `/me/mailFolders/${encodeURIComponent(folderId)}/messages`
+      }
 
-    if (pageToken) {
-      // Microsoft Graph uses $skip or continuation tokens
-      // For simplicity, we'll use $skip based on page number
-      const skip = parseInt(pageToken) || 0
-      params.$skip = skip.toString()
-    }
+      const params: Record<string, string> = {
+        $top: maxResults.toString(),
+        $select: 'id,conversationId,subject,from,toRecipients,ccRecipients,bccRecipients,replyTo,sentDateTime,receivedDateTime,isRead,hasAttachments,importance,parentFolderId,internetMessageId,bodyPreview',
+      }
 
-    const response = await this.request<GraphMessageListResponse>(endpoint, params)
+      // Add date filter if provided (but not with delta queries)
+      if (dateFilter && !deltaToken) {
+        params.$filter = dateFilter
+      }
+
+      // Handle pagination with $skip (only if no filter and no delta token)
+      if (pageToken && !dateFilter && !deltaToken && !pageToken.startsWith('http')) {
+        const skip = parseInt(pageToken) || 0
+        if (skip > 0) {
+          params.$skip = skip.toString()
+        }
+      }
+
+      response = await this.request<GraphMessageListResponse>(endpoint, params)
+    }
 
     // Fetch full message details
     const messages = await Promise.all(
       response.value.map(msg => this.getMessageDetails(msg.id))
     )
 
+    // For pagination, use the nextLink if available
+    let nextPageToken: string | undefined
+    if (response['@odata.nextLink']) {
+      // Use the full nextLink URL for pagination
+      nextPageToken = response['@odata.nextLink']
+    } else if (!dateFilter && !deltaToken && pageToken && !pageToken.startsWith('http')) {
+      // Fallback: calculate next skip value if no nextLink and we're using $skip pagination
+      const currentSkip = parseInt(pageToken) || 0
+      nextPageToken = (currentSkip + maxResults).toString()
+    }
+
     return {
       messages,
-      nextPageToken: response['@odata.nextLink'] ? (parseInt(pageToken || '0') + maxResults).toString() : undefined,
+      nextPageToken,
       nextDeltaToken: response['@odata.deltaLink']?.split('$deltatoken=')[1] || deltaToken,
     }
   }
 
   async performInitialSync(accountId: string): Promise<void> {
     try {
+      console.log(`Starting Microsoft Graph initial sync for account ${accountId}`)
+      
       // Get messages from Inbox folder (last 30 days)
       const thirtyDaysAgo = new Date()
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+      // Microsoft Graph expects ISO 8601 format for date filters
       const filter = `receivedDateTime ge ${thirtyDaysAgo.toISOString()}`
+      
+      console.log(`Microsoft Graph filter: ${filter}`)
 
       let allMessages: EmailMessage[] = []
-      let nextPageToken: string | undefined = '0'
+      let nextPageToken: string | undefined
+      let pageCount = 0
+
+      // Use smaller page size to avoid rate limits
+      const PAGE_SIZE = 50
 
       do {
-        const response = await this.listMessages('Inbox', undefined, nextPageToken, 100)
+        pageCount++
+        console.log(`Fetching Microsoft Graph page ${pageCount}...`)
+        const response = await this.listMessages('Inbox', undefined, nextPageToken, PAGE_SIZE, filter)
+        console.log(`Page ${pageCount}: Found ${response.messages.length} messages`)
         allMessages = allMessages.concat(response.messages)
         nextPageToken = response.nextPageToken
+        
+        // Add a small delay between pages to avoid rate limits
+        if (nextPageToken) {
+          await new Promise(resolve => setTimeout(resolve, 500))
+        }
       } while (nextPageToken)
 
-      console.log(`Fetched ${allMessages.length} emails from Microsoft Graph`)
+      console.log(`Fetched ${allMessages.length} emails from Microsoft Graph across ${pageCount} pages`)
+
+      if (allMessages.length === 0) {
+        console.warn(`No emails found for account ${accountId}. This might be normal if the account has no emails in the last 30 days.`)
+      }
 
       // Sync to database
       await syncEmailsToDatabase(accountId, allMessages)
+      console.log(`Synced ${allMessages.length} emails to database for account ${accountId}`)
 
       // Update account with delta token for future incremental syncs
-      // We'll get the delta token from the last request
-      const lastResponse = await this.listMessages('Inbox', undefined, nextPageToken, 1)
+      // Get a delta link by making a delta query without filter
+      const lastResponse = await this.listMessages('Inbox', undefined, undefined, 1)
       await db.account.update({
         where: { id: accountId },
         data: { nextDeltaToken: lastResponse.nextDeltaToken },
       })
 
-      console.log(`Successfully synced ${allMessages.length} emails for account ${accountId}`)
+      console.log(`Successfully completed Microsoft Graph initial sync for account ${accountId}`)
     } catch (error) {
       console.error('Error during Microsoft Graph initial sync:', error)
+      if (error instanceof Error) {
+        console.error('Error message:', error.message)
+        console.error('Error stack:', error.stack)
+      }
       throw error
     }
   }
