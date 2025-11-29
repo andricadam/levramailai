@@ -54,34 +54,42 @@ export class Account {
             const expiresIn = account.expiresAt.getTime() - Date.now();
             // Refresh if expires in less than 5 minutes
             if (expiresIn < 5 * 60 * 1000) {
-                try {
-                    let newTokens;
-                    if (account.provider === 'google') {
-                        const oauth = new GoogleEmailOAuth();
-                        newTokens = await oauth.refreshToken(account.refreshToken);
-                    } else if (account.provider === 'microsoft') {
-                        const oauth = new MicrosoftEmailOAuth();
-                        newTokens = await oauth.refreshToken(account.refreshToken);
-                    } else {
-                        throw new Error(`Unsupported provider: ${account.provider}`);
-                    }
-
-                    // Update token in database
-                    await db.account.update({
-                        where: { id: account.id },
-                        data: {
-                            accessToken: newTokens.access_token,
-                            refreshToken: newTokens.refresh_token || account.refreshToken,
-                            expiresAt: newTokens.expiry_date || account.expiresAt,
-                        },
-                    });
-
-                    this.token = newTokens.access_token;
-                } catch (error) {
-                    console.error('Token refresh failed:', error);
-                    throw new Error('Token refresh failed');
-                }
+                await this.refreshAccessToken(account);
             }
+        } else if (account.refreshToken) {
+            // If we have a refresh token but no expiry, try to refresh anyway
+            await this.refreshAccessToken(account);
+        }
+    }
+
+    private async refreshAccessToken(account: any) {
+        try {
+            let newTokens;
+            if (account.provider === 'google') {
+                const oauth = new GoogleEmailOAuth();
+                newTokens = await oauth.refreshToken(account.refreshToken);
+            } else if (account.provider === 'microsoft') {
+                const oauth = new MicrosoftEmailOAuth();
+                newTokens = await oauth.refreshToken(account.refreshToken);
+            } else {
+                throw new Error(`Unsupported provider: ${account.provider}`);
+            }
+
+            // Update token in database
+            await db.account.update({
+                where: { id: account.id },
+                data: {
+                    accessToken: newTokens.access_token,
+                    refreshToken: newTokens.refresh_token || account.refreshToken,
+                    expiresAt: newTokens.expiry_date || account.expiresAt,
+                },
+            });
+
+            this.token = newTokens.access_token;
+            console.log(`Token refreshed for account ${account.emailAddress}`);
+        } catch (error) {
+            console.error('Token refresh failed:', error);
+            throw new Error('Token refresh failed. Please reconnect your account.');
         }
     }
     

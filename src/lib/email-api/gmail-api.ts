@@ -64,16 +64,40 @@ export class GmailAPI {
 
         return response.data
       } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.status === 429) {
-          // Rate limit exceeded
-          const retryAfter = error.response.headers['retry-after']
-            ? parseInt(error.response.headers['retry-after'])
-            : Math.pow(2, attempt) // Exponential backoff: 2s, 4s, 8s
-          
-          if (attempt < retries) {
-            console.warn(`Gmail API rate limit hit. Retrying after ${retryAfter}s (attempt ${attempt + 1}/${retries})...`)
-            await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
-            continue
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 429) {
+            // Rate limit exceeded
+            const retryAfter = error.response.headers['retry-after']
+              ? parseInt(error.response.headers['retry-after'])
+              : Math.pow(2, attempt) // Exponential backoff: 2s, 4s, 8s
+            
+            if (attempt < retries) {
+              console.warn(`Gmail API rate limit hit. Retrying after ${retryAfter}s (attempt ${attempt + 1}/${retries})...`)
+              await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
+              continue
+            }
+          } else if (error.response?.status === 403) {
+            // Forbidden - likely token issue or insufficient permissions
+            console.error('Gmail API 403 Forbidden error:', {
+              url: url.toString(),
+              status: error.response.status,
+              statusText: error.response.statusText,
+              data: error.response.data,
+              errorMessage: error.response.data?.error?.message,
+              errorReason: error.response.data?.error?.errors?.[0]?.reason,
+            })
+            // Don't retry 403 errors - they indicate a permission/scope issue
+            throw error
+          } else if (error.response?.status === 401) {
+            // Unauthorized - token expired or invalid
+            console.error('Gmail API 401 Unauthorized error:', {
+              url: url.toString(),
+              status: error.response.status,
+              statusText: error.response.statusText,
+              data: error.response.data,
+            })
+            // Don't retry 401 errors - token needs to be refreshed
+            throw error
           }
         }
         throw error
