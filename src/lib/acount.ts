@@ -1,90 +1,149 @@
 import axios from "axios";
-import type { SyncResponse, SyncUpdatedResponse, EmailMessage, EmailAddress } from "@/types";
+import type { EmailMessage, EmailAddress } from "@/types";
 import { db, retryDbOperation } from "@/server/db";
-import { syncEmailsToDatabase } from "./sync-to-db";
-
+import { syncEmailsToDatabase } from "./sync-emails";
+import { GmailAPI } from "./email-api/gmail-api";
+import { MicrosoftGraphAPI } from "./email-api/microsoft-graph-api";
+import { GoogleEmailOAuth } from "./email-oauth/google-email-oauth";
+import { MicrosoftEmailOAuth } from "./email-oauth/microsoft-email-oauth";
 
 export class Account {
     private token: string;
+    private accountId?: string;
+    private provider?: 'google' | 'microsoft';
 
-    constructor(token: string) {
+    constructor(token: string, accountId?: string) {
         this.token = token;
+        this.accountId = accountId;
     }
 
-    private async startSync() {
-        const response = await axios.post<SyncResponse>('https://api.aurinko.io/v1/email/sync', {}, {
-            headers: {
-                Authorization: `Bearer ${this.token}`
-            },
-            params: {
-                daysWithin: 2,
-                bodyType: 'html'
+    private async getAccount() {
+        if (this.accountId) {
+            const account = await db.account.findUnique({
+                where: { id: this.accountId },
+                select: { id: true, provider: true, accessToken: true, refreshToken: true, expiresAt: true, nextDeltaToken: true }
+            });
+            if (account) {
+                this.provider = account.provider as 'google' | 'microsoft';
+                this.token = account.accessToken;
+                return account;
             }
-        })
-        return response.data
+        } else {
+            // Fallback: find by accessToken (for backward compatibility)
+            const account = await db.account.findFirst({
+                where: { accessToken: this.token },
+                select: { id: true, provider: true, accessToken: true, refreshToken: true, expiresAt: true, nextDeltaToken: true }
+            });
+            if (account) {
+                this.accountId = account.id;
+                this.provider = account.provider as 'google' | 'microsoft';
+                return account;
+            }
+        }
+        return null;
+    }
+
+    private async ensureValidToken() {
+        const account = await this.getAccount();
+        if (!account) {
+            throw new Error('Account not found');
+        }
+
+        // Check if token needs refresh
+        if (account.expiresAt && account.refreshToken) {
+            const expiresIn = account.expiresAt.getTime() - Date.now();
+            // Refresh if expires in less than 5 minutes
+            if (expiresIn < 5 * 60 * 1000) {
+                try {
+                    let newTokens;
+                    if (account.provider === 'google') {
+                        const oauth = new GoogleEmailOAuth();
+                        newTokens = await oauth.refreshToken(account.refreshToken);
+                    } else if (account.provider === 'microsoft') {
+                        const oauth = new MicrosoftEmailOAuth();
+                        newTokens = await oauth.refreshToken(account.refreshToken);
+                    } else {
+                        throw new Error(`Unsupported provider: ${account.provider}`);
+                    }
+
+                    // Update token in database
+                    await db.account.update({
+                        where: { id: account.id },
+                        data: {
+                            accessToken: newTokens.access_token,
+                            refreshToken: newTokens.refresh_token || account.refreshToken,
+                            expiresAt: newTokens.expiry_date || account.expiresAt,
+                        },
+                    });
+
+                    this.token = newTokens.access_token;
+                } catch (error) {
+                    console.error('Token refresh failed:', error);
+                    throw new Error('Token refresh failed');
+                }
+            }
+        }
     }
     
     async getUpdatedEmails({ deltaToken, pageToken }: { deltaToken?: string, pageToken?: string}) {
-        let params: Record<string, string> = {}
-        if (deltaToken) params.deltaToken = deltaToken
-        if (pageToken) params.pageToken = pageToken
+        await this.ensureValidToken();
+        const account = await this.getAccount();
+        if (!account) throw new Error('Account not found');
 
-        try {
-            const response = await axios.get<SyncUpdatedResponse>('https://api.aurinko.io/v1/email/sync/updated', {
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                },
-                params
-            })
-            return response.data
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                console.error('API Error:', error.response?.status, error.response?.statusText)
-                console.error('Error data:', JSON.stringify(error.response?.data, null, 2))
-                throw error
-            }
-            throw error
+        if (account.provider === 'google') {
+            const gmail = new GmailAPI(this.token);
+            const response = await gmail.listMessages(undefined, pageToken);
+            return {
+                records: response.messages,
+                nextPageToken: response.nextPageToken,
+                nextDeltaToken: response.nextDeltaToken,
+            };
+        } else if (account.provider === 'microsoft') {
+            const graph = new MicrosoftGraphAPI(this.token);
+            const response = await graph.listMessages(undefined, deltaToken, pageToken);
+            return {
+                records: response.messages,
+                nextPageToken: response.nextPageToken,
+                nextDeltaToken: response.nextDeltaToken,
+            };
+        } else {
+            throw new Error(`Unsupported provider: ${account.provider}`);
         }
     }
 
     async performInitialSync() {
+        await this.ensureValidToken();
+        const account = await this.getAccount();
+        if (!account) throw new Error('Account not found');
+
         try {
-            let syncResponse = await this.startSync()
-            while (!syncResponse.ready) {
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                syncResponse = await this.startSync()
+            if (account.provider === 'google') {
+                const gmail = new GmailAPI(this.token);
+                await gmail.performInitialSync(account.id);
+                // Get updated delta token
+                const updatedAccount = await db.account.findUnique({
+                    where: { id: account.id },
+                    select: { nextDeltaToken: true }
+                });
+                return {
+                    emails: [], // Already synced in performInitialSync
+                    deltaToken: updatedAccount?.nextDeltaToken || ''
+                };
+            } else if (account.provider === 'microsoft') {
+                const graph = new MicrosoftGraphAPI(this.token);
+                await graph.performInitialSync(account.id);
+                // Get updated delta token
+                const updatedAccount = await db.account.findUnique({
+                    where: { id: account.id },
+                    select: { nextDeltaToken: true }
+                });
+                return {
+                    emails: [], // Already synced in performInitialSync
+                    deltaToken: updatedAccount?.nextDeltaToken || ''
+                };
+            } else {
+                throw new Error(`Unsupported provider: ${account.provider}`);
             }
-
-            let storedDeltaToken: string = syncResponse.syncUpdatedToken
-
-            let updatedResponse = await this.getUpdatedEmails({deltaToken: storedDeltaToken})
-
-            if (updatedResponse.nextDeltaToken) {
-                // sync has completed
-                storedDeltaToken = updatedResponse.nextDeltaToken
-            }
-            let allEmails : EmailMessage[] = updatedResponse.records
-
-            // fetch al pages if there are more
-            while (updatedResponse.nextPageToken) {
-                updatedResponse = await this.getUpdatedEmails({pageToken: updatedResponse.nextPageToken})
-                allEmails = allEmails.concat(updatedResponse.records)
-                if (updatedResponse.nextDeltaToken) {
-                    // sync has completed
-                    storedDeltaToken = updatedResponse.nextDeltaToken
-                }
-            }
-
-            console.log('initial sync completed, we have synced', allEmails.length, 'emails')
-            console.log('sync completed', storedDeltaToken)
-            // store the latest delta token for future incremental syncs
-
-            return {
-                emails: allEmails,
-                deltaToken: storedDeltaToken
-            }
-
-
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 console.error('Error during sync:', JSON.stringify(error.response?.data, null, 2))
@@ -96,23 +155,35 @@ export class Account {
     }
 
     async syncEmails() {
-        const account = await db.account.findUnique({
-            where: { accessToken: this.token }
-        })
+        await this.ensureValidToken();
+        const account = await this.getAccount();
         if (!account) throw new Error('Account not found')
-        if (!account.nextDeltaToken) throw new Error('Account not ready to sync')
+        
+        // Skip sync for unsupported providers (like old Aurinko accounts)
+        if (account.provider !== 'google' && account.provider !== 'microsoft') {
+            console.warn(`Skipping sync for unsupported provider: ${account.provider}`)
+            return {
+                emails: [],
+                deltaToken: account.nextDeltaToken || ''
+            }
+        }
+        
+        // Google and Microsoft can sync without delta token (they'll handle it in their API clients)
         let response = await this.getUpdatedEmails({
-            deltaToken: account.nextDeltaToken
+            deltaToken: account.nextDeltaToken || undefined
         })
         let allEmails: EmailMessage[] = response.records
-        let storedDeltaToken: string = account.nextDeltaToken
+        let storedDeltaToken: string = account.nextDeltaToken || ''
 
         if (response.nextDeltaToken) {
             storedDeltaToken = response.nextDeltaToken
         }
 
         while (response.nextPageToken) {
-            response = await this.getUpdatedEmails({ pageToken: response.nextPageToken })
+            response = await this.getUpdatedEmails({ 
+                deltaToken: storedDeltaToken || undefined,
+                pageToken: response.nextPageToken 
+            })
             allEmails = allEmails.concat(response.records)
             if (response.nextDeltaToken) {
                 storedDeltaToken = response.nextDeltaToken
@@ -121,19 +192,14 @@ export class Account {
 
         try {
             console.log(`Syncing ${allEmails.length} emails to database`)
-            await syncEmailsToDatabase(allEmails, account.id)
+            await syncEmailsToDatabase(account.id, allEmails)
         } catch (error) {
             console.error('Error syncing emails to database:', error);
-            // Don't throw here - we still want to update the delta token if possible
         }
 
-        // Add a delay before updating account to let database locks clear
-        // This helps prevent timeout errors after large sync operations
         console.log('Waiting 2 seconds before updating account delta token...');
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Use retry logic with exponential backoff for the account update
-        // This handles statement timeout errors (PostgreSQL error code 57014)
         try {
             await retryDbOperation(
                 async () => {
@@ -142,15 +208,13 @@ export class Account {
                         data: { nextDeltaToken: storedDeltaToken }
                     });
                 },
-                5, // max retries
-                2000 // base delay of 2 seconds
+                5,
+                2000
             );
             console.log('Successfully updated account delta token');
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             console.error('Failed to update account delta token after retries:', errorMessage);
-            // Log the error but don't throw - the sync was successful, just the token update failed
-            // The next sync will use the same delta token and should work
         }
 
         return {
@@ -182,35 +246,47 @@ export class Account {
         bcc?: EmailAddress[],
         replyTo?: EmailAddress[]
     }) {
+        await this.ensureValidToken();
+        const account = await this.getAccount();
+        if (!account) throw new Error('Account not found');
+
         try {
-            const response = await axios.post('https://api.aurinko.io/v1/email/messages', {
-                from,
-                subject,
-                body,
-                inReplyTo,
-                references,
-                to,
-                threadId,
-                cc,
-                bcc,
-                replyTo
-        }, {
-            params: {
-                returnIds: true
-            },
-            headers: {
-                Authorization: `Bearer ${this.token}`
-            },
-        })
-        console.log('email sent', response.data)
-        return response.data
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error('Error sending email:', JSON.stringify(error.response?.data, null, 2))
-        } else {
-            console.error('Error sending email:', error)
+            if (account.provider === 'google') {
+                const gmail = new GmailAPI(this.token);
+                return await gmail.sendEmail({
+                    from,
+                    to,
+                    subject,
+                    body,
+                    cc,
+                    bcc,
+                    replyTo,
+                    inReplyTo,
+                    references,
+                });
+            } else if (account.provider === 'microsoft') {
+                const graph = new MicrosoftGraphAPI(this.token);
+                return await graph.sendEmail({
+                    from,
+                    to,
+                    subject,
+                    body,
+                    cc,
+                    bcc,
+                    replyTo,
+                    inReplyTo,
+                    references,
+                });
+            } else {
+                throw new Error(`Unsupported provider: ${account.provider}`);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error sending email:', JSON.stringify(error.response?.data, null, 2))
+            } else {
+                console.error('Error sending email:', error)
+            }
+            throw error
         }
-        throw error
-    }
     }
 }

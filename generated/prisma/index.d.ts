@@ -3591,6 +3591,9 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     accessToken: string | null
+    refreshToken: string | null
+    expiresAt: Date | null
+    provider: string | null
     emailAddress: string | null
     name: string | null
     nextDeltaToken: string | null
@@ -3602,6 +3605,9 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     accessToken: string | null
+    refreshToken: string | null
+    expiresAt: Date | null
+    provider: string | null
     emailAddress: string | null
     name: string | null
     nextDeltaToken: string | null
@@ -3613,6 +3619,9 @@ export namespace Prisma {
     id: number
     userId: number
     accessToken: number
+    refreshToken: number
+    expiresAt: number
+    provider: number
     emailAddress: number
     name: number
     nextDeltaToken: number
@@ -3626,6 +3635,9 @@ export namespace Prisma {
     id?: true
     userId?: true
     accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    provider?: true
     emailAddress?: true
     name?: true
     nextDeltaToken?: true
@@ -3637,6 +3649,9 @@ export namespace Prisma {
     id?: true
     userId?: true
     accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    provider?: true
     emailAddress?: true
     name?: true
     nextDeltaToken?: true
@@ -3648,6 +3663,9 @@ export namespace Prisma {
     id?: true
     userId?: true
     accessToken?: true
+    refreshToken?: true
+    expiresAt?: true
+    provider?: true
     emailAddress?: true
     name?: true
     nextDeltaToken?: true
@@ -3732,6 +3750,9 @@ export namespace Prisma {
     id: string
     userId: string
     accessToken: string
+    refreshToken: string | null
+    expiresAt: Date | null
+    provider: string
     emailAddress: string
     name: string
     nextDeltaToken: string | null
@@ -3760,6 +3781,9 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    provider?: boolean
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
@@ -3777,6 +3801,9 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    provider?: boolean
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
@@ -3789,6 +3816,9 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    provider?: boolean
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
@@ -3801,6 +3831,9 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     accessToken?: boolean
+    refreshToken?: boolean
+    expiresAt?: boolean
+    provider?: boolean
     emailAddress?: boolean
     name?: boolean
     nextDeltaToken?: boolean
@@ -3808,7 +3841,7 @@ export namespace Prisma {
     qaCacheIndex?: boolean
   }
 
-  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accessToken" | "emailAddress" | "name" | "nextDeltaToken" | "oramaIndex" | "qaCacheIndex", ExtArgs["result"]["account"]>
+  export type AccountOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "accessToken" | "refreshToken" | "expiresAt" | "provider" | "emailAddress" | "name" | "nextDeltaToken" | "oramaIndex" | "qaCacheIndex", ExtArgs["result"]["account"]>
   export type AccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     threads?: boolean | Account$threadsArgs<ExtArgs>
@@ -3837,6 +3870,9 @@ export namespace Prisma {
       id: string
       userId: string
       accessToken: string
+      refreshToken: string | null
+      expiresAt: Date | null
+      provider: string
       emailAddress: string
       name: string
       nextDeltaToken: string | null
@@ -4273,6 +4309,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Account", 'String'>
     readonly userId: FieldRef<"Account", 'String'>
     readonly accessToken: FieldRef<"Account", 'String'>
+    readonly refreshToken: FieldRef<"Account", 'String'>
+    readonly expiresAt: FieldRef<"Account", 'DateTime'>
+    readonly provider: FieldRef<"Account", 'String'>
     readonly emailAddress: FieldRef<"Account", 'String'>
     readonly name: FieldRef<"Account", 'String'>
     readonly nextDeltaToken: FieldRef<"Account", 'String'>
@@ -17903,6 +17942,9 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
+    expiresAt: 'expiresAt',
+    provider: 'provider',
     emailAddress: 'emailAddress',
     name: 'name',
     nextDeltaToken: 'nextDeltaToken',
@@ -18374,6 +18416,9 @@ export namespace Prisma {
     id?: StringFilter<"Account"> | string
     userId?: StringFilter<"Account"> | string
     accessToken?: StringFilter<"Account"> | string
+    refreshToken?: StringNullableFilter<"Account"> | string | null
+    expiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    provider?: StringFilter<"Account"> | string
     emailAddress?: StringFilter<"Account"> | string
     name?: StringFilter<"Account"> | string
     nextDeltaToken?: StringNullableFilter<"Account"> | string | null
@@ -18390,6 +18435,9 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     accessToken?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    provider?: SortOrder
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrderInput | SortOrder
@@ -18404,11 +18452,15 @@ export namespace Prisma {
 
   export type AccountWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    accessToken?: string
+    unique_user_email_provider?: AccountUnique_user_email_providerCompoundUniqueInput
     AND?: AccountWhereInput | AccountWhereInput[]
     OR?: AccountWhereInput[]
     NOT?: AccountWhereInput | AccountWhereInput[]
     userId?: StringFilter<"Account"> | string
+    accessToken?: StringFilter<"Account"> | string
+    refreshToken?: StringNullableFilter<"Account"> | string | null
+    expiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    provider?: StringFilter<"Account"> | string
     emailAddress?: StringFilter<"Account"> | string
     name?: StringFilter<"Account"> | string
     nextDeltaToken?: StringNullableFilter<"Account"> | string | null
@@ -18419,12 +18471,15 @@ export namespace Prisma {
     emailAddresses?: EmailAddressListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
     appConnections?: AppConnectionListRelationFilter
-  }, "id" | "accessToken">
+  }, "id" | "unique_user_email_provider">
 
   export type AccountOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
     accessToken?: SortOrder
+    refreshToken?: SortOrderInput | SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    provider?: SortOrder
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrderInput | SortOrder
@@ -18442,6 +18497,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Account"> | string
     userId?: StringWithAggregatesFilter<"Account"> | string
     accessToken?: StringWithAggregatesFilter<"Account"> | string
+    refreshToken?: StringNullableWithAggregatesFilter<"Account"> | string | null
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
+    provider?: StringWithAggregatesFilter<"Account"> | string
     emailAddress?: StringWithAggregatesFilter<"Account"> | string
     name?: StringWithAggregatesFilter<"Account"> | string
     nextDeltaToken?: StringNullableWithAggregatesFilter<"Account"> | string | null
@@ -19555,6 +19613,9 @@ export namespace Prisma {
   export type AccountCreateInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -19571,6 +19632,9 @@ export namespace Prisma {
     id?: string
     userId: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -19585,6 +19649,9 @@ export namespace Prisma {
   export type AccountUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19601,6 +19668,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19616,6 +19686,9 @@ export namespace Prisma {
     id?: string
     userId: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -19626,6 +19699,9 @@ export namespace Prisma {
   export type AccountUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19637,6 +19713,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20951,6 +21030,17 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -20976,10 +21066,19 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type AccountUnique_user_email_providerCompoundUniqueInput = {
+    userId: string
+    emailAddress: string
+    provider: string
+  }
+
   export type AccountCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    provider?: SortOrder
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrder
@@ -20991,6 +21090,9 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    provider?: SortOrder
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrder
@@ -21002,11 +21104,28 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     accessToken?: SortOrder
+    refreshToken?: SortOrder
+    expiresAt?: SortOrder
+    provider?: SortOrder
     emailAddress?: SortOrder
     name?: SortOrder
     nextDeltaToken?: SortOrder
     oramaIndex?: SortOrder
     qaCacheIndex?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -21655,17 +21774,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type ChatAttachmentCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -21717,20 +21825,6 @@ export namespace Prisma {
   export type ChatAttachmentSumOrderByAggregateInput = {
     size?: SortOrder
     textEmbeddings?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type AccountNullableScalarRelationFilter = {
@@ -22246,6 +22340,10 @@ export namespace Prisma {
     connectOrCreate?: AppConnectionCreateOrConnectWithoutAccountInput | AppConnectionCreateOrConnectWithoutAccountInput[]
     createMany?: AppConnectionCreateManyAccountInputEnvelope
     connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
@@ -23052,10 +23150,6 @@ export namespace Prisma {
     push?: number | number[]
   }
 
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
-  }
-
   export type UserUpdateOneRequiredWithoutChatAttachmentsNestedInput = {
     create?: XOR<UserCreateWithoutChatAttachmentsInput, UserUncheckedCreateWithoutChatAttachmentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutChatAttachmentsInput
@@ -23259,6 +23353,31 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -23455,31 +23574,6 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -23499,6 +23593,9 @@ export namespace Prisma {
   export type AccountCreateWithoutUserInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -23513,6 +23610,9 @@ export namespace Prisma {
   export type AccountUncheckedCreateWithoutUserInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -23762,6 +23862,9 @@ export namespace Prisma {
     id?: StringFilter<"Account"> | string
     userId?: StringFilter<"Account"> | string
     accessToken?: StringFilter<"Account"> | string
+    refreshToken?: StringNullableFilter<"Account"> | string | null
+    expiresAt?: DateTimeNullableFilter<"Account"> | Date | string | null
+    provider?: StringFilter<"Account"> | string
     emailAddress?: StringFilter<"Account"> | string
     name?: StringFilter<"Account"> | string
     nextDeltaToken?: StringNullableFilter<"Account"> | string | null
@@ -24284,6 +24387,9 @@ export namespace Prisma {
   export type AccountCreateWithoutThreadsInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -24299,6 +24405,9 @@ export namespace Prisma {
     id?: string
     userId: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -24406,6 +24515,9 @@ export namespace Prisma {
   export type AccountUpdateWithoutThreadsInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24421,6 +24533,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25232,6 +25347,9 @@ export namespace Prisma {
   export type AccountCreateWithoutEmailAddressesInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -25247,6 +25365,9 @@ export namespace Prisma {
     id?: string
     userId: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -25356,6 +25477,9 @@ export namespace Prisma {
   export type AccountUpdateWithoutEmailAddressesInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25371,6 +25495,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25857,6 +25984,9 @@ export namespace Prisma {
   export type AccountCreateWithoutChatAttachmentsInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -25872,6 +26002,9 @@ export namespace Prisma {
     id?: string
     userId: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -25940,6 +26073,9 @@ export namespace Prisma {
   export type AccountUpdateWithoutChatAttachmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25955,6 +26091,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26001,6 +26140,9 @@ export namespace Prisma {
   export type AccountCreateWithoutAppConnectionsInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -26016,6 +26158,9 @@ export namespace Prisma {
     id?: string
     userId: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -26122,6 +26267,9 @@ export namespace Prisma {
   export type AccountUpdateWithoutAppConnectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26137,6 +26285,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26268,6 +26419,9 @@ export namespace Prisma {
   export type AccountCreateManyUserInput = {
     id?: string
     accessToken: string
+    refreshToken?: string | null
+    expiresAt?: Date | string | null
+    provider?: string
     emailAddress: string
     name: string
     nextDeltaToken?: string | null
@@ -26343,6 +26497,9 @@ export namespace Prisma {
   export type AccountUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26357,6 +26514,9 @@ export namespace Prisma {
   export type AccountUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26371,6 +26531,9 @@ export namespace Prisma {
   export type AccountUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     accessToken?: StringFieldUpdateOperationsInput | string
+    refreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    provider?: StringFieldUpdateOperationsInput | string
     emailAddress?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     nextDeltaToken?: NullableStringFieldUpdateOperationsInput | string | null

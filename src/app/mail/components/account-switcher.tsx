@@ -13,9 +13,14 @@ import {
 import { api, type RouterOutputs } from "@/trpc/react"
 import { useLocalStorage } from "usehooks-ts"
 import { Plus, Trash2, RefreshCw } from "lucide-react"
-import { getAurinkoAuthUrl } from "@/lib/aurinko"
 import { useAuth } from "@clerk/nextjs"
 import { toast } from "sonner"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface AccountSwitcherProps {
   isCollapsed: boolean
@@ -140,30 +145,37 @@ export function AccountSwitcher({
   if (!accounts || accounts.length === 0) {
     return (
       <div className="items-center gap-2 flex w-full">
-        <button
-          onClick={async () => {
-            try {
-              const url = await getAurinkoAuthUrl('Google')
-              // Parse the URL to show the returnUrl being sent
-              const urlObj = new URL(url)
-              const returnUrl = urlObj.searchParams.get('returnUrl')
-              console.log('🔍 DEBUG: returnUrl being sent to Aurinko:')
-              console.log('   ', returnUrl)
-              console.log('📋 Make sure this EXACT URL is in your Aurinko dashboard!')
-              window.location.href = url
-            } catch (error) {
-              console.error((error as Error).message)
-              toast.error((error as Error).message)
-            }
-          }}
-          className={cn(
-            "flex w-full flex-1 items-center gap-2 h-9 rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground",
-            isCollapsed && "h-9 w-9 shrink-0 items-center justify-center p-0"
-          )}
-        >
-          <Plus className="size-4" />
-          <span className={cn(isCollapsed && "hidden")}>Add account</span>
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className={cn(
+                "flex w-full flex-1 items-center gap-2 h-9 rounded-md border border-input bg-background px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground",
+                isCollapsed && "h-9 w-9 shrink-0 items-center justify-center p-0"
+              )}
+            >
+              <Plus className="size-4" />
+              <span className={cn(isCollapsed && "hidden")}>Add account</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => {
+                window.location.href = '/api/auth/google/connect'
+              }}
+            >
+              <Plus className="size-4 mr-2" />
+              Add Gmail account
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                window.location.href = '/api/auth/microsoft/connect'
+              }}
+            >
+              <Plus className="size-4 mr-2" />
+              Add Outlook account
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     )
   }
@@ -229,24 +241,32 @@ export function AccountSwitcher({
               <span>{syncAccount.isPending ? "Syncing..." : "Sync emails"}</span>
             </div>
           )}
-          <div onClick={async (e) => {
-            try {
-              const url = await getAurinkoAuthUrl('Google')
-              // Parse the URL to show the returnUrl being sent
-              const urlObj = new URL(url)
-              const returnUrl = urlObj.searchParams.get('returnUrl')
-              console.log('🔍 DEBUG: returnUrl being sent to Aurinko:')
-              console.log('   ', returnUrl)
-              console.log('📋 Make sure this EXACT URL is in your Aurinko dashboard!')
-              window.location.href = url
-            } catch (error) {
-              console.error((error as Error).message)
-              toast.error((error as Error).message)
-            }
-          }} className="relative flex hover:bg-gray-50 dark:hover:bg-gray-800 w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-            <Plus className="size-4 mr-1" />
-            Add account
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="relative flex hover:bg-gray-50 dark:hover:bg-gray-800 w-full cursor-pointer items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                <Plus className="size-4 mr-1" />
+                Add account
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  window.location.href = '/api/auth/google/connect'
+                }}
+              >
+                <Plus className="size-4 mr-2" />
+                Add Gmail account
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  window.location.href = '/api/auth/microsoft/connect'
+                }}
+              >
+                <Plus className="size-4 mr-2" />
+                Add Outlook account
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </SelectContent>
       </Select>
     </div>

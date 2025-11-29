@@ -31,7 +31,10 @@ model Account {
   id     String @id @default(cuid())
   userId String
 
-  accessToken  String @unique
+  accessToken  String
+  refreshToken String?
+  expiresAt    DateTime?
+  provider     String    @default("aurinko") // 'google' | 'microsoft' | 'aurinko' (for backward compatibility)
   emailAddress String
   name         String
 
@@ -44,6 +47,9 @@ model Account {
   emailAddresses  EmailAddress[]
   chatAttachments ChatAttachment[]
   appConnections  AppConnection[]
+
+  @@unique([userId, emailAddress, provider], name: "unique_user_email_provider")
+  @@index([provider])
 }
 
 model Thread {

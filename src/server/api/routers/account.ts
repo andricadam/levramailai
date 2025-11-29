@@ -108,7 +108,7 @@ export const accountRouter = createTRPCRouter({
         done: z.boolean()
     })).query(async ({ctx, input})=>{
         const account = await authoriseAccess(input.accountId, ctx.auth.userId)
-        const acc = new Account(account.accessToken)
+        const acc = new Account(account.accessToken, account.id)
         acc.syncEmails().catch(console.error)
 
         const filter: {
@@ -275,7 +275,7 @@ export const accountRouter = createTRPCRouter({
         instantReplyFeedbackId: z.string().optional(), // Link to generated reply
     })).mutation(async ({ ctx, input }) => {
         const account = await authoriseAccess(input.accountId, ctx.auth.userId)
-        const acc = new Account(account.accessToken as string)
+        const acc = new Account(account.accessToken as string, account.id)
         await acc.sendEmail({
             body: input.body,
             subject: input.subject,
@@ -398,7 +398,7 @@ export const accountRouter = createTRPCRouter({
         
         try {
             // Create Account instance and perform initial sync
-            const acc = new Account(account.accessToken as string);
+            const acc = new Account(account.accessToken as string, account.id);
             const response = await acc.performInitialSync();
             
             if (!response) {
