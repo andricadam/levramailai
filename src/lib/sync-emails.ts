@@ -239,84 +239,101 @@ export async function syncEmailsToDatabase(
             const lastModifiedTimeDate = safeDateParse(email.lastModifiedTime, email.sentAt);
             const receivedAtDate = safeDateParse(email.receivedAt, email.sentAt);
             
-            await db.email.upsert({
-                where: { id: email.id },
-                create: {
-                    id: email.id,
-                    threadId: thread.id,
-                    createdTime: createdTimeDate,
-                    lastModifiedTime: lastModifiedTimeDate,
-                    sentAt: sentAtDate,
-                    receivedAt: receivedAtDate,
-                    internetMessageId: email.internetMessageId,
-                    subject: email.subject || "(No subject)",
-                    sysLabels: email.sysLabels,
-                    keywords: email.keywords || [],
-                    sysClassifications: email.sysClassifications || [],
-                    sensitivity: sensitivity as "normal" | "private" | "personal" | "confidential",
-                    meetingMessageMethod,
-                    fromId,
-                    hasAttachments: email.hasAttachments || false,
-                    body: email.body || null,
-                    bodySnippet: email.bodySnippet || null,
-                    inReplyTo: email.inReplyTo || null,
-                    references: email.references || null,
-                    threadIndex: email.threadIndex || null,
-                    internetHeaders: email.internetHeaders as unknown as any[],
-                    nativeProperties: email.nativeProperties as unknown as Record<string, any>,
-                    folderId: email.folderId || null,
-                    omitted: email.omitted || [],
-                    emailLabel: mapEmailLabel(email.sysLabels),
-                    to: {
-                        connect: toIds.map(id => ({ id })),
-                    },
-                    cc: {
-                        connect: ccIds.map(id => ({ id })),
-                    },
-                    bcc: {
-                        connect: bccIds.map(id => ({ id })),
-                    },
-                    replyTo: {
-                        connect: replyToIds.map(id => ({ id })),
-                    },
+            // Prepare email data to avoid duplication
+            const emailUpdateData = {
+                createdTime: createdTimeDate,
+                lastModifiedTime: lastModifiedTimeDate,
+                sentAt: sentAtDate,
+                receivedAt: receivedAtDate,
+                subject: email.subject || "(No subject)",
+                sysLabels: email.sysLabels,
+                keywords: email.keywords || [],
+                sysClassifications: email.sysClassifications || [],
+                sensitivity: sensitivity as "normal" | "private" | "personal" | "confidential",
+                meetingMessageMethod,
+                fromId,
+                hasAttachments: email.hasAttachments || false,
+                body: email.body || null,
+                bodySnippet: email.bodySnippet || null,
+                inReplyTo: email.inReplyTo || null,
+                references: email.references || null,
+                threadIndex: email.threadIndex || null,
+                internetHeaders: email.internetHeaders as unknown as any[],
+                nativeProperties: email.nativeProperties as unknown as Record<string, any>,
+                folderId: email.folderId || null,
+                omitted: email.omitted || [],
+                emailLabel: mapEmailLabel(email.sysLabels),
+                to: {
+                    set: toIds.map(id => ({ id })),
                 },
-                update: {
-                    createdTime: createdTimeDate,
-                    lastModifiedTime: lastModifiedTimeDate,
-                    sentAt: sentAtDate,
-                    receivedAt: receivedAtDate,
-                    subject: email.subject || "(No subject)",
-                    sysLabels: email.sysLabels,
-                    keywords: email.keywords || [],
-                    sysClassifications: email.sysClassifications || [],
-                    sensitivity: sensitivity as "normal" | "private" | "personal" | "confidential",
-                    meetingMessageMethod,
-                    fromId,
-                    hasAttachments: email.hasAttachments || false,
-                    body: email.body || null,
-                    bodySnippet: email.bodySnippet || null,
-                    inReplyTo: email.inReplyTo || null,
-                    references: email.references || null,
-                    threadIndex: email.threadIndex || null,
-                    internetHeaders: email.internetHeaders as unknown as any[],
-                    nativeProperties: email.nativeProperties as unknown as Record<string, any>,
-                    folderId: email.folderId || null,
-                    omitted: email.omitted || [],
-                    emailLabel: mapEmailLabel(email.sysLabels),
-                    to: {
-                        set: toIds.map(id => ({ id })),
-                    },
-                    cc: {
-                        set: ccIds.map(id => ({ id })),
-                    },
-                    bcc: {
-                        set: bccIds.map(id => ({ id })),
-                    },
-                    replyTo: {
-                        set: replyToIds.map(id => ({ id })),
-                    },
+                cc: {
+                    set: ccIds.map(id => ({ id })),
                 },
-            });
+                bcc: {
+                    set: bccIds.map(id => ({ id })),
+                },
+                replyTo: {
+                    set: replyToIds.map(id => ({ id })),
+                },
+            };
+
+            try {
+                await db.email.upsert({
+                    where: { id: email.id },
+                    create: {
+                        id: email.id,
+                        threadId: thread.id,
+                        internetMessageId: email.internetMessageId,
+                        ...emailUpdateData,
+                        to: {
+                            connect: toIds.map(id => ({ id })),
+                        },
+                        cc: {
+                            connect: ccIds.map(id => ({ id })),
+                        },
+                        bcc: {
+                            connect: bccIds.map(id => ({ id })),
+                        },
+                        replyTo: {
+                            connect: replyToIds.map(id => ({ id })),
+                        },
+                    },
+                    update: emailUpdateData,
+                });
+            } catch (error: any) {
+                // Handle unique constraint violation (race condition)
+                // If email already exists due to concurrent processing, just update it
+                const isUniqueConstraintError = 
+                    error?.code === 'P2002' || 
+                    (error?.message && error.message.includes('Unique constraint failed'));
+                
+                if (isUniqueConstraintError) {
+                    console.warn(`Email ${email.id} already exists (likely race condition), updating instead...`);
+                    try {
+                        await db.email.update({
+                            where: { id: email.id },
+                            data: emailUpdateData,
+                        });
+                    } catch (updateError: any) {
+                        // If update fails (email doesn't exist after all), try to find it first
+                        const existingEmail = await db.email.findUnique({
+                            where: { id: email.id },
+                        });
+                        
+                        if (!existingEmail) {
+                            // Email doesn't exist, log the error but continue
+                            console.error(`Email ${email.id} not found during error recovery:`, updateError);
+                            throw error; // Re-throw original error
+                        }
+                        // Email exists, update should have worked, log and continue
+                        console.warn(`Email ${email.id} updated successfully after error recovery`);
+                    }
+                } else {
+                    // Re-throw if it's a different error
+                    console.error(`Error upserting email ${email.id}:`, error);
+                    throw error;
+                }
+            }
 
             // Create or update attachments
             if (email.attachments && email.attachments.length > 0) {

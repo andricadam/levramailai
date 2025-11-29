@@ -6,6 +6,7 @@ import { db } from '@/server/db'
 import { GmailAPI } from '@/lib/email-api/gmail-api'
 import { syncEmailsToDatabase } from '@/lib/sync-emails'
 import { initializeUIKnowledgeForAccount, isUIKnowledgeInitialized } from '@/lib/init-ui-knowledge'
+import { syncGoogleCalendar } from '@/lib/integrations/google-calendar-sync'
 
 export async function GET(req: NextRequest) {
   try {
@@ -137,6 +138,63 @@ export async function GET(req: NextRequest) {
           stack: error instanceof Error ? error.stack : undefined
         })
       })
+
+      // Auto-create calendar AppConnection and sync calendar events
+      try {
+        // Check if calendar connection already exists
+        const existingCalendarConnection = await db.appConnection.findFirst({
+          where: {
+            userId,
+            appType: 'google_calendar',
+          },
+        })
+
+        let calendarConnectionId: string
+
+        if (existingCalendarConnection) {
+          // Update existing connection with new tokens
+          calendarConnectionId = existingCalendarConnection.id
+          await db.appConnection.update({
+            where: { id: calendarConnectionId },
+            data: {
+              accountId,
+              accessToken: tokens.access_token,
+              refreshToken: tokens.refresh_token || undefined,
+              expiresAt: expiresAt || undefined,
+              enabled: true,
+            },
+          })
+        } else {
+          // Create new calendar connection linked to the email account
+          const newConnection = await db.appConnection.create({
+            data: {
+              userId,
+              accountId,
+              appType: 'google_calendar',
+              appName: 'Google Calendar',
+              accessToken: tokens.access_token,
+              refreshToken: tokens.refresh_token || null,
+              expiresAt,
+              enabled: true,
+              syncStatus: 'pending',
+            },
+          })
+          calendarConnectionId = newConnection.id
+        }
+
+        // Trigger calendar sync in background
+        syncGoogleCalendar(calendarConnectionId).catch((error) => {
+          console.error('Background calendar sync error:', error)
+          console.error('Error details:', {
+            calendarConnectionId,
+            accountId,
+            errorMessage: error instanceof Error ? error.message : String(error),
+          })
+        })
+      } catch (error) {
+        console.error('Error setting up calendar connection:', error)
+        // Don't fail the whole flow if calendar setup fails
+      }
 
       // Initialize UI knowledge
       try {

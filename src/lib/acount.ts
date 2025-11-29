@@ -76,12 +76,17 @@ export class Account {
             }
 
             // Update token in database
+            // Convert expiry_date to Date (handles both timestamp numbers and Date objects)
+            const expiresAtDate = newTokens.expiry_date 
+                ? new Date(newTokens.expiry_date) 
+                : null;
+
             await db.account.update({
                 where: { id: account.id },
                 data: {
                     accessToken: newTokens.access_token,
                     refreshToken: newTokens.refresh_token || account.refreshToken,
-                    expiresAt: newTokens.expiry_date || account.expiresAt,
+                    expiresAt: expiresAtDate || account.expiresAt || null,
                 },
             });
 

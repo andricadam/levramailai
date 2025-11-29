@@ -4,6 +4,9 @@ import { Nav } from './nav'
 
 import {
     Calendar as CalendarIcon,
+    CalendarDays,
+    LayoutGrid,
+    Clock,
 } from "lucide-react"
 import { useLocalStorage } from 'usehooks-ts'
 
@@ -26,10 +29,28 @@ const SideBar = ({ isCollapsed = false }: Props) => {
                 isCollapsed={isCollapsed}
                 links={[
                     {
+                        title: "Day",
+                        label: undefined,
+                        icon: Clock,
+                        variant: currentView === "day" ? "default" : "ghost",
+                    },
+                    {
+                        title: "Week",
+                        label: undefined,
+                        icon: CalendarDays,
+                        variant: currentView === "week" ? "default" : "ghost",
+                    },
+                    {
                         title: "Month",
                         label: undefined,
                         icon: CalendarIcon,
                         variant: currentView === "month" ? "default" : "ghost",
+                    },
+                    {
+                        title: "Year",
+                        label: undefined,
+                        icon: LayoutGrid,
+                        variant: currentView === "year" ? "default" : "ghost",
                     },
                 ]}
             />
