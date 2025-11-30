@@ -3,6 +3,7 @@ import { privateProcedure, createTRPCRouter } from '../trpc'
 import { db } from '@/server/db'
 import { syncGoogleDrive } from '@/lib/integrations/google-drive-sync'
 import { syncGoogleCalendar } from '@/lib/integrations/google-calendar-sync'
+import { syncMicrosoftCalendar } from '@/lib/integrations/microsoft-calendar-sync'
 import { syncSharePoint } from '@/lib/integrations/sharepoint-sync'
 
 export const integrationsRouter = createTRPCRouter({
@@ -71,6 +72,10 @@ export const integrationsRouter = createTRPCRouter({
         })
       } else if (connection.appType === 'google_calendar') {
         syncGoogleCalendar(input.connectionId).catch((error) => {
+          console.error('Sync error:', error)
+        })
+      } else if (connection.appType === 'microsoft_calendar') {
+        syncMicrosoftCalendar(input.connectionId).catch((error) => {
           console.error('Sync error:', error)
         })
       } else if (connection.appType === 'sharepoint') {

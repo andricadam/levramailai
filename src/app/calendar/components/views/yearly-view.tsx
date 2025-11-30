@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { api } from "@/trpc/react"
 import { cn } from "@/lib/utils"
 import { NoCalendarMessage } from "./no-calendar-message"
+import { useLocalStorage } from "usehooks-ts"
 
 export function YearlyView() {
   const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear())
@@ -18,16 +19,25 @@ export function YearlyView() {
   const startOfYearISO = yearStart.toISOString()
   const endOfYearISO = yearEnd.toISOString()
 
+  // Get the currently selected account ID
+  const [accountId] = useLocalStorage('accountId', '')
+
   const { data: events = [] } = api.calendar.getEvents.useQuery({
     startDate: startOfYearISO,
     endDate: endOfYearISO,
+    accountId: accountId || undefined,
   })
 
   const { data: connections = [] } = api.integrations.getConnections.useQuery()
+  // Check for calendar connection for the current account
   const hasCalendarConnection = connections.some(
-    (conn) => conn.appType === 'google_calendar' && conn.enabled
+    (conn) => 
+      (conn.appType === 'google_calendar' || conn.appType === 'microsoft_calendar') && 
+      conn.enabled &&
+      (!accountId || conn.accountId === accountId)
   )
 
+  // IMPORTANT: All hooks must be called before any conditional returns
   // Group events by month
   const eventsByMonth = React.useMemo(() => {
     const grouped: Record<number, number> = {}

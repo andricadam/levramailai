@@ -6,6 +6,7 @@ import { db } from '@/server/db'
 import { MicrosoftGraphAPI } from '@/lib/email-api/microsoft-graph-api'
 import { syncEmailsToDatabase } from '@/lib/sync-emails'
 import { initializeUIKnowledgeForAccount, isUIKnowledgeInitialized } from '@/lib/init-ui-knowledge'
+import { syncMicrosoftCalendar } from '@/lib/integrations/microsoft-calendar-sync'
 
 export async function GET(req: NextRequest) {
   try {
@@ -140,6 +141,63 @@ export async function GET(req: NextRequest) {
           stack: error instanceof Error ? error.stack : undefined
         })
       })
+
+      // Auto-create calendar AppConnection and sync calendar events
+      try {
+        // Check if calendar connection already exists
+        const existingCalendarConnection = await db.appConnection.findFirst({
+          where: {
+            userId,
+            appType: 'microsoft_calendar',
+          },
+        })
+
+        let calendarConnectionId: string
+
+        if (existingCalendarConnection) {
+          // Update existing connection with new tokens
+          calendarConnectionId = existingCalendarConnection.id
+          await db.appConnection.update({
+            where: { id: calendarConnectionId },
+            data: {
+              accountId,
+              accessToken: tokens.access_token,
+              refreshToken: tokens.refresh_token || undefined,
+              expiresAt: expiresAt || undefined,
+              enabled: true,
+            },
+          })
+        } else {
+          // Create new calendar connection linked to the email account
+          const newConnection = await db.appConnection.create({
+            data: {
+              userId,
+              accountId,
+              appType: 'microsoft_calendar',
+              appName: 'Microsoft Calendar',
+              accessToken: tokens.access_token,
+              refreshToken: tokens.refresh_token || null,
+              expiresAt: expiresAt || null,
+              enabled: true,
+              syncStatus: 'pending',
+            },
+          })
+          calendarConnectionId = newConnection.id
+        }
+
+        // Trigger calendar sync in background
+        syncMicrosoftCalendar(calendarConnectionId).catch((error) => {
+          console.error('Background calendar sync error:', error)
+          console.error('Error details:', {
+            calendarConnectionId,
+            accountId,
+            errorMessage: error instanceof Error ? error.message : String(error),
+          })
+        })
+      } catch (error) {
+        console.error('Error setting up calendar connection:', error)
+        // Don't fail the whole flow if calendar setup fails
+      }
 
       // Initialize UI knowledge
       try {

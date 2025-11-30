@@ -9,6 +9,7 @@ import { api } from "@/trpc/react"
 import { cn } from "@/lib/utils"
 import { formatDateRange } from "little-date"
 import { NoCalendarMessage } from "./no-calendar-message"
+import { useLocalStorage } from "usehooks-ts"
 
 export function DailyView() {
   const [currentDate, setCurrentDate] = React.useState(new Date())
@@ -17,16 +18,25 @@ export function DailyView() {
   const startOfDayISO = startOfDay(currentDate).toISOString()
   const endOfDayISO = endOfDay(currentDate).toISOString()
 
+  // Get the currently selected account ID
+  const [accountId] = useLocalStorage('accountId', '')
+
   const { data: events = [], isLoading } = api.calendar.getEvents.useQuery({
     startDate: startOfDayISO,
     endDate: endOfDayISO,
+    accountId: accountId || undefined,
   })
 
   const { data: connections = [] } = api.integrations.getConnections.useQuery()
+  // Check for calendar connection for the current account
   const hasCalendarConnection = connections.some(
-    (conn) => conn.appType === 'google_calendar' && conn.enabled
+    (conn) => 
+      (conn.appType === 'google_calendar' || conn.appType === 'microsoft_calendar') && 
+      conn.enabled &&
+      (!accountId || conn.accountId === accountId)
   )
 
+  // IMPORTANT: All hooks must be called before any conditional returns
   const sortedEvents = React.useMemo(() => {
     return [...events].sort((a, b) => {
       return new Date(a.start).getTime() - new Date(b.start).getTime()

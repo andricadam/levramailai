@@ -8,6 +8,7 @@ import { api } from "@/trpc/react"
 import { cn } from "@/lib/utils"
 import { formatDateRange } from "little-date"
 import { NoCalendarMessage } from "./no-calendar-message"
+import { useLocalStorage } from "usehooks-ts"
 
 export function WeeklyView() {
   const [currentDate, setCurrentDate] = React.useState(new Date())
@@ -19,16 +20,25 @@ export function WeeklyView() {
   const startOfWeekISO = weekStart.toISOString()
   const endOfWeekISO = weekEnd.toISOString()
 
+  // Get the currently selected account ID
+  const [accountId] = useLocalStorage('accountId', '')
+
   const { data: events = [] } = api.calendar.getEvents.useQuery({
     startDate: startOfWeekISO,
     endDate: endOfWeekISO,
+    accountId: accountId || undefined,
   })
 
   const { data: connections = [] } = api.integrations.getConnections.useQuery()
+  // Check for calendar connection for the current account
   const hasCalendarConnection = connections.some(
-    (conn) => conn.appType === 'google_calendar' && conn.enabled
+    (conn) => 
+      (conn.appType === 'google_calendar' || conn.appType === 'microsoft_calendar') && 
+      conn.enabled &&
+      (!accountId || conn.accountId === accountId)
   )
 
+  // IMPORTANT: All hooks must be called before any conditional returns
   // Group events by date
   const eventsByDate = React.useMemo(() => {
     const grouped: Record<string, typeof events> = {}

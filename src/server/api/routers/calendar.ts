@@ -88,24 +88,32 @@ function parseEventData(content: string, title: string): {
 async function fetchCalendarEvents(
   userId: string,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
+  accountId?: string
 ) {
-  // Find Google Calendar connection for this user (linked to Google email accounts)
-  // Since calendar scopes are included in email OAuth, there should be one calendar connection per user
-  const connection = await db.appConnection.findFirst({
-    where: {
-      userId,
-      appType: 'google_calendar',
-      enabled: true,
-    },
+  // Find calendar connections for this user (both Google and Microsoft)
+  // If accountId is provided, filter by it to show only events for the selected account
+  const whereClause: any = {
+    userId,
+    appType: { in: ['google_calendar', 'microsoft_calendar'] },
+    enabled: true,
+  };
+
+  // Filter by accountId if provided (to show events for the currently selected account)
+  if (accountId) {
+    whereClause.accountId = accountId;
+  }
+
+  const connections = await db.appConnection.findMany({
+    where: whereClause,
   });
 
-  if (!connection) {
+  if (connections.length === 0) {
     return [];
   }
 
-  // Fetch all events from the calendar connection
-  const connectionIds = [connection.id];
+  // Fetch all events from all matching calendar connections
+  const connectionIds = connections.map(c => c.id);
   
   const syncedItems = await db.syncedItem.findMany({
     where: {
@@ -178,13 +186,15 @@ export const calendarRouter = createTRPCRouter({
       z.object({
         startDate: z.string().optional(), // ISO date string
         endDate: z.string().optional(), // ISO date string
+        accountId: z.string().optional(), // Filter by account ID
       })
     )
     .query(async ({ ctx, input }) => {
       return await fetchCalendarEvents(
         ctx.auth.userId,
         input.startDate,
-        input.endDate
+        input.endDate,
+        input.accountId
       );
     }),
 
@@ -208,7 +218,8 @@ export const calendarRouter = createTRPCRouter({
       return await fetchCalendarEvents(
         ctx.auth.userId,
         startOfDay,
-        endOfDay
+        endOfDay,
+        undefined // getEventsForDate doesn't filter by accountId for now
       );
     }),
 });

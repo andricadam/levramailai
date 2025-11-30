@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { api } from "@/trpc/react"
 import { cn } from "@/lib/utils"
 import { NoCalendarMessage } from "./no-calendar-message"
+import { useLocalStorage } from "usehooks-ts"
 
 type CalendarEvent = {
   id: string
@@ -27,24 +28,26 @@ export function MonthlyView() {
   const startOfMonthISO = monthStart.toISOString()
   const endOfMonthISO = endOfMonth(currentDate).toISOString()
 
+  // Get the currently selected account ID
+  const [accountId] = useLocalStorage('accountId', '')
+
   const { data: events = [], isLoading } = api.calendar.getEvents.useQuery({
     startDate: startOfMonthISO,
     endDate: endOfMonthISO,
+    accountId: accountId || undefined,
   })
 
   const { data: connections = [] } = api.integrations.getConnections.useQuery()
+  // Check for calendar connection for the current account
   const hasCalendarConnection = connections.some(
-    (conn) => conn.appType === 'google_calendar' && conn.enabled
+    (conn) => 
+      (conn.appType === 'google_calendar' || conn.appType === 'microsoft_calendar') && 
+      conn.enabled &&
+      (!accountId || conn.accountId === accountId)
   )
 
-  const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
-  const weekDays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
-
-  if (!hasCalendarConnection) {
-    return <NoCalendarMessage />
-  }
-
   // Group events by date and sort by time
+  // IMPORTANT: All hooks must be called before any conditional returns
   const eventsByDate = React.useMemo(() => {
     const grouped: Record<string, CalendarEvent[]> = {}
     events.forEach((event) => {
@@ -62,6 +65,13 @@ export function MonthlyView() {
     })
     return grouped
   }, [events])
+
+  const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
+  const weekDays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+
+  if (!hasCalendarConnection) {
+    return <NoCalendarMessage />
+  }
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     setCurrentDate((prev) => {
