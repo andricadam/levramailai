@@ -7,6 +7,7 @@ import {
   Reply,
   ReplyAll,
   Trash2,
+  ArrowLeft,
 } from "lucide-react"
 import {
   DropdownMenuContent,
@@ -46,10 +47,22 @@ import ReplyBox from "./reply-box";
 import { useId } from "react";
 import React from "react";
 import { SummaryButton } from "./ai/summary";
+import { ViewModeSelector, type ViewMode } from "./view-mode-selector";
 
+interface ThreadDisplayProps {
+  currentViewMode?: ViewMode;
+  onViewModeChange?: (view: ViewMode) => void;
+  onFullscreen?: () => void;
+  onSettingsClick?: () => void;
+}
 
-export function ThreadDisplay() {
-  const { threads, threadId } = useThreads()
+export function ThreadDisplay({
+  currentViewMode = 'centered',
+  onViewModeChange,
+  onFullscreen,
+  onSettingsClick,
+}: ThreadDisplayProps = {}) {
+  const { threads, threadId, setThreadId } = useThreads()
   const today = new Date()
   const popoverId = useId()
   const dropdownMenuId = useId()
@@ -74,6 +87,31 @@ export function ThreadDisplay() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center p-2">
+        {/* View Mode Selector - Top Left */}
+        {onViewModeChange && onFullscreen && onSettingsClick && (
+          <ViewModeSelector
+            currentView={currentViewMode}
+            onViewChange={onViewModeChange}
+            onFullscreen={onFullscreen}
+            onSettingsClick={onSettingsClick}
+          />
+        )}
+        
+        {/* Back Button */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setThreadId(null)}
+              className="mr-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="sr-only">Back to inbox</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Back to inbox</TooltipContent>
+        </Tooltip>
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
