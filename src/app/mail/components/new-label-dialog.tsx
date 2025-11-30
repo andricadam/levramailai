@@ -17,11 +17,12 @@ import { Label } from "@/components/ui/label"
 type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
-    onSubmit: (name: string, description: string) => void
+    onSubmit: (name: string, description: string, color?: string) => void
     editLabel?: {
         id: string
         name: string
         description?: string
+        color?: string
     } | null
 }
 
@@ -43,7 +44,7 @@ const NewLabelDialog = ({ open, onOpenChange, onSubmit, editLabel }: Props) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         if (labelName.trim()) {
-            onSubmit(labelName.trim(), description.trim())
+            onSubmit(labelName.trim(), description.trim(), editLabel?.color)
             setLabelName('')
             setDescription('')
             onOpenChange(false)

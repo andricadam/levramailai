@@ -78,6 +78,16 @@ export type AppConnection = $Result.DefaultSelection<Prisma.$AppConnectionPayloa
  * 
  */
 export type SyncedItem = $Result.DefaultSelection<Prisma.$SyncedItemPayload>
+/**
+ * Model UserLabel
+ * 
+ */
+export type UserLabel = $Result.DefaultSelection<Prisma.$UserLabelPayload>
+/**
+ * Model ThreadLabel
+ * 
+ */
+export type ThreadLabel = $Result.DefaultSelection<Prisma.$ThreadLabelPayload>
 
 /**
  * Enums
@@ -388,6 +398,26 @@ export class PrismaClient<
     * ```
     */
   get syncedItem(): Prisma.SyncedItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userLabel`: Exposes CRUD operations for the **UserLabel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserLabels
+    * const userLabels = await prisma.userLabel.findMany()
+    * ```
+    */
+  get userLabel(): Prisma.UserLabelDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.threadLabel`: Exposes CRUD operations for the **ThreadLabel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ThreadLabels
+    * const threadLabels = await prisma.threadLabel.findMany()
+    * ```
+    */
+  get threadLabel(): Prisma.ThreadLabelDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -841,7 +871,9 @@ export namespace Prisma {
     InstantReplyFeedback: 'InstantReplyFeedback',
     ChatAttachment: 'ChatAttachment',
     AppConnection: 'AppConnection',
-    SyncedItem: 'SyncedItem'
+    SyncedItem: 'SyncedItem',
+    UserLabel: 'UserLabel',
+    ThreadLabel: 'ThreadLabel'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -860,7 +892,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback" | "chatAttachment" | "appConnection" | "syncedItem"
+      modelProps: "user" | "account" | "thread" | "email" | "emailAddress" | "emailAttachment" | "chatbotInteraction" | "stripeSubscription" | "chatFeedback" | "instantReplyFeedback" | "chatAttachment" | "appConnection" | "syncedItem" | "userLabel" | "threadLabel"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1826,6 +1858,154 @@ export namespace Prisma {
           }
         }
       }
+      UserLabel: {
+        payload: Prisma.$UserLabelPayload<ExtArgs>
+        fields: Prisma.UserLabelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserLabelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserLabelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>
+          }
+          findFirst: {
+            args: Prisma.UserLabelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserLabelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>
+          }
+          findMany: {
+            args: Prisma.UserLabelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>[]
+          }
+          create: {
+            args: Prisma.UserLabelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>
+          }
+          createMany: {
+            args: Prisma.UserLabelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserLabelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>[]
+          }
+          delete: {
+            args: Prisma.UserLabelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>
+          }
+          update: {
+            args: Prisma.UserLabelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserLabelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserLabelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserLabelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserLabelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserLabelPayload>
+          }
+          aggregate: {
+            args: Prisma.UserLabelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserLabel>
+          }
+          groupBy: {
+            args: Prisma.UserLabelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserLabelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserLabelCountArgs<ExtArgs>
+            result: $Utils.Optional<UserLabelCountAggregateOutputType> | number
+          }
+        }
+      }
+      ThreadLabel: {
+        payload: Prisma.$ThreadLabelPayload<ExtArgs>
+        fields: Prisma.ThreadLabelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ThreadLabelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ThreadLabelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>
+          }
+          findFirst: {
+            args: Prisma.ThreadLabelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ThreadLabelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>
+          }
+          findMany: {
+            args: Prisma.ThreadLabelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>[]
+          }
+          create: {
+            args: Prisma.ThreadLabelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>
+          }
+          createMany: {
+            args: Prisma.ThreadLabelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ThreadLabelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>[]
+          }
+          delete: {
+            args: Prisma.ThreadLabelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>
+          }
+          update: {
+            args: Prisma.ThreadLabelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>
+          }
+          deleteMany: {
+            args: Prisma.ThreadLabelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ThreadLabelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ThreadLabelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>[]
+          }
+          upsert: {
+            args: Prisma.ThreadLabelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ThreadLabelPayload>
+          }
+          aggregate: {
+            args: Prisma.ThreadLabelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateThreadLabel>
+          }
+          groupBy: {
+            args: Prisma.ThreadLabelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ThreadLabelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ThreadLabelCountArgs<ExtArgs>
+            result: $Utils.Optional<ThreadLabelCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1935,6 +2115,8 @@ export namespace Prisma {
     chatAttachment?: ChatAttachmentOmit
     appConnection?: AppConnectionOmit
     syncedItem?: SyncedItemOmit
+    userLabel?: UserLabelOmit
+    threadLabel?: ThreadLabelOmit
   }
 
   /* Types for Logging */
@@ -2021,6 +2203,7 @@ export namespace Prisma {
     instantReplyFeedback: number
     chatAttachments: number
     appConnections: number
+    labels: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2030,6 +2213,7 @@ export namespace Prisma {
     instantReplyFeedback?: boolean | UserCountOutputTypeCountInstantReplyFeedbackArgs
     chatAttachments?: boolean | UserCountOutputTypeCountChatAttachmentsArgs
     appConnections?: boolean | UserCountOutputTypeCountAppConnectionsArgs
+    labels?: boolean | UserCountOutputTypeCountLabelsArgs
   }
 
   // Custom InputTypes
@@ -2083,6 +2267,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAppConnectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AppConnectionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLabelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserLabelWhereInput
   }
 
 
@@ -2150,10 +2341,12 @@ export namespace Prisma {
 
   export type ThreadCountOutputType = {
     emails: number
+    threadLabels: number
   }
 
   export type ThreadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     emails?: boolean | ThreadCountOutputTypeCountEmailsArgs
+    threadLabels?: boolean | ThreadCountOutputTypeCountThreadLabelsArgs
   }
 
   // Custom InputTypes
@@ -2172,6 +2365,13 @@ export namespace Prisma {
    */
   export type ThreadCountOutputTypeCountEmailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmailWhereInput
+  }
+
+  /**
+   * ThreadCountOutputType without action
+   */
+  export type ThreadCountOutputTypeCountThreadLabelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ThreadLabelWhereInput
   }
 
 
@@ -2337,6 +2537,37 @@ export namespace Prisma {
    */
   export type AppConnectionCountOutputTypeCountSyncedItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SyncedItemWhereInput
+  }
+
+
+  /**
+   * Count Type UserLabelCountOutputType
+   */
+
+  export type UserLabelCountOutputType = {
+    threadLabels: number
+  }
+
+  export type UserLabelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    threadLabels?: boolean | UserLabelCountOutputTypeCountThreadLabelsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserLabelCountOutputType without action
+   */
+  export type UserLabelCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabelCountOutputType
+     */
+    select?: UserLabelCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserLabelCountOutputType without action
+   */
+  export type UserLabelCountOutputTypeCountThreadLabelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ThreadLabelWhereInput
   }
 
 
@@ -2515,6 +2746,7 @@ export namespace Prisma {
     instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
     chatAttachments?: boolean | User$chatAttachmentsArgs<ExtArgs>
     appConnections?: boolean | User$appConnectionsArgs<ExtArgs>
+    labels?: boolean | User$labelsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2551,6 +2783,7 @@ export namespace Prisma {
     instantReplyFeedback?: boolean | User$instantReplyFeedbackArgs<ExtArgs>
     chatAttachments?: boolean | User$chatAttachmentsArgs<ExtArgs>
     appConnections?: boolean | User$appConnectionsArgs<ExtArgs>
+    labels?: boolean | User$labelsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2566,6 +2799,7 @@ export namespace Prisma {
       instantReplyFeedback: Prisma.$InstantReplyFeedbackPayload<ExtArgs>[]
       chatAttachments: Prisma.$ChatAttachmentPayload<ExtArgs>[]
       appConnections: Prisma.$AppConnectionPayload<ExtArgs>[]
+      labels: Prisma.$UserLabelPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2974,6 +3208,7 @@ export namespace Prisma {
     instantReplyFeedback<T extends User$instantReplyFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, User$instantReplyFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstantReplyFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     chatAttachments<T extends User$chatAttachmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$chatAttachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChatAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     appConnections<T extends User$appConnectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$appConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AppConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    labels<T extends User$labelsArgs<ExtArgs> = {}>(args?: Subset<T, User$labelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3556,6 +3791,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AppConnectionScalarFieldEnum | AppConnectionScalarFieldEnum[]
+  }
+
+  /**
+   * User.labels
+   */
+  export type User$labelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    where?: UserLabelWhereInput
+    orderBy?: UserLabelOrderByWithRelationInput | UserLabelOrderByWithRelationInput[]
+    cursor?: UserLabelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserLabelScalarFieldEnum | UserLabelScalarFieldEnum[]
   }
 
   /**
@@ -5037,6 +5296,7 @@ export namespace Prisma {
     junkStatus?: boolean
     account?: boolean | AccountDefaultArgs<ExtArgs>
     emails?: boolean | Thread$emailsArgs<ExtArgs>
+    threadLabels?: boolean | Thread$threadLabelsArgs<ExtArgs>
     _count?: boolean | ThreadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["thread"]>
 
@@ -5088,6 +5348,7 @@ export namespace Prisma {
   export type ThreadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     account?: boolean | AccountDefaultArgs<ExtArgs>
     emails?: boolean | Thread$emailsArgs<ExtArgs>
+    threadLabels?: boolean | Thread$threadLabelsArgs<ExtArgs>
     _count?: boolean | ThreadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ThreadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5102,6 +5363,7 @@ export namespace Prisma {
     objects: {
       account: Prisma.$AccountPayload<ExtArgs>
       emails: Prisma.$EmailPayload<ExtArgs>[]
+      threadLabels: Prisma.$ThreadLabelPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5511,6 +5773,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     account<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     emails<T extends Thread$emailsArgs<ExtArgs> = {}>(args?: Subset<T, Thread$emailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    threadLabels<T extends Thread$threadLabelsArgs<ExtArgs> = {}>(args?: Subset<T, Thread$threadLabelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5968,6 +6231,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmailScalarFieldEnum | EmailScalarFieldEnum[]
+  }
+
+  /**
+   * Thread.threadLabels
+   */
+  export type Thread$threadLabelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    where?: ThreadLabelWhereInput
+    orderBy?: ThreadLabelOrderByWithRelationInput | ThreadLabelOrderByWithRelationInput[]
+    cursor?: ThreadLabelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ThreadLabelScalarFieldEnum | ThreadLabelScalarFieldEnum[]
   }
 
   /**
@@ -17914,6 +18201,2160 @@ export namespace Prisma {
 
 
   /**
+   * Model UserLabel
+   */
+
+  export type AggregateUserLabel = {
+    _count: UserLabelCountAggregateOutputType | null
+    _min: UserLabelMinAggregateOutputType | null
+    _max: UserLabelMaxAggregateOutputType | null
+  }
+
+  export type UserLabelMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    description: string | null
+    color: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserLabelMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    name: string | null
+    description: string | null
+    color: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserLabelCountAggregateOutputType = {
+    id: number
+    userId: number
+    name: number
+    description: number
+    color: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserLabelMinAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    description?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserLabelMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    description?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserLabelCountAggregateInputType = {
+    id?: true
+    userId?: true
+    name?: true
+    description?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserLabelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserLabel to aggregate.
+     */
+    where?: UserLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLabels to fetch.
+     */
+    orderBy?: UserLabelOrderByWithRelationInput | UserLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLabels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserLabels
+    **/
+    _count?: true | UserLabelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserLabelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserLabelMaxAggregateInputType
+  }
+
+  export type GetUserLabelAggregateType<T extends UserLabelAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserLabel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserLabel[P]>
+      : GetScalarType<T[P], AggregateUserLabel[P]>
+  }
+
+
+
+
+  export type UserLabelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserLabelWhereInput
+    orderBy?: UserLabelOrderByWithAggregationInput | UserLabelOrderByWithAggregationInput[]
+    by: UserLabelScalarFieldEnum[] | UserLabelScalarFieldEnum
+    having?: UserLabelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserLabelCountAggregateInputType | true
+    _min?: UserLabelMinAggregateInputType
+    _max?: UserLabelMaxAggregateInputType
+  }
+
+  export type UserLabelGroupByOutputType = {
+    id: string
+    userId: string
+    name: string
+    description: string | null
+    color: string
+    createdAt: Date
+    updatedAt: Date
+    _count: UserLabelCountAggregateOutputType | null
+    _min: UserLabelMinAggregateOutputType | null
+    _max: UserLabelMaxAggregateOutputType | null
+  }
+
+  type GetUserLabelGroupByPayload<T extends UserLabelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserLabelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserLabelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserLabelGroupByOutputType[P]>
+            : GetScalarType<T[P], UserLabelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserLabelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    threadLabels?: boolean | UserLabel$threadLabelsArgs<ExtArgs>
+    _count?: boolean | UserLabelCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userLabel"]>
+
+  export type UserLabelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userLabel"]>
+
+  export type UserLabelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userLabel"]>
+
+  export type UserLabelSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserLabelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "description" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["userLabel"]>
+  export type UserLabelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    threadLabels?: boolean | UserLabel$threadLabelsArgs<ExtArgs>
+    _count?: boolean | UserLabelCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserLabelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserLabelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserLabelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserLabel"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      threadLabels: Prisma.$ThreadLabelPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      name: string
+      description: string | null
+      color: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userLabel"]>
+    composites: {}
+  }
+
+  type UserLabelGetPayload<S extends boolean | null | undefined | UserLabelDefaultArgs> = $Result.GetResult<Prisma.$UserLabelPayload, S>
+
+  type UserLabelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserLabelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserLabelCountAggregateInputType | true
+    }
+
+  export interface UserLabelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserLabel'], meta: { name: 'UserLabel' } }
+    /**
+     * Find zero or one UserLabel that matches the filter.
+     * @param {UserLabelFindUniqueArgs} args - Arguments to find a UserLabel
+     * @example
+     * // Get one UserLabel
+     * const userLabel = await prisma.userLabel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserLabelFindUniqueArgs>(args: SelectSubset<T, UserLabelFindUniqueArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserLabel that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserLabelFindUniqueOrThrowArgs} args - Arguments to find a UserLabel
+     * @example
+     * // Get one UserLabel
+     * const userLabel = await prisma.userLabel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserLabelFindUniqueOrThrowArgs>(args: SelectSubset<T, UserLabelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserLabel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelFindFirstArgs} args - Arguments to find a UserLabel
+     * @example
+     * // Get one UserLabel
+     * const userLabel = await prisma.userLabel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserLabelFindFirstArgs>(args?: SelectSubset<T, UserLabelFindFirstArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserLabel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelFindFirstOrThrowArgs} args - Arguments to find a UserLabel
+     * @example
+     * // Get one UserLabel
+     * const userLabel = await prisma.userLabel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserLabelFindFirstOrThrowArgs>(args?: SelectSubset<T, UserLabelFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserLabels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserLabels
+     * const userLabels = await prisma.userLabel.findMany()
+     * 
+     * // Get first 10 UserLabels
+     * const userLabels = await prisma.userLabel.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userLabelWithIdOnly = await prisma.userLabel.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserLabelFindManyArgs>(args?: SelectSubset<T, UserLabelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserLabel.
+     * @param {UserLabelCreateArgs} args - Arguments to create a UserLabel.
+     * @example
+     * // Create one UserLabel
+     * const UserLabel = await prisma.userLabel.create({
+     *   data: {
+     *     // ... data to create a UserLabel
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserLabelCreateArgs>(args: SelectSubset<T, UserLabelCreateArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserLabels.
+     * @param {UserLabelCreateManyArgs} args - Arguments to create many UserLabels.
+     * @example
+     * // Create many UserLabels
+     * const userLabel = await prisma.userLabel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserLabelCreateManyArgs>(args?: SelectSubset<T, UserLabelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserLabels and returns the data saved in the database.
+     * @param {UserLabelCreateManyAndReturnArgs} args - Arguments to create many UserLabels.
+     * @example
+     * // Create many UserLabels
+     * const userLabel = await prisma.userLabel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserLabels and only return the `id`
+     * const userLabelWithIdOnly = await prisma.userLabel.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserLabelCreateManyAndReturnArgs>(args?: SelectSubset<T, UserLabelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserLabel.
+     * @param {UserLabelDeleteArgs} args - Arguments to delete one UserLabel.
+     * @example
+     * // Delete one UserLabel
+     * const UserLabel = await prisma.userLabel.delete({
+     *   where: {
+     *     // ... filter to delete one UserLabel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserLabelDeleteArgs>(args: SelectSubset<T, UserLabelDeleteArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserLabel.
+     * @param {UserLabelUpdateArgs} args - Arguments to update one UserLabel.
+     * @example
+     * // Update one UserLabel
+     * const userLabel = await prisma.userLabel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserLabelUpdateArgs>(args: SelectSubset<T, UserLabelUpdateArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserLabels.
+     * @param {UserLabelDeleteManyArgs} args - Arguments to filter UserLabels to delete.
+     * @example
+     * // Delete a few UserLabels
+     * const { count } = await prisma.userLabel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserLabelDeleteManyArgs>(args?: SelectSubset<T, UserLabelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserLabels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserLabels
+     * const userLabel = await prisma.userLabel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserLabelUpdateManyArgs>(args: SelectSubset<T, UserLabelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserLabels and returns the data updated in the database.
+     * @param {UserLabelUpdateManyAndReturnArgs} args - Arguments to update many UserLabels.
+     * @example
+     * // Update many UserLabels
+     * const userLabel = await prisma.userLabel.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserLabels and only return the `id`
+     * const userLabelWithIdOnly = await prisma.userLabel.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserLabelUpdateManyAndReturnArgs>(args: SelectSubset<T, UserLabelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserLabel.
+     * @param {UserLabelUpsertArgs} args - Arguments to update or create a UserLabel.
+     * @example
+     * // Update or create a UserLabel
+     * const userLabel = await prisma.userLabel.upsert({
+     *   create: {
+     *     // ... data to create a UserLabel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserLabel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserLabelUpsertArgs>(args: SelectSubset<T, UserLabelUpsertArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserLabels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelCountArgs} args - Arguments to filter UserLabels to count.
+     * @example
+     * // Count the number of UserLabels
+     * const count = await prisma.userLabel.count({
+     *   where: {
+     *     // ... the filter for the UserLabels we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserLabelCountArgs>(
+      args?: Subset<T, UserLabelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserLabelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserLabel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserLabelAggregateArgs>(args: Subset<T, UserLabelAggregateArgs>): Prisma.PrismaPromise<GetUserLabelAggregateType<T>>
+
+    /**
+     * Group by UserLabel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserLabelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserLabelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserLabelGroupByArgs['orderBy'] }
+        : { orderBy?: UserLabelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserLabelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserLabelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserLabel model
+   */
+  readonly fields: UserLabelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserLabel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserLabelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    threadLabels<T extends UserLabel$threadLabelsArgs<ExtArgs> = {}>(args?: Subset<T, UserLabel$threadLabelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserLabel model
+   */
+  interface UserLabelFieldRefs {
+    readonly id: FieldRef<"UserLabel", 'String'>
+    readonly userId: FieldRef<"UserLabel", 'String'>
+    readonly name: FieldRef<"UserLabel", 'String'>
+    readonly description: FieldRef<"UserLabel", 'String'>
+    readonly color: FieldRef<"UserLabel", 'String'>
+    readonly createdAt: FieldRef<"UserLabel", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserLabel", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserLabel findUnique
+   */
+  export type UserLabelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLabel to fetch.
+     */
+    where: UserLabelWhereUniqueInput
+  }
+
+  /**
+   * UserLabel findUniqueOrThrow
+   */
+  export type UserLabelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLabel to fetch.
+     */
+    where: UserLabelWhereUniqueInput
+  }
+
+  /**
+   * UserLabel findFirst
+   */
+  export type UserLabelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLabel to fetch.
+     */
+    where?: UserLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLabels to fetch.
+     */
+    orderBy?: UserLabelOrderByWithRelationInput | UserLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserLabels.
+     */
+    cursor?: UserLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLabels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserLabels.
+     */
+    distinct?: UserLabelScalarFieldEnum | UserLabelScalarFieldEnum[]
+  }
+
+  /**
+   * UserLabel findFirstOrThrow
+   */
+  export type UserLabelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLabel to fetch.
+     */
+    where?: UserLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLabels to fetch.
+     */
+    orderBy?: UserLabelOrderByWithRelationInput | UserLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserLabels.
+     */
+    cursor?: UserLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLabels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserLabels.
+     */
+    distinct?: UserLabelScalarFieldEnum | UserLabelScalarFieldEnum[]
+  }
+
+  /**
+   * UserLabel findMany
+   */
+  export type UserLabelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which UserLabels to fetch.
+     */
+    where?: UserLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserLabels to fetch.
+     */
+    orderBy?: UserLabelOrderByWithRelationInput | UserLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserLabels.
+     */
+    cursor?: UserLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserLabels.
+     */
+    skip?: number
+    distinct?: UserLabelScalarFieldEnum | UserLabelScalarFieldEnum[]
+  }
+
+  /**
+   * UserLabel create
+   */
+  export type UserLabelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserLabel.
+     */
+    data: XOR<UserLabelCreateInput, UserLabelUncheckedCreateInput>
+  }
+
+  /**
+   * UserLabel createMany
+   */
+  export type UserLabelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserLabels.
+     */
+    data: UserLabelCreateManyInput | UserLabelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserLabel createManyAndReturn
+   */
+  export type UserLabelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserLabels.
+     */
+    data: UserLabelCreateManyInput | UserLabelCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserLabel update
+   */
+  export type UserLabelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserLabel.
+     */
+    data: XOR<UserLabelUpdateInput, UserLabelUncheckedUpdateInput>
+    /**
+     * Choose, which UserLabel to update.
+     */
+    where: UserLabelWhereUniqueInput
+  }
+
+  /**
+   * UserLabel updateMany
+   */
+  export type UserLabelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserLabels.
+     */
+    data: XOR<UserLabelUpdateManyMutationInput, UserLabelUncheckedUpdateManyInput>
+    /**
+     * Filter which UserLabels to update
+     */
+    where?: UserLabelWhereInput
+    /**
+     * Limit how many UserLabels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserLabel updateManyAndReturn
+   */
+  export type UserLabelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * The data used to update UserLabels.
+     */
+    data: XOR<UserLabelUpdateManyMutationInput, UserLabelUncheckedUpdateManyInput>
+    /**
+     * Filter which UserLabels to update
+     */
+    where?: UserLabelWhereInput
+    /**
+     * Limit how many UserLabels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserLabel upsert
+   */
+  export type UserLabelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserLabel to update in case it exists.
+     */
+    where: UserLabelWhereUniqueInput
+    /**
+     * In case the UserLabel found by the `where` argument doesn't exist, create a new UserLabel with this data.
+     */
+    create: XOR<UserLabelCreateInput, UserLabelUncheckedCreateInput>
+    /**
+     * In case the UserLabel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserLabelUpdateInput, UserLabelUncheckedUpdateInput>
+  }
+
+  /**
+   * UserLabel delete
+   */
+  export type UserLabelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+    /**
+     * Filter which UserLabel to delete.
+     */
+    where: UserLabelWhereUniqueInput
+  }
+
+  /**
+   * UserLabel deleteMany
+   */
+  export type UserLabelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserLabels to delete
+     */
+    where?: UserLabelWhereInput
+    /**
+     * Limit how many UserLabels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserLabel.threadLabels
+   */
+  export type UserLabel$threadLabelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    where?: ThreadLabelWhereInput
+    orderBy?: ThreadLabelOrderByWithRelationInput | ThreadLabelOrderByWithRelationInput[]
+    cursor?: ThreadLabelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ThreadLabelScalarFieldEnum | ThreadLabelScalarFieldEnum[]
+  }
+
+  /**
+   * UserLabel without action
+   */
+  export type UserLabelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserLabel
+     */
+    select?: UserLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserLabel
+     */
+    omit?: UserLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserLabelInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ThreadLabel
+   */
+
+  export type AggregateThreadLabel = {
+    _count: ThreadLabelCountAggregateOutputType | null
+    _min: ThreadLabelMinAggregateOutputType | null
+    _max: ThreadLabelMaxAggregateOutputType | null
+  }
+
+  export type ThreadLabelMinAggregateOutputType = {
+    id: string | null
+    threadId: string | null
+    labelId: string | null
+  }
+
+  export type ThreadLabelMaxAggregateOutputType = {
+    id: string | null
+    threadId: string | null
+    labelId: string | null
+  }
+
+  export type ThreadLabelCountAggregateOutputType = {
+    id: number
+    threadId: number
+    labelId: number
+    _all: number
+  }
+
+
+  export type ThreadLabelMinAggregateInputType = {
+    id?: true
+    threadId?: true
+    labelId?: true
+  }
+
+  export type ThreadLabelMaxAggregateInputType = {
+    id?: true
+    threadId?: true
+    labelId?: true
+  }
+
+  export type ThreadLabelCountAggregateInputType = {
+    id?: true
+    threadId?: true
+    labelId?: true
+    _all?: true
+  }
+
+  export type ThreadLabelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ThreadLabel to aggregate.
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ThreadLabels to fetch.
+     */
+    orderBy?: ThreadLabelOrderByWithRelationInput | ThreadLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ThreadLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ThreadLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ThreadLabels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ThreadLabels
+    **/
+    _count?: true | ThreadLabelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ThreadLabelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ThreadLabelMaxAggregateInputType
+  }
+
+  export type GetThreadLabelAggregateType<T extends ThreadLabelAggregateArgs> = {
+        [P in keyof T & keyof AggregateThreadLabel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateThreadLabel[P]>
+      : GetScalarType<T[P], AggregateThreadLabel[P]>
+  }
+
+
+
+
+  export type ThreadLabelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ThreadLabelWhereInput
+    orderBy?: ThreadLabelOrderByWithAggregationInput | ThreadLabelOrderByWithAggregationInput[]
+    by: ThreadLabelScalarFieldEnum[] | ThreadLabelScalarFieldEnum
+    having?: ThreadLabelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ThreadLabelCountAggregateInputType | true
+    _min?: ThreadLabelMinAggregateInputType
+    _max?: ThreadLabelMaxAggregateInputType
+  }
+
+  export type ThreadLabelGroupByOutputType = {
+    id: string
+    threadId: string
+    labelId: string
+    _count: ThreadLabelCountAggregateOutputType | null
+    _min: ThreadLabelMinAggregateOutputType | null
+    _max: ThreadLabelMaxAggregateOutputType | null
+  }
+
+  type GetThreadLabelGroupByPayload<T extends ThreadLabelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ThreadLabelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ThreadLabelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ThreadLabelGroupByOutputType[P]>
+            : GetScalarType<T[P], ThreadLabelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ThreadLabelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    labelId?: boolean
+    thread?: boolean | ThreadDefaultArgs<ExtArgs>
+    label?: boolean | UserLabelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["threadLabel"]>
+
+  export type ThreadLabelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    labelId?: boolean
+    thread?: boolean | ThreadDefaultArgs<ExtArgs>
+    label?: boolean | UserLabelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["threadLabel"]>
+
+  export type ThreadLabelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    threadId?: boolean
+    labelId?: boolean
+    thread?: boolean | ThreadDefaultArgs<ExtArgs>
+    label?: boolean | UserLabelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["threadLabel"]>
+
+  export type ThreadLabelSelectScalar = {
+    id?: boolean
+    threadId?: boolean
+    labelId?: boolean
+  }
+
+  export type ThreadLabelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "threadId" | "labelId", ExtArgs["result"]["threadLabel"]>
+  export type ThreadLabelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | ThreadDefaultArgs<ExtArgs>
+    label?: boolean | UserLabelDefaultArgs<ExtArgs>
+  }
+  export type ThreadLabelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | ThreadDefaultArgs<ExtArgs>
+    label?: boolean | UserLabelDefaultArgs<ExtArgs>
+  }
+  export type ThreadLabelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    thread?: boolean | ThreadDefaultArgs<ExtArgs>
+    label?: boolean | UserLabelDefaultArgs<ExtArgs>
+  }
+
+  export type $ThreadLabelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ThreadLabel"
+    objects: {
+      thread: Prisma.$ThreadPayload<ExtArgs>
+      label: Prisma.$UserLabelPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      threadId: string
+      labelId: string
+    }, ExtArgs["result"]["threadLabel"]>
+    composites: {}
+  }
+
+  type ThreadLabelGetPayload<S extends boolean | null | undefined | ThreadLabelDefaultArgs> = $Result.GetResult<Prisma.$ThreadLabelPayload, S>
+
+  type ThreadLabelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ThreadLabelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ThreadLabelCountAggregateInputType | true
+    }
+
+  export interface ThreadLabelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ThreadLabel'], meta: { name: 'ThreadLabel' } }
+    /**
+     * Find zero or one ThreadLabel that matches the filter.
+     * @param {ThreadLabelFindUniqueArgs} args - Arguments to find a ThreadLabel
+     * @example
+     * // Get one ThreadLabel
+     * const threadLabel = await prisma.threadLabel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ThreadLabelFindUniqueArgs>(args: SelectSubset<T, ThreadLabelFindUniqueArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ThreadLabel that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ThreadLabelFindUniqueOrThrowArgs} args - Arguments to find a ThreadLabel
+     * @example
+     * // Get one ThreadLabel
+     * const threadLabel = await prisma.threadLabel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ThreadLabelFindUniqueOrThrowArgs>(args: SelectSubset<T, ThreadLabelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ThreadLabel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelFindFirstArgs} args - Arguments to find a ThreadLabel
+     * @example
+     * // Get one ThreadLabel
+     * const threadLabel = await prisma.threadLabel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ThreadLabelFindFirstArgs>(args?: SelectSubset<T, ThreadLabelFindFirstArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ThreadLabel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelFindFirstOrThrowArgs} args - Arguments to find a ThreadLabel
+     * @example
+     * // Get one ThreadLabel
+     * const threadLabel = await prisma.threadLabel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ThreadLabelFindFirstOrThrowArgs>(args?: SelectSubset<T, ThreadLabelFindFirstOrThrowArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ThreadLabels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ThreadLabels
+     * const threadLabels = await prisma.threadLabel.findMany()
+     * 
+     * // Get first 10 ThreadLabels
+     * const threadLabels = await prisma.threadLabel.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const threadLabelWithIdOnly = await prisma.threadLabel.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ThreadLabelFindManyArgs>(args?: SelectSubset<T, ThreadLabelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ThreadLabel.
+     * @param {ThreadLabelCreateArgs} args - Arguments to create a ThreadLabel.
+     * @example
+     * // Create one ThreadLabel
+     * const ThreadLabel = await prisma.threadLabel.create({
+     *   data: {
+     *     // ... data to create a ThreadLabel
+     *   }
+     * })
+     * 
+     */
+    create<T extends ThreadLabelCreateArgs>(args: SelectSubset<T, ThreadLabelCreateArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ThreadLabels.
+     * @param {ThreadLabelCreateManyArgs} args - Arguments to create many ThreadLabels.
+     * @example
+     * // Create many ThreadLabels
+     * const threadLabel = await prisma.threadLabel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ThreadLabelCreateManyArgs>(args?: SelectSubset<T, ThreadLabelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ThreadLabels and returns the data saved in the database.
+     * @param {ThreadLabelCreateManyAndReturnArgs} args - Arguments to create many ThreadLabels.
+     * @example
+     * // Create many ThreadLabels
+     * const threadLabel = await prisma.threadLabel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ThreadLabels and only return the `id`
+     * const threadLabelWithIdOnly = await prisma.threadLabel.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ThreadLabelCreateManyAndReturnArgs>(args?: SelectSubset<T, ThreadLabelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ThreadLabel.
+     * @param {ThreadLabelDeleteArgs} args - Arguments to delete one ThreadLabel.
+     * @example
+     * // Delete one ThreadLabel
+     * const ThreadLabel = await prisma.threadLabel.delete({
+     *   where: {
+     *     // ... filter to delete one ThreadLabel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ThreadLabelDeleteArgs>(args: SelectSubset<T, ThreadLabelDeleteArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ThreadLabel.
+     * @param {ThreadLabelUpdateArgs} args - Arguments to update one ThreadLabel.
+     * @example
+     * // Update one ThreadLabel
+     * const threadLabel = await prisma.threadLabel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ThreadLabelUpdateArgs>(args: SelectSubset<T, ThreadLabelUpdateArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ThreadLabels.
+     * @param {ThreadLabelDeleteManyArgs} args - Arguments to filter ThreadLabels to delete.
+     * @example
+     * // Delete a few ThreadLabels
+     * const { count } = await prisma.threadLabel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ThreadLabelDeleteManyArgs>(args?: SelectSubset<T, ThreadLabelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ThreadLabels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ThreadLabels
+     * const threadLabel = await prisma.threadLabel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ThreadLabelUpdateManyArgs>(args: SelectSubset<T, ThreadLabelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ThreadLabels and returns the data updated in the database.
+     * @param {ThreadLabelUpdateManyAndReturnArgs} args - Arguments to update many ThreadLabels.
+     * @example
+     * // Update many ThreadLabels
+     * const threadLabel = await prisma.threadLabel.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ThreadLabels and only return the `id`
+     * const threadLabelWithIdOnly = await prisma.threadLabel.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ThreadLabelUpdateManyAndReturnArgs>(args: SelectSubset<T, ThreadLabelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ThreadLabel.
+     * @param {ThreadLabelUpsertArgs} args - Arguments to update or create a ThreadLabel.
+     * @example
+     * // Update or create a ThreadLabel
+     * const threadLabel = await prisma.threadLabel.upsert({
+     *   create: {
+     *     // ... data to create a ThreadLabel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ThreadLabel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ThreadLabelUpsertArgs>(args: SelectSubset<T, ThreadLabelUpsertArgs<ExtArgs>>): Prisma__ThreadLabelClient<$Result.GetResult<Prisma.$ThreadLabelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ThreadLabels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelCountArgs} args - Arguments to filter ThreadLabels to count.
+     * @example
+     * // Count the number of ThreadLabels
+     * const count = await prisma.threadLabel.count({
+     *   where: {
+     *     // ... the filter for the ThreadLabels we want to count
+     *   }
+     * })
+    **/
+    count<T extends ThreadLabelCountArgs>(
+      args?: Subset<T, ThreadLabelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ThreadLabelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ThreadLabel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ThreadLabelAggregateArgs>(args: Subset<T, ThreadLabelAggregateArgs>): Prisma.PrismaPromise<GetThreadLabelAggregateType<T>>
+
+    /**
+     * Group by ThreadLabel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ThreadLabelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ThreadLabelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ThreadLabelGroupByArgs['orderBy'] }
+        : { orderBy?: ThreadLabelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ThreadLabelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetThreadLabelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ThreadLabel model
+   */
+  readonly fields: ThreadLabelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ThreadLabel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ThreadLabelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    thread<T extends ThreadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ThreadDefaultArgs<ExtArgs>>): Prisma__ThreadClient<$Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    label<T extends UserLabelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserLabelDefaultArgs<ExtArgs>>): Prisma__UserLabelClient<$Result.GetResult<Prisma.$UserLabelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ThreadLabel model
+   */
+  interface ThreadLabelFieldRefs {
+    readonly id: FieldRef<"ThreadLabel", 'String'>
+    readonly threadId: FieldRef<"ThreadLabel", 'String'>
+    readonly labelId: FieldRef<"ThreadLabel", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ThreadLabel findUnique
+   */
+  export type ThreadLabelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which ThreadLabel to fetch.
+     */
+    where: ThreadLabelWhereUniqueInput
+  }
+
+  /**
+   * ThreadLabel findUniqueOrThrow
+   */
+  export type ThreadLabelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which ThreadLabel to fetch.
+     */
+    where: ThreadLabelWhereUniqueInput
+  }
+
+  /**
+   * ThreadLabel findFirst
+   */
+  export type ThreadLabelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which ThreadLabel to fetch.
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ThreadLabels to fetch.
+     */
+    orderBy?: ThreadLabelOrderByWithRelationInput | ThreadLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ThreadLabels.
+     */
+    cursor?: ThreadLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ThreadLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ThreadLabels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ThreadLabels.
+     */
+    distinct?: ThreadLabelScalarFieldEnum | ThreadLabelScalarFieldEnum[]
+  }
+
+  /**
+   * ThreadLabel findFirstOrThrow
+   */
+  export type ThreadLabelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which ThreadLabel to fetch.
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ThreadLabels to fetch.
+     */
+    orderBy?: ThreadLabelOrderByWithRelationInput | ThreadLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ThreadLabels.
+     */
+    cursor?: ThreadLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ThreadLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ThreadLabels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ThreadLabels.
+     */
+    distinct?: ThreadLabelScalarFieldEnum | ThreadLabelScalarFieldEnum[]
+  }
+
+  /**
+   * ThreadLabel findMany
+   */
+  export type ThreadLabelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * Filter, which ThreadLabels to fetch.
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ThreadLabels to fetch.
+     */
+    orderBy?: ThreadLabelOrderByWithRelationInput | ThreadLabelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ThreadLabels.
+     */
+    cursor?: ThreadLabelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ThreadLabels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ThreadLabels.
+     */
+    skip?: number
+    distinct?: ThreadLabelScalarFieldEnum | ThreadLabelScalarFieldEnum[]
+  }
+
+  /**
+   * ThreadLabel create
+   */
+  export type ThreadLabelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ThreadLabel.
+     */
+    data: XOR<ThreadLabelCreateInput, ThreadLabelUncheckedCreateInput>
+  }
+
+  /**
+   * ThreadLabel createMany
+   */
+  export type ThreadLabelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ThreadLabels.
+     */
+    data: ThreadLabelCreateManyInput | ThreadLabelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ThreadLabel createManyAndReturn
+   */
+  export type ThreadLabelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * The data used to create many ThreadLabels.
+     */
+    data: ThreadLabelCreateManyInput | ThreadLabelCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ThreadLabel update
+   */
+  export type ThreadLabelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ThreadLabel.
+     */
+    data: XOR<ThreadLabelUpdateInput, ThreadLabelUncheckedUpdateInput>
+    /**
+     * Choose, which ThreadLabel to update.
+     */
+    where: ThreadLabelWhereUniqueInput
+  }
+
+  /**
+   * ThreadLabel updateMany
+   */
+  export type ThreadLabelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ThreadLabels.
+     */
+    data: XOR<ThreadLabelUpdateManyMutationInput, ThreadLabelUncheckedUpdateManyInput>
+    /**
+     * Filter which ThreadLabels to update
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * Limit how many ThreadLabels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ThreadLabel updateManyAndReturn
+   */
+  export type ThreadLabelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * The data used to update ThreadLabels.
+     */
+    data: XOR<ThreadLabelUpdateManyMutationInput, ThreadLabelUncheckedUpdateManyInput>
+    /**
+     * Filter which ThreadLabels to update
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * Limit how many ThreadLabels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ThreadLabel upsert
+   */
+  export type ThreadLabelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ThreadLabel to update in case it exists.
+     */
+    where: ThreadLabelWhereUniqueInput
+    /**
+     * In case the ThreadLabel found by the `where` argument doesn't exist, create a new ThreadLabel with this data.
+     */
+    create: XOR<ThreadLabelCreateInput, ThreadLabelUncheckedCreateInput>
+    /**
+     * In case the ThreadLabel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ThreadLabelUpdateInput, ThreadLabelUncheckedUpdateInput>
+  }
+
+  /**
+   * ThreadLabel delete
+   */
+  export type ThreadLabelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+    /**
+     * Filter which ThreadLabel to delete.
+     */
+    where: ThreadLabelWhereUniqueInput
+  }
+
+  /**
+   * ThreadLabel deleteMany
+   */
+  export type ThreadLabelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ThreadLabels to delete
+     */
+    where?: ThreadLabelWhereInput
+    /**
+     * Limit how many ThreadLabels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ThreadLabel without action
+   */
+  export type ThreadLabelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ThreadLabel
+     */
+    select?: ThreadLabelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ThreadLabel
+     */
+    omit?: ThreadLabelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ThreadLabelInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -18147,6 +20588,28 @@ export namespace Prisma {
   export type SyncedItemScalarFieldEnum = (typeof SyncedItemScalarFieldEnum)[keyof typeof SyncedItemScalarFieldEnum]
 
 
+  export const UserLabelScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    name: 'name',
+    description: 'description',
+    color: 'color',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserLabelScalarFieldEnum = (typeof UserLabelScalarFieldEnum)[keyof typeof UserLabelScalarFieldEnum]
+
+
+  export const ThreadLabelScalarFieldEnum: {
+    id: 'id',
+    threadId: 'threadId',
+    labelId: 'labelId'
+  };
+
+  export type ThreadLabelScalarFieldEnum = (typeof ThreadLabelScalarFieldEnum)[keyof typeof ThreadLabelScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -18352,6 +20815,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
     appConnections?: AppConnectionListRelationFilter
+    labels?: UserLabelListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -18367,6 +20831,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackOrderByRelationAggregateInput
     chatAttachments?: ChatAttachmentOrderByRelationAggregateInput
     appConnections?: AppConnectionOrderByRelationAggregateInput
+    labels?: UserLabelOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -18385,6 +20850,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackListRelationFilter
     chatAttachments?: ChatAttachmentListRelationFilter
     appConnections?: AppConnectionListRelationFilter
+    labels?: UserLabelListRelationFilter
   }, "id" | "emailAddress">
 
   export type UserOrderByWithAggregationInput = {
@@ -18524,6 +20990,7 @@ export namespace Prisma {
     junkStatus?: BoolFilter<"Thread"> | boolean
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     emails?: EmailListRelationFilter
+    threadLabels?: ThreadLabelListRelationFilter
   }
 
   export type ThreadOrderByWithRelationInput = {
@@ -18540,6 +21007,7 @@ export namespace Prisma {
     junkStatus?: SortOrder
     account?: AccountOrderByWithRelationInput
     emails?: EmailOrderByRelationAggregateInput
+    threadLabels?: ThreadLabelOrderByRelationAggregateInput
   }
 
   export type ThreadWhereUniqueInput = Prisma.AtLeast<{
@@ -18559,6 +21027,7 @@ export namespace Prisma {
     junkStatus?: BoolFilter<"Thread"> | boolean
     account?: XOR<AccountScalarRelationFilter, AccountWhereInput>
     emails?: EmailListRelationFilter
+    threadLabels?: ThreadLabelListRelationFilter
   }, "id">
 
   export type ThreadOrderByWithAggregationInput = {
@@ -19526,6 +21995,123 @@ export namespace Prisma {
     embeddings?: FloatNullableListFilter<"SyncedItem">
   }
 
+  export type UserLabelWhereInput = {
+    AND?: UserLabelWhereInput | UserLabelWhereInput[]
+    OR?: UserLabelWhereInput[]
+    NOT?: UserLabelWhereInput | UserLabelWhereInput[]
+    id?: StringFilter<"UserLabel"> | string
+    userId?: StringFilter<"UserLabel"> | string
+    name?: StringFilter<"UserLabel"> | string
+    description?: StringNullableFilter<"UserLabel"> | string | null
+    color?: StringFilter<"UserLabel"> | string
+    createdAt?: DateTimeFilter<"UserLabel"> | Date | string
+    updatedAt?: DateTimeFilter<"UserLabel"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    threadLabels?: ThreadLabelListRelationFilter
+  }
+
+  export type UserLabelOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    threadLabels?: ThreadLabelOrderByRelationAggregateInput
+  }
+
+  export type UserLabelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: UserLabelWhereInput | UserLabelWhereInput[]
+    OR?: UserLabelWhereInput[]
+    NOT?: UserLabelWhereInput | UserLabelWhereInput[]
+    userId?: StringFilter<"UserLabel"> | string
+    name?: StringFilter<"UserLabel"> | string
+    description?: StringNullableFilter<"UserLabel"> | string | null
+    color?: StringFilter<"UserLabel"> | string
+    createdAt?: DateTimeFilter<"UserLabel"> | Date | string
+    updatedAt?: DateTimeFilter<"UserLabel"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    threadLabels?: ThreadLabelListRelationFilter
+  }, "id">
+
+  export type UserLabelOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserLabelCountOrderByAggregateInput
+    _max?: UserLabelMaxOrderByAggregateInput
+    _min?: UserLabelMinOrderByAggregateInput
+  }
+
+  export type UserLabelScalarWhereWithAggregatesInput = {
+    AND?: UserLabelScalarWhereWithAggregatesInput | UserLabelScalarWhereWithAggregatesInput[]
+    OR?: UserLabelScalarWhereWithAggregatesInput[]
+    NOT?: UserLabelScalarWhereWithAggregatesInput | UserLabelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserLabel"> | string
+    userId?: StringWithAggregatesFilter<"UserLabel"> | string
+    name?: StringWithAggregatesFilter<"UserLabel"> | string
+    description?: StringNullableWithAggregatesFilter<"UserLabel"> | string | null
+    color?: StringWithAggregatesFilter<"UserLabel"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"UserLabel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserLabel"> | Date | string
+  }
+
+  export type ThreadLabelWhereInput = {
+    AND?: ThreadLabelWhereInput | ThreadLabelWhereInput[]
+    OR?: ThreadLabelWhereInput[]
+    NOT?: ThreadLabelWhereInput | ThreadLabelWhereInput[]
+    id?: StringFilter<"ThreadLabel"> | string
+    threadId?: StringFilter<"ThreadLabel"> | string
+    labelId?: StringFilter<"ThreadLabel"> | string
+    thread?: XOR<ThreadScalarRelationFilter, ThreadWhereInput>
+    label?: XOR<UserLabelScalarRelationFilter, UserLabelWhereInput>
+  }
+
+  export type ThreadLabelOrderByWithRelationInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    labelId?: SortOrder
+    thread?: ThreadOrderByWithRelationInput
+    label?: UserLabelOrderByWithRelationInput
+  }
+
+  export type ThreadLabelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    threadId_labelId?: ThreadLabelThreadIdLabelIdCompoundUniqueInput
+    AND?: ThreadLabelWhereInput | ThreadLabelWhereInput[]
+    OR?: ThreadLabelWhereInput[]
+    NOT?: ThreadLabelWhereInput | ThreadLabelWhereInput[]
+    threadId?: StringFilter<"ThreadLabel"> | string
+    labelId?: StringFilter<"ThreadLabel"> | string
+    thread?: XOR<ThreadScalarRelationFilter, ThreadWhereInput>
+    label?: XOR<UserLabelScalarRelationFilter, UserLabelWhereInput>
+  }, "id" | "threadId_labelId">
+
+  export type ThreadLabelOrderByWithAggregationInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    labelId?: SortOrder
+    _count?: ThreadLabelCountOrderByAggregateInput
+    _max?: ThreadLabelMaxOrderByAggregateInput
+    _min?: ThreadLabelMinOrderByAggregateInput
+  }
+
+  export type ThreadLabelScalarWhereWithAggregatesInput = {
+    AND?: ThreadLabelScalarWhereWithAggregatesInput | ThreadLabelScalarWhereWithAggregatesInput[]
+    OR?: ThreadLabelScalarWhereWithAggregatesInput[]
+    NOT?: ThreadLabelScalarWhereWithAggregatesInput | ThreadLabelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ThreadLabel"> | string
+    threadId?: StringWithAggregatesFilter<"ThreadLabel"> | string
+    labelId?: StringWithAggregatesFilter<"ThreadLabel"> | string
+  }
+
   export type UserCreateInput = {
     id: string
     emailAddress: string
@@ -19539,6 +22125,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -19554,6 +22141,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -19569,6 +22157,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -19584,6 +22173,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -19736,6 +22326,7 @@ export namespace Prisma {
     junkStatus?: boolean
     account: AccountCreateNestedOneWithoutThreadsInput
     emails?: EmailCreateNestedManyWithoutThreadInput
+    threadLabels?: ThreadLabelCreateNestedManyWithoutThreadInput
   }
 
   export type ThreadUncheckedCreateInput = {
@@ -19751,6 +22342,7 @@ export namespace Prisma {
     spamStatus?: boolean
     junkStatus?: boolean
     emails?: EmailUncheckedCreateNestedManyWithoutThreadInput
+    threadLabels?: ThreadLabelUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type ThreadUpdateInput = {
@@ -19766,6 +22358,7 @@ export namespace Prisma {
     junkStatus?: BoolFieldUpdateOperationsInput | boolean
     account?: AccountUpdateOneRequiredWithoutThreadsNestedInput
     emails?: EmailUpdateManyWithoutThreadNestedInput
+    threadLabels?: ThreadLabelUpdateManyWithoutThreadNestedInput
   }
 
   export type ThreadUncheckedUpdateInput = {
@@ -19781,6 +22374,7 @@ export namespace Prisma {
     spamStatus?: BoolFieldUpdateOperationsInput | boolean
     junkStatus?: BoolFieldUpdateOperationsInput | boolean
     emails?: EmailUncheckedUpdateManyWithoutThreadNestedInput
+    threadLabels?: ThreadLabelUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type ThreadCreateManyInput = {
@@ -20870,6 +23464,119 @@ export namespace Prisma {
     embeddings?: SyncedItemUpdateembeddingsInput | number[]
   }
 
+  export type UserLabelCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutLabelsInput
+    threadLabels?: ThreadLabelCreateNestedManyWithoutLabelInput
+  }
+
+  export type UserLabelUncheckedCreateInput = {
+    id?: string
+    userId: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threadLabels?: ThreadLabelUncheckedCreateNestedManyWithoutLabelInput
+  }
+
+  export type UserLabelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLabelsNestedInput
+    threadLabels?: ThreadLabelUpdateManyWithoutLabelNestedInput
+  }
+
+  export type UserLabelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threadLabels?: ThreadLabelUncheckedUpdateManyWithoutLabelNestedInput
+  }
+
+  export type UserLabelCreateManyInput = {
+    id?: string
+    userId: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserLabelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserLabelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ThreadLabelCreateInput = {
+    id?: string
+    thread: ThreadCreateNestedOneWithoutThreadLabelsInput
+    label: UserLabelCreateNestedOneWithoutThreadLabelsInput
+  }
+
+  export type ThreadLabelUncheckedCreateInput = {
+    id?: string
+    threadId: string
+    labelId: string
+  }
+
+  export type ThreadLabelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    thread?: ThreadUpdateOneRequiredWithoutThreadLabelsNestedInput
+    label?: UserLabelUpdateOneRequiredWithoutThreadLabelsNestedInput
+  }
+
+  export type ThreadLabelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    labelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ThreadLabelCreateManyInput = {
+    id?: string
+    threadId: string
+    labelId: string
+  }
+
+  export type ThreadLabelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ThreadLabelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+    labelId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -20941,6 +23648,12 @@ export namespace Prisma {
     none?: AppConnectionWhereInput
   }
 
+  export type UserLabelListRelationFilter = {
+    every?: UserLabelWhereInput
+    some?: UserLabelWhereInput
+    none?: UserLabelWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -20967,6 +23680,10 @@ export namespace Prisma {
   }
 
   export type AppConnectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserLabelOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -21163,7 +23880,17 @@ export namespace Prisma {
     none?: EmailWhereInput
   }
 
+  export type ThreadLabelListRelationFilter = {
+    every?: ThreadLabelWhereInput
+    some?: ThreadLabelWhereInput
+    none?: ThreadLabelWhereInput
+  }
+
   export type EmailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ThreadLabelOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -21988,6 +24715,64 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type UserLabelCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserLabelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserLabelMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserLabelScalarRelationFilter = {
+    is?: UserLabelWhereInput
+    isNot?: UserLabelWhereInput
+  }
+
+  export type ThreadLabelThreadIdLabelIdCompoundUniqueInput = {
+    threadId: string
+    labelId: string
+  }
+
+  export type ThreadLabelCountOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    labelId?: SortOrder
+  }
+
+  export type ThreadLabelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    labelId?: SortOrder
+  }
+
+  export type ThreadLabelMinOrderByAggregateInput = {
+    id?: SortOrder
+    threadId?: SortOrder
+    labelId?: SortOrder
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -22036,6 +24821,13 @@ export namespace Prisma {
     connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
   }
 
+  export type UserLabelCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserLabelCreateWithoutUserInput, UserLabelUncheckedCreateWithoutUserInput> | UserLabelCreateWithoutUserInput[] | UserLabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLabelCreateOrConnectWithoutUserInput | UserLabelCreateOrConnectWithoutUserInput[]
+    createMany?: UserLabelCreateManyUserInputEnvelope
+    connect?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -22082,6 +24874,13 @@ export namespace Prisma {
     connectOrCreate?: AppConnectionCreateOrConnectWithoutUserInput | AppConnectionCreateOrConnectWithoutUserInput[]
     createMany?: AppConnectionCreateManyUserInputEnvelope
     connect?: AppConnectionWhereUniqueInput | AppConnectionWhereUniqueInput[]
+  }
+
+  export type UserLabelUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserLabelCreateWithoutUserInput, UserLabelUncheckedCreateWithoutUserInput> | UserLabelCreateWithoutUserInput[] | UserLabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLabelCreateOrConnectWithoutUserInput | UserLabelCreateOrConnectWithoutUserInput[]
+    createMany?: UserLabelCreateManyUserInputEnvelope
+    connect?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -22186,6 +24985,20 @@ export namespace Prisma {
     deleteMany?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
   }
 
+  export type UserLabelUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserLabelCreateWithoutUserInput, UserLabelUncheckedCreateWithoutUserInput> | UserLabelCreateWithoutUserInput[] | UserLabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLabelCreateOrConnectWithoutUserInput | UserLabelCreateOrConnectWithoutUserInput[]
+    upsert?: UserLabelUpsertWithWhereUniqueWithoutUserInput | UserLabelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserLabelCreateManyUserInputEnvelope
+    set?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    disconnect?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    delete?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    connect?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    update?: UserLabelUpdateWithWhereUniqueWithoutUserInput | UserLabelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserLabelUpdateManyWithWhereWithoutUserInput | UserLabelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserLabelScalarWhereInput | UserLabelScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -22278,6 +25091,20 @@ export namespace Prisma {
     update?: AppConnectionUpdateWithWhereUniqueWithoutUserInput | AppConnectionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AppConnectionUpdateManyWithWhereWithoutUserInput | AppConnectionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AppConnectionScalarWhereInput | AppConnectionScalarWhereInput[]
+  }
+
+  export type UserLabelUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserLabelCreateWithoutUserInput, UserLabelUncheckedCreateWithoutUserInput> | UserLabelCreateWithoutUserInput[] | UserLabelUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserLabelCreateOrConnectWithoutUserInput | UserLabelCreateOrConnectWithoutUserInput[]
+    upsert?: UserLabelUpsertWithWhereUniqueWithoutUserInput | UserLabelUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserLabelCreateManyUserInputEnvelope
+    set?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    disconnect?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    delete?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    connect?: UserLabelWhereUniqueInput | UserLabelWhereUniqueInput[]
+    update?: UserLabelUpdateWithWhereUniqueWithoutUserInput | UserLabelUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserLabelUpdateManyWithWhereWithoutUserInput | UserLabelUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserLabelScalarWhereInput | UserLabelScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutAccountsInput = {
@@ -22483,11 +25310,25 @@ export namespace Prisma {
     connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
   }
 
+  export type ThreadLabelCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ThreadLabelCreateWithoutThreadInput, ThreadLabelUncheckedCreateWithoutThreadInput> | ThreadLabelCreateWithoutThreadInput[] | ThreadLabelUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutThreadInput | ThreadLabelCreateOrConnectWithoutThreadInput[]
+    createMany?: ThreadLabelCreateManyThreadInputEnvelope
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+  }
+
   export type EmailUncheckedCreateNestedManyWithoutThreadInput = {
     create?: XOR<EmailCreateWithoutThreadInput, EmailUncheckedCreateWithoutThreadInput> | EmailCreateWithoutThreadInput[] | EmailUncheckedCreateWithoutThreadInput[]
     connectOrCreate?: EmailCreateOrConnectWithoutThreadInput | EmailCreateOrConnectWithoutThreadInput[]
     createMany?: EmailCreateManyThreadInputEnvelope
     connect?: EmailWhereUniqueInput | EmailWhereUniqueInput[]
+  }
+
+  export type ThreadLabelUncheckedCreateNestedManyWithoutThreadInput = {
+    create?: XOR<ThreadLabelCreateWithoutThreadInput, ThreadLabelUncheckedCreateWithoutThreadInput> | ThreadLabelCreateWithoutThreadInput[] | ThreadLabelUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutThreadInput | ThreadLabelCreateOrConnectWithoutThreadInput[]
+    createMany?: ThreadLabelCreateManyThreadInputEnvelope
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -22525,6 +25366,20 @@ export namespace Prisma {
     deleteMany?: EmailScalarWhereInput | EmailScalarWhereInput[]
   }
 
+  export type ThreadLabelUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ThreadLabelCreateWithoutThreadInput, ThreadLabelUncheckedCreateWithoutThreadInput> | ThreadLabelCreateWithoutThreadInput[] | ThreadLabelUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutThreadInput | ThreadLabelCreateOrConnectWithoutThreadInput[]
+    upsert?: ThreadLabelUpsertWithWhereUniqueWithoutThreadInput | ThreadLabelUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ThreadLabelCreateManyThreadInputEnvelope
+    set?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    disconnect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    delete?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    update?: ThreadLabelUpdateWithWhereUniqueWithoutThreadInput | ThreadLabelUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ThreadLabelUpdateManyWithWhereWithoutThreadInput | ThreadLabelUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ThreadLabelScalarWhereInput | ThreadLabelScalarWhereInput[]
+  }
+
   export type EmailUncheckedUpdateManyWithoutThreadNestedInput = {
     create?: XOR<EmailCreateWithoutThreadInput, EmailUncheckedCreateWithoutThreadInput> | EmailCreateWithoutThreadInput[] | EmailUncheckedCreateWithoutThreadInput[]
     connectOrCreate?: EmailCreateOrConnectWithoutThreadInput | EmailCreateOrConnectWithoutThreadInput[]
@@ -22537,6 +25392,20 @@ export namespace Prisma {
     update?: EmailUpdateWithWhereUniqueWithoutThreadInput | EmailUpdateWithWhereUniqueWithoutThreadInput[]
     updateMany?: EmailUpdateManyWithWhereWithoutThreadInput | EmailUpdateManyWithWhereWithoutThreadInput[]
     deleteMany?: EmailScalarWhereInput | EmailScalarWhereInput[]
+  }
+
+  export type ThreadLabelUncheckedUpdateManyWithoutThreadNestedInput = {
+    create?: XOR<ThreadLabelCreateWithoutThreadInput, ThreadLabelUncheckedCreateWithoutThreadInput> | ThreadLabelCreateWithoutThreadInput[] | ThreadLabelUncheckedCreateWithoutThreadInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutThreadInput | ThreadLabelCreateOrConnectWithoutThreadInput[]
+    upsert?: ThreadLabelUpsertWithWhereUniqueWithoutThreadInput | ThreadLabelUpsertWithWhereUniqueWithoutThreadInput[]
+    createMany?: ThreadLabelCreateManyThreadInputEnvelope
+    set?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    disconnect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    delete?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    update?: ThreadLabelUpdateWithWhereUniqueWithoutThreadInput | ThreadLabelUpdateWithWhereUniqueWithoutThreadInput[]
+    updateMany?: ThreadLabelUpdateManyWithWhereWithoutThreadInput | ThreadLabelUpdateManyWithWhereWithoutThreadInput[]
+    deleteMany?: ThreadLabelScalarWhereInput | ThreadLabelScalarWhereInput[]
   }
 
   export type EmailCreatesysLabelsInput = {
@@ -23269,6 +26138,90 @@ export namespace Prisma {
     update?: XOR<XOR<AppConnectionUpdateToOneWithWhereWithoutSyncedItemsInput, AppConnectionUpdateWithoutSyncedItemsInput>, AppConnectionUncheckedUpdateWithoutSyncedItemsInput>
   }
 
+  export type UserCreateNestedOneWithoutLabelsInput = {
+    create?: XOR<UserCreateWithoutLabelsInput, UserUncheckedCreateWithoutLabelsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLabelsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ThreadLabelCreateNestedManyWithoutLabelInput = {
+    create?: XOR<ThreadLabelCreateWithoutLabelInput, ThreadLabelUncheckedCreateWithoutLabelInput> | ThreadLabelCreateWithoutLabelInput[] | ThreadLabelUncheckedCreateWithoutLabelInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutLabelInput | ThreadLabelCreateOrConnectWithoutLabelInput[]
+    createMany?: ThreadLabelCreateManyLabelInputEnvelope
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+  }
+
+  export type ThreadLabelUncheckedCreateNestedManyWithoutLabelInput = {
+    create?: XOR<ThreadLabelCreateWithoutLabelInput, ThreadLabelUncheckedCreateWithoutLabelInput> | ThreadLabelCreateWithoutLabelInput[] | ThreadLabelUncheckedCreateWithoutLabelInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutLabelInput | ThreadLabelCreateOrConnectWithoutLabelInput[]
+    createMany?: ThreadLabelCreateManyLabelInputEnvelope
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutLabelsNestedInput = {
+    create?: XOR<UserCreateWithoutLabelsInput, UserUncheckedCreateWithoutLabelsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLabelsInput
+    upsert?: UserUpsertWithoutLabelsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLabelsInput, UserUpdateWithoutLabelsInput>, UserUncheckedUpdateWithoutLabelsInput>
+  }
+
+  export type ThreadLabelUpdateManyWithoutLabelNestedInput = {
+    create?: XOR<ThreadLabelCreateWithoutLabelInput, ThreadLabelUncheckedCreateWithoutLabelInput> | ThreadLabelCreateWithoutLabelInput[] | ThreadLabelUncheckedCreateWithoutLabelInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutLabelInput | ThreadLabelCreateOrConnectWithoutLabelInput[]
+    upsert?: ThreadLabelUpsertWithWhereUniqueWithoutLabelInput | ThreadLabelUpsertWithWhereUniqueWithoutLabelInput[]
+    createMany?: ThreadLabelCreateManyLabelInputEnvelope
+    set?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    disconnect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    delete?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    update?: ThreadLabelUpdateWithWhereUniqueWithoutLabelInput | ThreadLabelUpdateWithWhereUniqueWithoutLabelInput[]
+    updateMany?: ThreadLabelUpdateManyWithWhereWithoutLabelInput | ThreadLabelUpdateManyWithWhereWithoutLabelInput[]
+    deleteMany?: ThreadLabelScalarWhereInput | ThreadLabelScalarWhereInput[]
+  }
+
+  export type ThreadLabelUncheckedUpdateManyWithoutLabelNestedInput = {
+    create?: XOR<ThreadLabelCreateWithoutLabelInput, ThreadLabelUncheckedCreateWithoutLabelInput> | ThreadLabelCreateWithoutLabelInput[] | ThreadLabelUncheckedCreateWithoutLabelInput[]
+    connectOrCreate?: ThreadLabelCreateOrConnectWithoutLabelInput | ThreadLabelCreateOrConnectWithoutLabelInput[]
+    upsert?: ThreadLabelUpsertWithWhereUniqueWithoutLabelInput | ThreadLabelUpsertWithWhereUniqueWithoutLabelInput[]
+    createMany?: ThreadLabelCreateManyLabelInputEnvelope
+    set?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    disconnect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    delete?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    connect?: ThreadLabelWhereUniqueInput | ThreadLabelWhereUniqueInput[]
+    update?: ThreadLabelUpdateWithWhereUniqueWithoutLabelInput | ThreadLabelUpdateWithWhereUniqueWithoutLabelInput[]
+    updateMany?: ThreadLabelUpdateManyWithWhereWithoutLabelInput | ThreadLabelUpdateManyWithWhereWithoutLabelInput[]
+    deleteMany?: ThreadLabelScalarWhereInput | ThreadLabelScalarWhereInput[]
+  }
+
+  export type ThreadCreateNestedOneWithoutThreadLabelsInput = {
+    create?: XOR<ThreadCreateWithoutThreadLabelsInput, ThreadUncheckedCreateWithoutThreadLabelsInput>
+    connectOrCreate?: ThreadCreateOrConnectWithoutThreadLabelsInput
+    connect?: ThreadWhereUniqueInput
+  }
+
+  export type UserLabelCreateNestedOneWithoutThreadLabelsInput = {
+    create?: XOR<UserLabelCreateWithoutThreadLabelsInput, UserLabelUncheckedCreateWithoutThreadLabelsInput>
+    connectOrCreate?: UserLabelCreateOrConnectWithoutThreadLabelsInput
+    connect?: UserLabelWhereUniqueInput
+  }
+
+  export type ThreadUpdateOneRequiredWithoutThreadLabelsNestedInput = {
+    create?: XOR<ThreadCreateWithoutThreadLabelsInput, ThreadUncheckedCreateWithoutThreadLabelsInput>
+    connectOrCreate?: ThreadCreateOrConnectWithoutThreadLabelsInput
+    upsert?: ThreadUpsertWithoutThreadLabelsInput
+    connect?: ThreadWhereUniqueInput
+    update?: XOR<XOR<ThreadUpdateToOneWithWhereWithoutThreadLabelsInput, ThreadUpdateWithoutThreadLabelsInput>, ThreadUncheckedUpdateWithoutThreadLabelsInput>
+  }
+
+  export type UserLabelUpdateOneRequiredWithoutThreadLabelsNestedInput = {
+    create?: XOR<UserLabelCreateWithoutThreadLabelsInput, UserLabelUncheckedCreateWithoutThreadLabelsInput>
+    connectOrCreate?: UserLabelCreateOrConnectWithoutThreadLabelsInput
+    upsert?: UserLabelUpsertWithoutThreadLabelsInput
+    connect?: UserLabelWhereUniqueInput
+    update?: XOR<XOR<UserLabelUpdateToOneWithWhereWithoutThreadLabelsInput, UserLabelUpdateWithoutThreadLabelsInput>, UserLabelUncheckedUpdateWithoutThreadLabelsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -23839,6 +26792,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserLabelCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threadLabels?: ThreadLabelCreateNestedManyWithoutLabelInput
+  }
+
+  export type UserLabelUncheckedCreateWithoutUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    threadLabels?: ThreadLabelUncheckedCreateNestedManyWithoutLabelInput
+  }
+
+  export type UserLabelCreateOrConnectWithoutUserInput = {
+    where: UserLabelWhereUniqueInput
+    create: XOR<UserLabelCreateWithoutUserInput, UserLabelUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserLabelCreateManyUserInputEnvelope = {
+    data: UserLabelCreateManyUserInput | UserLabelCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -24066,6 +27049,35 @@ export namespace Prisma {
     syncFrequency?: StringFilter<"AppConnection"> | string
   }
 
+  export type UserLabelUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserLabelWhereUniqueInput
+    update: XOR<UserLabelUpdateWithoutUserInput, UserLabelUncheckedUpdateWithoutUserInput>
+    create: XOR<UserLabelCreateWithoutUserInput, UserLabelUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserLabelUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserLabelWhereUniqueInput
+    data: XOR<UserLabelUpdateWithoutUserInput, UserLabelUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserLabelUpdateManyWithWhereWithoutUserInput = {
+    where: UserLabelScalarWhereInput
+    data: XOR<UserLabelUpdateManyMutationInput, UserLabelUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserLabelScalarWhereInput = {
+    AND?: UserLabelScalarWhereInput | UserLabelScalarWhereInput[]
+    OR?: UserLabelScalarWhereInput[]
+    NOT?: UserLabelScalarWhereInput | UserLabelScalarWhereInput[]
+    id?: StringFilter<"UserLabel"> | string
+    userId?: StringFilter<"UserLabel"> | string
+    name?: StringFilter<"UserLabel"> | string
+    description?: StringNullableFilter<"UserLabel"> | string | null
+    color?: StringFilter<"UserLabel"> | string
+    createdAt?: DateTimeFilter<"UserLabel"> | Date | string
+    updatedAt?: DateTimeFilter<"UserLabel"> | Date | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     id: string
     emailAddress: string
@@ -24078,6 +27090,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -24092,6 +27105,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -24111,6 +27125,7 @@ export namespace Prisma {
     spamStatus?: boolean
     junkStatus?: boolean
     emails?: EmailCreateNestedManyWithoutThreadInput
+    threadLabels?: ThreadLabelCreateNestedManyWithoutThreadInput
   }
 
   export type ThreadUncheckedCreateWithoutAccountInput = {
@@ -24125,6 +27140,7 @@ export namespace Prisma {
     spamStatus?: boolean
     junkStatus?: boolean
     emails?: EmailUncheckedCreateNestedManyWithoutThreadInput
+    threadLabels?: ThreadLabelUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type ThreadCreateOrConnectWithoutAccountInput = {
@@ -24276,6 +27292,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -24290,6 +27307,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ThreadUpsertWithWhereUniqueWithoutAccountInput = {
@@ -24501,6 +27519,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ThreadLabelCreateWithoutThreadInput = {
+    id?: string
+    label: UserLabelCreateNestedOneWithoutThreadLabelsInput
+  }
+
+  export type ThreadLabelUncheckedCreateWithoutThreadInput = {
+    id?: string
+    labelId: string
+  }
+
+  export type ThreadLabelCreateOrConnectWithoutThreadInput = {
+    where: ThreadLabelWhereUniqueInput
+    create: XOR<ThreadLabelCreateWithoutThreadInput, ThreadLabelUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ThreadLabelCreateManyThreadInputEnvelope = {
+    data: ThreadLabelCreateManyThreadInput | ThreadLabelCreateManyThreadInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithoutThreadsInput = {
     update: XOR<AccountUpdateWithoutThreadsInput, AccountUncheckedUpdateWithoutThreadsInput>
     create: XOR<AccountCreateWithoutThreadsInput, AccountUncheckedCreateWithoutThreadsInput>
@@ -24595,6 +27633,31 @@ export namespace Prisma {
     autoReplyDraft?: StringNullableFilter<"Email"> | string | null
   }
 
+  export type ThreadLabelUpsertWithWhereUniqueWithoutThreadInput = {
+    where: ThreadLabelWhereUniqueInput
+    update: XOR<ThreadLabelUpdateWithoutThreadInput, ThreadLabelUncheckedUpdateWithoutThreadInput>
+    create: XOR<ThreadLabelCreateWithoutThreadInput, ThreadLabelUncheckedCreateWithoutThreadInput>
+  }
+
+  export type ThreadLabelUpdateWithWhereUniqueWithoutThreadInput = {
+    where: ThreadLabelWhereUniqueInput
+    data: XOR<ThreadLabelUpdateWithoutThreadInput, ThreadLabelUncheckedUpdateWithoutThreadInput>
+  }
+
+  export type ThreadLabelUpdateManyWithWhereWithoutThreadInput = {
+    where: ThreadLabelScalarWhereInput
+    data: XOR<ThreadLabelUpdateManyMutationInput, ThreadLabelUncheckedUpdateManyWithoutThreadInput>
+  }
+
+  export type ThreadLabelScalarWhereInput = {
+    AND?: ThreadLabelScalarWhereInput | ThreadLabelScalarWhereInput[]
+    OR?: ThreadLabelScalarWhereInput[]
+    NOT?: ThreadLabelScalarWhereInput | ThreadLabelScalarWhereInput[]
+    id?: StringFilter<"ThreadLabel"> | string
+    threadId?: StringFilter<"ThreadLabel"> | string
+    labelId?: StringFilter<"ThreadLabel"> | string
+  }
+
   export type ThreadCreateWithoutEmailsInput = {
     id?: string
     subject: string
@@ -24607,6 +27670,7 @@ export namespace Prisma {
     spamStatus?: boolean
     junkStatus?: boolean
     account: AccountCreateNestedOneWithoutThreadsInput
+    threadLabels?: ThreadLabelCreateNestedManyWithoutThreadInput
   }
 
   export type ThreadUncheckedCreateWithoutEmailsInput = {
@@ -24621,6 +27685,7 @@ export namespace Prisma {
     sentStatus?: boolean
     spamStatus?: boolean
     junkStatus?: boolean
+    threadLabels?: ThreadLabelUncheckedCreateNestedManyWithoutThreadInput
   }
 
   export type ThreadCreateOrConnectWithoutEmailsInput = {
@@ -24828,6 +27893,7 @@ export namespace Prisma {
     spamStatus?: BoolFieldUpdateOperationsInput | boolean
     junkStatus?: BoolFieldUpdateOperationsInput | boolean
     account?: AccountUpdateOneRequiredWithoutThreadsNestedInput
+    threadLabels?: ThreadLabelUpdateManyWithoutThreadNestedInput
   }
 
   export type ThreadUncheckedUpdateWithoutEmailsInput = {
@@ -24842,6 +27908,7 @@ export namespace Prisma {
     sentStatus?: BoolFieldUpdateOperationsInput | boolean
     spamStatus?: BoolFieldUpdateOperationsInput | boolean
     junkStatus?: BoolFieldUpdateOperationsInput | boolean
+    threadLabels?: ThreadLabelUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type EmailAddressUpsertWithoutSentEmailsInput = {
@@ -25672,6 +28739,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatbotInteractionsInput = {
@@ -25686,6 +28754,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatbotInteractionsInput = {
@@ -25716,6 +28785,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatbotInteractionsInput = {
@@ -25730,6 +28800,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStripeSubscriptionInput = {
@@ -25744,6 +28815,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStripeSubscriptionInput = {
@@ -25758,6 +28830,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStripeSubscriptionInput = {
@@ -25788,6 +28861,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStripeSubscriptionInput = {
@@ -25802,6 +28876,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutChatFeedbackInput = {
@@ -25816,6 +28891,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatFeedbackInput = {
@@ -25830,6 +28906,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatFeedbackInput = {
@@ -25860,6 +28937,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatFeedbackInput = {
@@ -25874,6 +28952,7 @@ export namespace Prisma {
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutInstantReplyFeedbackInput = {
@@ -25888,6 +28967,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInstantReplyFeedbackInput = {
@@ -25902,6 +28982,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInstantReplyFeedbackInput = {
@@ -25932,6 +29013,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInstantReplyFeedbackInput = {
@@ -25946,6 +29028,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutChatAttachmentsInput = {
@@ -25960,6 +29043,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutChatAttachmentsInput = {
@@ -25974,6 +29058,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutChatAttachmentsInput = {
@@ -26043,6 +29128,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutChatAttachmentsInput = {
@@ -26057,6 +29143,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutChatAttachmentsInput = {
@@ -26116,6 +29203,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    labels?: UserLabelCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAppConnectionsInput = {
@@ -26130,6 +29218,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
     chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    labels?: UserLabelUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAppConnectionsInput = {
@@ -26237,6 +29326,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAppConnectionsInput = {
@@ -26251,6 +29341,7 @@ export namespace Prisma {
     chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
     instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
     chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    labels?: UserLabelUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountUpsertWithoutAppConnectionsInput = {
@@ -26416,6 +29507,250 @@ export namespace Prisma {
     syncFrequency?: StringFieldUpdateOperationsInput | string
   }
 
+  export type UserCreateWithoutLabelsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutLabelsInput = {
+    id: string
+    emailAddress: string
+    firstName: string
+    lastName: string
+    imageUrl?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    stripeSubscription?: StripeSubscriptionUncheckedCreateNestedOneWithoutUserInput
+    chatbotInteractions?: ChatbotInteractionUncheckedCreateNestedManyWithoutUserInput
+    chatFeedback?: ChatFeedbackUncheckedCreateNestedManyWithoutUserInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedCreateNestedManyWithoutUserInput
+    chatAttachments?: ChatAttachmentUncheckedCreateNestedManyWithoutUserInput
+    appConnections?: AppConnectionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutLabelsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLabelsInput, UserUncheckedCreateWithoutLabelsInput>
+  }
+
+  export type ThreadLabelCreateWithoutLabelInput = {
+    id?: string
+    thread: ThreadCreateNestedOneWithoutThreadLabelsInput
+  }
+
+  export type ThreadLabelUncheckedCreateWithoutLabelInput = {
+    id?: string
+    threadId: string
+  }
+
+  export type ThreadLabelCreateOrConnectWithoutLabelInput = {
+    where: ThreadLabelWhereUniqueInput
+    create: XOR<ThreadLabelCreateWithoutLabelInput, ThreadLabelUncheckedCreateWithoutLabelInput>
+  }
+
+  export type ThreadLabelCreateManyLabelInputEnvelope = {
+    data: ThreadLabelCreateManyLabelInput | ThreadLabelCreateManyLabelInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutLabelsInput = {
+    update: XOR<UserUpdateWithoutLabelsInput, UserUncheckedUpdateWithoutLabelsInput>
+    create: XOR<UserCreateWithoutLabelsInput, UserUncheckedCreateWithoutLabelsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLabelsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLabelsInput, UserUncheckedUpdateWithoutLabelsInput>
+  }
+
+  export type UserUpdateWithoutLabelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLabelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    emailAddress?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    stripeSubscription?: StripeSubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    chatbotInteractions?: ChatbotInteractionUncheckedUpdateManyWithoutUserNestedInput
+    chatFeedback?: ChatFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    instantReplyFeedback?: InstantReplyFeedbackUncheckedUpdateManyWithoutUserNestedInput
+    chatAttachments?: ChatAttachmentUncheckedUpdateManyWithoutUserNestedInput
+    appConnections?: AppConnectionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ThreadLabelUpsertWithWhereUniqueWithoutLabelInput = {
+    where: ThreadLabelWhereUniqueInput
+    update: XOR<ThreadLabelUpdateWithoutLabelInput, ThreadLabelUncheckedUpdateWithoutLabelInput>
+    create: XOR<ThreadLabelCreateWithoutLabelInput, ThreadLabelUncheckedCreateWithoutLabelInput>
+  }
+
+  export type ThreadLabelUpdateWithWhereUniqueWithoutLabelInput = {
+    where: ThreadLabelWhereUniqueInput
+    data: XOR<ThreadLabelUpdateWithoutLabelInput, ThreadLabelUncheckedUpdateWithoutLabelInput>
+  }
+
+  export type ThreadLabelUpdateManyWithWhereWithoutLabelInput = {
+    where: ThreadLabelScalarWhereInput
+    data: XOR<ThreadLabelUpdateManyMutationInput, ThreadLabelUncheckedUpdateManyWithoutLabelInput>
+  }
+
+  export type ThreadCreateWithoutThreadLabelsInput = {
+    id?: string
+    subject: string
+    lastMessageDate: Date | string
+    participantIds?: ThreadCreateparticipantIdsInput | string[]
+    done?: boolean
+    inboxStatus?: boolean
+    draftStatus?: boolean
+    sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
+    account: AccountCreateNestedOneWithoutThreadsInput
+    emails?: EmailCreateNestedManyWithoutThreadInput
+  }
+
+  export type ThreadUncheckedCreateWithoutThreadLabelsInput = {
+    id?: string
+    subject: string
+    lastMessageDate: Date | string
+    participantIds?: ThreadCreateparticipantIdsInput | string[]
+    accountId: string
+    done?: boolean
+    inboxStatus?: boolean
+    draftStatus?: boolean
+    sentStatus?: boolean
+    spamStatus?: boolean
+    junkStatus?: boolean
+    emails?: EmailUncheckedCreateNestedManyWithoutThreadInput
+  }
+
+  export type ThreadCreateOrConnectWithoutThreadLabelsInput = {
+    where: ThreadWhereUniqueInput
+    create: XOR<ThreadCreateWithoutThreadLabelsInput, ThreadUncheckedCreateWithoutThreadLabelsInput>
+  }
+
+  export type UserLabelCreateWithoutThreadLabelsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutLabelsInput
+  }
+
+  export type UserLabelUncheckedCreateWithoutThreadLabelsInput = {
+    id?: string
+    userId: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserLabelCreateOrConnectWithoutThreadLabelsInput = {
+    where: UserLabelWhereUniqueInput
+    create: XOR<UserLabelCreateWithoutThreadLabelsInput, UserLabelUncheckedCreateWithoutThreadLabelsInput>
+  }
+
+  export type ThreadUpsertWithoutThreadLabelsInput = {
+    update: XOR<ThreadUpdateWithoutThreadLabelsInput, ThreadUncheckedUpdateWithoutThreadLabelsInput>
+    create: XOR<ThreadCreateWithoutThreadLabelsInput, ThreadUncheckedCreateWithoutThreadLabelsInput>
+    where?: ThreadWhereInput
+  }
+
+  export type ThreadUpdateToOneWithWhereWithoutThreadLabelsInput = {
+    where?: ThreadWhereInput
+    data: XOR<ThreadUpdateWithoutThreadLabelsInput, ThreadUncheckedUpdateWithoutThreadLabelsInput>
+  }
+
+  export type ThreadUpdateWithoutThreadLabelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    lastMessageDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    participantIds?: ThreadUpdateparticipantIdsInput | string[]
+    done?: BoolFieldUpdateOperationsInput | boolean
+    inboxStatus?: BoolFieldUpdateOperationsInput | boolean
+    draftStatus?: BoolFieldUpdateOperationsInput | boolean
+    sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
+    account?: AccountUpdateOneRequiredWithoutThreadsNestedInput
+    emails?: EmailUpdateManyWithoutThreadNestedInput
+  }
+
+  export type ThreadUncheckedUpdateWithoutThreadLabelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    subject?: StringFieldUpdateOperationsInput | string
+    lastMessageDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    participantIds?: ThreadUpdateparticipantIdsInput | string[]
+    accountId?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
+    inboxStatus?: BoolFieldUpdateOperationsInput | boolean
+    draftStatus?: BoolFieldUpdateOperationsInput | boolean
+    sentStatus?: BoolFieldUpdateOperationsInput | boolean
+    spamStatus?: BoolFieldUpdateOperationsInput | boolean
+    junkStatus?: BoolFieldUpdateOperationsInput | boolean
+    emails?: EmailUncheckedUpdateManyWithoutThreadNestedInput
+  }
+
+  export type UserLabelUpsertWithoutThreadLabelsInput = {
+    update: XOR<UserLabelUpdateWithoutThreadLabelsInput, UserLabelUncheckedUpdateWithoutThreadLabelsInput>
+    create: XOR<UserLabelCreateWithoutThreadLabelsInput, UserLabelUncheckedCreateWithoutThreadLabelsInput>
+    where?: UserLabelWhereInput
+  }
+
+  export type UserLabelUpdateToOneWithWhereWithoutThreadLabelsInput = {
+    where?: UserLabelWhereInput
+    data: XOR<UserLabelUpdateWithoutThreadLabelsInput, UserLabelUncheckedUpdateWithoutThreadLabelsInput>
+  }
+
+  export type UserLabelUpdateWithoutThreadLabelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLabelsNestedInput
+  }
+
+  export type UserLabelUncheckedUpdateWithoutThreadLabelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AccountCreateManyUserInput = {
     id?: string
     accessToken: string
@@ -26492,6 +29827,15 @@ export namespace Prisma {
     syncError?: string | null
     enabled?: boolean
     syncFrequency?: string
+  }
+
+  export type UserLabelCreateManyUserInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -26738,6 +30082,35 @@ export namespace Prisma {
     syncFrequency?: StringFieldUpdateOperationsInput | string
   }
 
+  export type UserLabelUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threadLabels?: ThreadLabelUpdateManyWithoutLabelNestedInput
+  }
+
+  export type UserLabelUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    threadLabels?: ThreadLabelUncheckedUpdateManyWithoutLabelNestedInput
+  }
+
+  export type UserLabelUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ThreadCreateManyAccountInput = {
     id?: string
     subject: string
@@ -26800,6 +30173,7 @@ export namespace Prisma {
     spamStatus?: BoolFieldUpdateOperationsInput | boolean
     junkStatus?: BoolFieldUpdateOperationsInput | boolean
     emails?: EmailUpdateManyWithoutThreadNestedInput
+    threadLabels?: ThreadLabelUpdateManyWithoutThreadNestedInput
   }
 
   export type ThreadUncheckedUpdateWithoutAccountInput = {
@@ -26814,6 +30188,7 @@ export namespace Prisma {
     spamStatus?: BoolFieldUpdateOperationsInput | boolean
     junkStatus?: BoolFieldUpdateOperationsInput | boolean
     emails?: EmailUncheckedUpdateManyWithoutThreadNestedInput
+    threadLabels?: ThreadLabelUncheckedUpdateManyWithoutThreadNestedInput
   }
 
   export type ThreadUncheckedUpdateManyWithoutAccountInput = {
@@ -26981,6 +30356,11 @@ export namespace Prisma {
     autoReplyDraft?: string | null
   }
 
+  export type ThreadLabelCreateManyThreadInput = {
+    id?: string
+    labelId: string
+  }
+
   export type EmailUpdateWithoutThreadInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdTime?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27076,6 +30456,21 @@ export namespace Prisma {
     emailLabel?: EnumEmailLabelFieldUpdateOperationsInput | $Enums.EmailLabel
     priority?: EnumEmailPriorityFieldUpdateOperationsInput | $Enums.EmailPriority
     autoReplyDraft?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ThreadLabelUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    label?: UserLabelUpdateOneRequiredWithoutThreadLabelsNestedInput
+  }
+
+  export type ThreadLabelUncheckedUpdateWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    labelId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ThreadLabelUncheckedUpdateManyWithoutThreadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    labelId?: StringFieldUpdateOperationsInput | string
   }
 
   export type EmailAttachmentCreateManyEmailInput = {
@@ -27822,6 +31217,26 @@ export namespace Prisma {
     modifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     indexedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     embeddings?: SyncedItemUpdateembeddingsInput | number[]
+  }
+
+  export type ThreadLabelCreateManyLabelInput = {
+    id?: string
+    threadId: string
+  }
+
+  export type ThreadLabelUpdateWithoutLabelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    thread?: ThreadUpdateOneRequiredWithoutThreadLabelsNestedInput
+  }
+
+  export type ThreadLabelUncheckedUpdateWithoutLabelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ThreadLabelUncheckedUpdateManyWithoutLabelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    threadId?: StringFieldUpdateOperationsInput | string
   }
 
 

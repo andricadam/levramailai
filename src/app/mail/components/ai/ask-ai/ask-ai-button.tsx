@@ -1,12 +1,22 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 import AskAI from './ask-ai'
 
 const AskAIButton = () => {
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Prevent hydration mismatch by only rendering on client
+  if (!mounted) {
+    return null
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

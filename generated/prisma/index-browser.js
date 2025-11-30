@@ -302,6 +302,22 @@ exports.Prisma.SyncedItemScalarFieldEnum = {
   embeddings: 'embeddings'
 };
 
+exports.Prisma.UserLabelScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ThreadLabelScalarFieldEnum = {
+  id: 'id',
+  threadId: 'threadId',
+  labelId: 'labelId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -369,7 +385,9 @@ exports.Prisma.ModelName = {
   InstantReplyFeedback: 'InstantReplyFeedback',
   ChatAttachment: 'ChatAttachment',
   AppConnection: 'AppConnection',
-  SyncedItem: 'SyncedItem'
+  SyncedItem: 'SyncedItem',
+  UserLabel: 'UserLabel',
+  ThreadLabel: 'ThreadLabel'
 };
 
 /**

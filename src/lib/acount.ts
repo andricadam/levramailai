@@ -196,13 +196,26 @@ export class Account {
         }
 
         while (response.nextPageToken) {
-            response = await this.getUpdatedEmails({ 
-                deltaToken: storedDeltaToken || undefined,
-                pageToken: response.nextPageToken 
-            })
-            allEmails = allEmails.concat(response.records)
-            if (response.nextDeltaToken) {
-                storedDeltaToken = response.nextDeltaToken
+            // Add delay between pagination requests to avoid rate limits
+            // Gmail allows ~50 requests/second, so we'll add a small delay
+            await new Promise(resolve => setTimeout(resolve, 100))
+            
+            try {
+                response = await this.getUpdatedEmails({ 
+                    deltaToken: storedDeltaToken || undefined,
+                    pageToken: response.nextPageToken 
+                })
+                allEmails = allEmails.concat(response.records)
+                if (response.nextDeltaToken) {
+                    storedDeltaToken = response.nextDeltaToken
+                }
+            } catch (error) {
+                // If we hit rate limits during pagination, stop and use what we have
+                if (axios.isAxiosError(error) && error.response?.status === 429) {
+                    console.warn('Rate limit hit during pagination. Stopping sync and using emails fetched so far.')
+                    break
+                }
+                throw error
             }
         }
 

@@ -156,6 +156,11 @@ export const accountRouter = createTRPCRouter({
                         sentAt: true,
                         priority: true,
                     }
+                },
+                threadLabels: {
+                    include: {
+                        label: true,
+                    }
                 }
             }, 
             take: 15,

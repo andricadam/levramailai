@@ -4,6 +4,7 @@ import { postRouter } from "@/server/api/routers/post";
 import { searchRouter } from "@/server/api/routers/search";
 import { integrationsRouter } from "@/server/api/routers/integrations";
 import { calendarRouter } from "@/server/api/routers/calendar";
+import { labelsRouter } from "@/server/api/routers/labels";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   search: searchRouter,
   integrations: integrationsRouter,
   calendar: calendarRouter,
+  labels: labelsRouter,
 });
 
 // export type definition of API

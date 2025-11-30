@@ -90,10 +90,10 @@ const Mail = ({ defaultLayout = [20,32,48], navCollapsedSize, defaultCollapsed }
                         </div>
                         <Separator />
                         <SearchBar />
-                        <TabsContent value="inbox" className='flex-1 overflow-y-auto min-h-0'>
+                        <TabsContent value="inbox" className='flex-1 overflow-y-auto overflow-x-hidden min-h-0'>
                             <ThreadList />
                         </TabsContent>
-                        <TabsContent value="done" className='flex-1 overflow-y-auto min-h-0'>
+                        <TabsContent value="done" className='flex-1 overflow-y-auto overflow-x-hidden min-h-0'>
                             <ThreadList />
                         </TabsContent>
                     </Tabs>

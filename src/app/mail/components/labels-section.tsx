@@ -5,6 +5,7 @@ import { Plus, ChevronDown, MoreVertical, Palette, Edit, Trash2, Check, Tag } fr
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import NewLabelDialog from './new-label-dialog'
+import { api } from '@/trpc/react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,7 +20,7 @@ import {
 type Label = {
     id: string
     name: string
-    description?: string
+    description?: string | null
     color?: string
 }
 
@@ -52,29 +53,45 @@ const LABEL_COLORS = [
 const LabelsSection = ({ isCollapsed }: Props) => {
     const [open, setOpen] = React.useState(false)
     const [editingLabel, setEditingLabel] = React.useState<Label | null>(null)
-    const [labels, setLabels] = React.useState<Label[]>([])
     const [showMore, setShowMore] = React.useState(false)
 
-    // For now, we'll just store labels in state
-    // Later this will be connected to a backend/API
-    const handleCreateLabel = (name: string, description: string) => {
-        if (editingLabel) {
-            // Update existing label
-            setLabels(labels.map(l => 
-                l.id === editingLabel.id 
-                    ? { ...l, name, description }
-                    : l
-            ))
+    const utils = api.useUtils()
+    const { data: labels = [], isLoading } = api.labels.getLabels.useQuery()
+    const createLabel = api.labels.createLabel.useMutation({
+        onSuccess: () => {
+            utils.labels.getLabels.invalidate()
+            setOpen(false)
+        }
+    })
+    const updateLabel = api.labels.updateLabel.useMutation({
+        onSuccess: () => {
+            utils.labels.getLabels.invalidate()
             setEditingLabel(null)
-        } else {
-            // Create new label
-            const newLabel: Label = {
-                id: Date.now().toString(),
+            setOpen(false)
+        }
+    })
+    const deleteLabel = api.labels.deleteLabel.useMutation({
+        onSuccess: () => {
+            utils.labels.getLabels.invalidate()
+        }
+    })
+
+    const handleCreateLabel = (name: string, description: string, color?: string) => {
+        if (editingLabel) {
+            // Update existing label - only update color if explicitly provided
+            updateLabel.mutate({
+                id: editingLabel.id,
                 name,
                 description,
-                color: '#6b7280', // Default gray color
-            }
-            setLabels([...labels, newLabel])
+                ...(color && { color }),
+            })
+        } else {
+            // Create new label
+            createLabel.mutate({
+                name,
+                description,
+                color: color || '#6b7280',
+            })
         }
     }
 
@@ -84,15 +101,19 @@ const LabelsSection = ({ isCollapsed }: Props) => {
     }
 
     const handleDeleteLabel = (labelId: string) => {
-        setLabels(labels.filter(l => l.id !== labelId))
+        if (confirm('Are you sure you want to delete this label?')) {
+            deleteLabel.mutate({ id: labelId })
+        }
     }
 
     const handleColorChange = (labelId: string, color: string) => {
-        setLabels(labels.map(l => 
-            l.id === labelId 
-                ? { ...l, color }
-                : l
-        ))
+        const label = labels.find(l => l.id === labelId)
+        if (label) {
+            updateLabel.mutate({
+                id: labelId,
+                color,
+            })
+        }
     }
 
     const handleDialogClose = (newOpen: boolean) => {
@@ -141,7 +162,11 @@ const LabelsSection = ({ isCollapsed }: Props) => {
                 </Button>
             </div>
             <div className="px-2 space-y-0.5">
-                {displayedLabels.length === 0 ? (
+                {isLoading ? (
+                    <p className="text-sm text-muted-foreground px-2 py-1">
+                        Loading...
+                    </p>
+                ) : displayedLabels.length === 0 ? (
                     <p className="text-sm text-muted-foreground px-2 py-1">
                         No labels yet
                     </p>

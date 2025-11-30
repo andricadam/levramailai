@@ -23,6 +23,18 @@ import { Separator } from '@/components/ui/separator'
 
 type Thread = RouterOutputs["account"]["getThreads"][number]
 
+const getPriorityBadgeVariant = (priority: 'high' | 'medium' | 'low' | undefined): ComponentProps<typeof Badge>['variant'] => {
+    if (priority === 'high') return 'destructive'
+    if (priority === 'low') return 'secondary'
+    return 'default' // medium
+}
+
+const getPriorityLabel = (priority: 'high' | 'medium' | 'low' | undefined): string => {
+    if (priority === 'high') return 'High'
+    if (priority === 'low') return 'Low'
+    return 'Medium'
+}
+
 const ThreadList = () => {
     const { threads, isFetching, threadId, setThreadId } = useThreads()
     const [mounted, setMounted] = React.useState(false)
@@ -109,8 +121,8 @@ const ThreadList = () => {
     }
 
     return (
-        <div className='w-full h-full'>
-            <div className='flex flex-col gap-2 p-4 pt-0'>
+        <div className='w-full h-full overflow-hidden'>
+            <div className='flex flex-col gap-2 p-2 pt-0 w-full'>
                 {Object.entries(groupedThreads).map(([date, threads]) => (
                     <React.Fragment key={date}>
                         <div className='text-xs font-medium text-muted-foreground mt-5 first:mt-0'>
@@ -262,24 +274,24 @@ const ThreadList = () => {
                                                 }}
                                                 onClick={() => setThreadId(thread.id)}
                                                 className={cn(
-                                                    'flex items-center gap-4 rounded-lg border p-3 text-left text-sm transition-all w-full',
+                                                    'flex items-center gap-1.5 rounded-lg border p-2 text-left text-sm transition-all w-full max-w-full overflow-hidden',
                                                     'bg-[#fafafa] hover:bg-[#f0f0f0]',
                                                     threadId === thread.id && 'bg-accent'
                                                 )}
                                             >
                                                 {/* Left: Sender Name - Fixed Width */}
-                                                <div className='font-semibold flex-shrink-0 w-[140px] truncate'>
+                                                <div className='font-semibold flex-shrink-0 w-[80px] truncate text-xs'>
                                                     {thread.emails.at(-1)?.from?.name || 'Unknown'}
                                                 </div>
                                                 
                                                 {/* Center: Subject and Preview - Fixed alignment */}
-                                                <div className='flex-1 flex flex-col gap-1 min-w-0'>
+                                                <div className='flex-1 flex flex-col gap-0.5 min-w-0'>
                                                     {thread.subject && (
-                                                        <div className='text-sm font-medium truncate'>{thread.subject}</div>
+                                                        <div className='text-xs font-medium truncate'>{thread.subject}</div>
                                                     )}
                                                     {thread.emails.at(-1)?.bodySnippet && (
                                                         <div 
-                                                            className='text-xs line-clamp-1 text-muted-foreground truncate'
+                                                            className='text-[10px] line-clamp-1 text-muted-foreground truncate'
                                                             dangerouslySetInnerHTML={{
                                                                 __html: DOMPurify.sanitize(thread.emails.at(-1)?.bodySnippet ?? "", { USE_PROFILES: { html: true } })
                                                             }}
@@ -288,13 +300,35 @@ const ThreadList = () => {
                                                     )}
                                                 </div>
                                                 
-                                                {/* Space for labels (for future implementation) */}
-                                                <div className='flex-shrink-0 w-0'>
-                                                    {/* Labels will go here later */}
+                                                {/* Labels: User Label (top) and Priority Label (bottom) - Stacked vertically */}
+                                                <div className='flex-shrink-0 flex flex-col gap-0.5 items-center justify-center w-[50px]'>
+                                                    {/* User Label - Display on top if exists */}
+                                                    {thread.threadLabels && thread.threadLabels.length > 0 && thread.threadLabels[0]?.label && (
+                                                        <Badge 
+                                                            variant="secondary"
+                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight'
+                                                            style={{ 
+                                                                backgroundColor: thread.threadLabels[0].label.color || undefined,
+                                                                color: thread.threadLabels[0].label.color ? '#fff' : undefined
+                                                            }}
+                                                        >
+                                                            {thread.threadLabels[0].label.name}
+                                                        </Badge>
+                                                    )}
+                                                    
+                                                    {/* Priority Label - Display below user label */}
+                                                    {thread.emails.at(-1)?.priority && (
+                                                        <Badge 
+                                                            variant={getPriorityBadgeVariant(thread.emails.at(-1)?.priority)}
+                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight'
+                                                        >
+                                                            {getPriorityLabel(thread.emails.at(-1)?.priority)}
+                                                        </Badge>
+                                                    )}
                                                 </div>
                                                 
                                                 {/* Right: Action Icons (shown on hover) or Date/Time */}
-                                                <div className='flex-shrink-0 flex items-center gap-1 w-[80px] justify-end'>
+                                                <div className='flex-shrink-0 flex items-center gap-1 w-[55px] justify-end'>
                                                     {isHovered ? (
                                                         <div 
                                                             className='flex items-center gap-1' 
@@ -377,14 +411,14 @@ const ThreadList = () => {
                                                             </Tooltip>
                                                         </div>
                                                     ) : (
-                                                        <div className='text-right'>
+                                                        <div className='text-right min-w-0'>
                                                             {dateInfo.showTime ? (
                                                                 <div className='flex flex-col items-end'>
-                                                                    <div className='text-xs font-medium'>{dateInfo.day}</div>
-                                                                    <div className='text-xs text-muted-foreground'>{dateInfo.time}</div>
+                                                                    <div className='text-[10px] font-medium leading-tight'>{dateInfo.day}</div>
+                                                                    <div className='text-[10px] text-muted-foreground leading-tight'>{dateInfo.time}</div>
                                                                 </div>
                                                             ) : (
-                                                                <div className='text-xs text-muted-foreground'>{dateInfo.date}</div>
+                                                                <div className='text-[10px] text-muted-foreground leading-tight'>{dateInfo.date}</div>
                                                             )}
                                                         </div>
                                                     )}

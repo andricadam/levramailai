@@ -69,12 +69,16 @@ export class GmailAPI {
             // Rate limit exceeded
             const retryAfter = error.response.headers['retry-after']
               ? parseInt(error.response.headers['retry-after'])
-              : Math.pow(2, attempt) // Exponential backoff: 2s, 4s, 8s
+              : Math.pow(2, attempt) // Exponential backoff: 2s, 4s, 8s, 16s
             
             if (attempt < retries) {
-              console.warn(`Gmail API rate limit hit. Retrying after ${retryAfter}s (attempt ${attempt + 1}/${retries})...`)
+              console.warn(`Gmail API rate limit hit. Retrying after ${retryAfter}s (attempt ${attempt + 1}/${retries + 1})...`)
               await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
               continue
+            } else {
+              // All retries exhausted
+              console.error(`Gmail API rate limit exceeded after ${retries + 1} attempts. Please try again later.`)
+              throw error
             }
           } else if (error.response?.status === 403) {
             // Forbidden - likely token issue or insufficient permissions

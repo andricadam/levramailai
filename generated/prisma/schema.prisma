@@ -25,6 +25,7 @@ model User {
   instantReplyFeedback InstantReplyFeedback[]
   chatAttachments      ChatAttachment[]
   appConnections       AppConnection[]
+  labels               UserLabel[]
 }
 
 model Account {
@@ -68,7 +69,8 @@ model Thread {
   spamStatus  Boolean @default(false)
   junkStatus  Boolean @default(false)
 
-  emails Email[]
+  emails       Email[]
+  threadLabels ThreadLabel[]
 
   @@index([accountId])
   @@index([done])
@@ -350,4 +352,32 @@ model SyncedItem {
   @@index([connectionId])
   @@index([itemType])
   @@index([indexedAt])
+}
+
+model UserLabel {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  color       String   @default("#6b7280")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threadLabels ThreadLabel[]
+
+  @@index([userId])
+}
+
+model ThreadLabel {
+  id       String @id @default(cuid())
+  threadId String
+  labelId  String
+
+  thread Thread    @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  label  UserLabel @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, labelId])
+  @@index([threadId])
+  @@index([labelId])
 }
