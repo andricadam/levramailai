@@ -181,6 +181,17 @@ export async function syncEmailsToDatabase(
         // Determine thread status
         const threadStatus = determineThreadStatus(threadEmails);
         
+        // DEBUG: Log thread status determination for debugging
+        console.log(`[DEBUG] Thread ${aurinkoThreadId} - Subject: "${firstEmail.subject || "(No subject)"}"`);
+        console.log(`[DEBUG] Thread ${aurinkoThreadId} - Thread Status:`, JSON.stringify(threadStatus, null, 2));
+        console.log(`[DEBUG] Thread ${aurinkoThreadId} - Emails in thread:`, threadEmails.map(e => ({
+            id: e.id,
+            subject: e.subject,
+            from: e.from.address,
+            sysLabels: e.sysLabels,
+            emailLabelType: mapEmailLabel(e.sysLabels)
+        })));
+        
         // Extract participant IDs
         const participantIds = extractParticipantIds(threadEmails);
         
@@ -203,15 +214,25 @@ export async function syncEmailsToDatabase(
                 ...threadStatus,
             },
         });
+        
+        // DEBUG: Log final thread status after upsert
+        console.log(`[DEBUG] Thread ${aurinkoThreadId} upserted successfully - inboxStatus: ${threadStatus.inboxStatus}, sentStatus: ${threadStatus.sentStatus}, spamStatus: ${threadStatus.spamStatus}`);
 
         // Process each email in the thread
         for (const email of threadEmails) {
             // Determine email label type
             const emailLabelType = mapEmailLabel(email.sysLabels);
             
+            // DEBUG: Log email label type and sysLabels for all emails
+            console.log(`[DEBUG] Email ${email.id} - Subject: "${email.subject || "(No subject)"}", From: ${email.from.address}`);
+            console.log(`[DEBUG] Email ${email.id} - sysLabels:`, email.sysLabels);
+            console.log(`[DEBUG] Email ${email.id} - emailLabelType: ${emailLabelType}`);
+            
             // Log if email is being marked as inbox for debugging
             if (emailLabelType === 'inbox') {
-                console.log(`Email ${email.id} (${email.subject}) marked as inbox with labels:`, email.sysLabels);
+                console.log(`[DEBUG] Email ${email.id} (${email.subject}) marked as inbox with labels:`, email.sysLabels);
+            } else {
+                console.log(`[DEBUG] Email ${email.id} (${email.subject}) NOT marked as inbox - emailLabelType: ${emailLabelType}, sysLabels:`, email.sysLabels);
             }
 
             // Determine priority for inbox emails only
