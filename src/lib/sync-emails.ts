@@ -54,9 +54,12 @@ function mapEmailLabel(sysLabels: EmailMessage["sysLabels"]): "inbox" | "sent" |
  */
 function determineThreadStatus(emails: EmailMessage[]) {
     const sysLabelsLower = (labels: string[]) => labels.map(l => l.toLowerCase());
+    // Check if any email has "inbox" label (even if it also has "sent" - incoming emails can be in both)
     const hasInbox = emails.some(e => {
         const labels = sysLabelsLower(e.sysLabels);
-        return labels.includes("inbox") && !labels.includes("sent") && !labels.includes("draft") && !labels.includes("spam") && !labels.includes("junk");
+        // An email is considered "inbox" if it has the inbox label and is not spam/junk/draft
+        // Note: "sent" label doesn't prevent inbox status - an email can be both sent and in inbox
+        return labels.includes("inbox") && !labels.includes("draft") && !labels.includes("spam") && !labels.includes("junk");
     });
     const hasSent = emails.some(e => sysLabelsLower(e.sysLabels).includes("sent"));
     const hasDraft = emails.some(e => sysLabelsLower(e.sysLabels).includes("draft"));
