@@ -554,14 +554,11 @@ export class GmailAPI {
     try {
       console.log(`Starting Gmail initial sync for account ${accountId}`)
       
-      // Get messages from last 30 days in INBOX
-      const thirtyDaysAgo = new Date()
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-      // Gmail API accepts Unix timestamp in seconds for 'after:' query
-      // Use 'in:inbox' to only fetch emails from the inbox
-      const query = `in:inbox after:${Math.floor(thirtyDaysAgo.getTime() / 1000)}`
+      // Use 'in:inbox' to fetch ALL inbox emails (including very new ones)
+      // Removed 'after:' filter to ensure we capture emails immediately, even if they're very new
+      const query = `in:inbox`
       
-      console.log(`Gmail query: ${query}`)
+      console.log(`Gmail query: ${query} (fetching all inbox emails for immediate sync)`)
 
       let allMessages: EmailMessage[] = []
       let nextPageToken: string | undefined
@@ -576,6 +573,18 @@ export class GmailAPI {
         try {
           const response = await this.listMessages(query, nextPageToken, PAGE_SIZE)
           console.log(`Page ${pageCount}: Found ${response.messages.length} messages`)
+          
+          // Log first few message IDs and subjects for debugging
+          if (pageCount === 1 && response.messages.length > 0) {
+            const firstFew = response.messages.slice(0, 5)
+            console.log(`Sample messages from page 1:`, firstFew.map(m => ({
+              id: m.id,
+              subject: m.subject,
+              from: m.from.address,
+              sentAt: m.sentAt
+            })))
+          }
+          
           allMessages = allMessages.concat(response.messages)
           nextPageToken = response.nextPageToken
           
@@ -597,7 +606,26 @@ export class GmailAPI {
       console.log(`Fetched ${allMessages.length} emails from Gmail across ${pageCount} pages`)
 
       if (allMessages.length === 0) {
-        console.warn(`No emails found for account ${accountId}. This might be normal if the account has no emails in the last 30 days.`)
+        console.warn(`No emails found for account ${accountId}. This might be normal if the inbox is empty.`)
+      } else {
+        // Log summary of fetched emails
+        const recentEmails = allMessages
+          .filter(m => {
+            const sentDate = new Date(m.sentAt)
+            const oneDayAgo = new Date()
+            oneDayAgo.setDate(oneDayAgo.getDate() - 1)
+            return sentDate > oneDayAgo
+          })
+          .slice(0, 10)
+        
+        if (recentEmails.length > 0) {
+          console.log(`Found ${recentEmails.length} emails from the last 24 hours:`, recentEmails.map(m => ({
+            id: m.id,
+            subject: m.subject,
+            from: m.from.address,
+            sentAt: m.sentAt
+          })))
+        }
       }
 
       // Sync to database

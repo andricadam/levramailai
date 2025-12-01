@@ -205,6 +205,11 @@ export async function syncEmailsToDatabase(
         for (const email of threadEmails) {
             // Determine email label type
             const emailLabelType = mapEmailLabel(email.sysLabels);
+            
+            // Log if email is being marked as inbox for debugging
+            if (emailLabelType === 'inbox') {
+                console.log(`Email ${email.id} (${email.subject}) marked as inbox with labels:`, email.sysLabels);
+            }
 
             // Determine priority for inbox emails only
             let emailPriority: 'high' | 'medium' | 'low' = 'medium';
