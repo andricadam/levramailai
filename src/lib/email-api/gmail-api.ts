@@ -103,9 +103,11 @@ export class GmailAPI {
   private accessToken: string
   private baseUrl = 'https://gmail.googleapis.com/gmail/v1'
   private rateLimiter = GmailRateLimiter.getInstance() // Use singleton to coordinate across all instances
+  private onTokenRefresh?: () => Promise<string> // Callback to refresh token on 401
 
-  constructor(accessToken: string) {
+  constructor(accessToken: string, onTokenRefresh?: () => Promise<string>) {
     this.accessToken = accessToken
+    this.onTokenRefresh = onTokenRefresh
   }
 
   private async request<T>(endpoint: string, params?: Record<string, string>, retries = 4): Promise<T> {
@@ -180,13 +182,28 @@ export class GmailAPI {
               throw error
             } else if (error.response?.status === 401) {
               // Unauthorized - token expired or invalid
+              // Try to refresh token if callback is provided
+              if (this.onTokenRefresh && attempt === 0) {
+                try {
+                  console.log('Token expired, attempting to refresh...')
+                  const newToken = await this.onTokenRefresh()
+                  this.accessToken = newToken
+                  console.log('Token refreshed successfully, retrying request...')
+                  // Retry the request with the new token
+                  continue
+                } catch (refreshError) {
+                  console.error('Failed to refresh token:', refreshError)
+                  // Fall through to throw the original 401 error
+                }
+              }
+              
               console.error('Gmail API 401 Unauthorized error:', {
                 url: url.toString(),
                 status: error.response.status,
                 statusText: error.response.statusText,
                 data: error.response.data,
               })
-              // Don't retry 401 errors - token needs to be refreshed
+              // Don't retry 401 errors if refresh failed or no refresh callback
               throw error
             }
           }
@@ -263,11 +280,27 @@ export class GmailAPI {
               throw error
             } else if (error.response?.status === 401) {
               // Unauthorized - token expired or invalid
+              // Try to refresh token if callback is provided
+              if (this.onTokenRefresh && attempt === 0) {
+                try {
+                  console.log('Token expired, attempting to refresh...')
+                  const newToken = await this.onTokenRefresh()
+                  this.accessToken = newToken
+                  console.log('Token refreshed successfully, retrying request...')
+                  // Retry the request with the new token
+                  continue
+                } catch (refreshError) {
+                  console.error('Failed to refresh token:', refreshError)
+                  // Fall through to throw the original 401 error
+                }
+              }
+              
               console.error('Gmail API 401 Unauthorized error:', {
                 endpoint,
                 status: error.response.status,
                 statusText: error.response.statusText,
               })
+              // Don't retry 401 errors if refresh failed or no refresh callback
               throw error
             }
           }
@@ -521,11 +554,12 @@ export class GmailAPI {
     try {
       console.log(`Starting Gmail initial sync for account ${accountId}`)
       
-      // Get messages from last 30 days
+      // Get messages from last 30 days in INBOX
       const thirtyDaysAgo = new Date()
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
       // Gmail API accepts Unix timestamp in seconds for 'after:' query
-      const query = `after:${Math.floor(thirtyDaysAgo.getTime() / 1000)}`
+      // Use 'in:inbox' to only fetch emails from the inbox
+      const query = `in:inbox after:${Math.floor(thirtyDaysAgo.getTime() / 1000)}`
       
       console.log(`Gmail query: ${query}`)
 
