@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { authoriseAccess } from "./account";
 import { retryDbOperation } from "@/server/db";
+import { Account } from "@/lib/acount";
 
 export const mailRouter = createTRPCRouter({
     getNumThreads: privateProcedure
@@ -142,6 +143,119 @@ export const mailRouter = createTRPCRouter({
             await authoriseAccess(input.accountId, ctx.auth.userId);
             // TODO: Implement email suggestions
             return [] as { address: string }[];
+        }),
+    archiveThread: privateProcedure
+        .input(z.object({
+            accountId: z.string(),
+            threadId: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const account = await authoriseAccess(input.accountId, ctx.auth.userId);
+            
+            // Verify thread exists and belongs to account
+            const thread = await ctx.db.thread.findFirst({
+                where: {
+                    id: input.threadId,
+                    accountId: input.accountId,
+                },
+            });
+
+            if (!thread) {
+                throw new Error("Thread not found");
+            }
+
+            // Call API to archive thread
+            const acc = new Account(account.accessToken as string, account.id);
+            await acc.archiveThread(thread.id);
+
+            // Update database: remove from inbox
+            await ctx.db.thread.update({
+                where: { id: thread.id },
+                data: { inboxStatus: false },
+            });
+
+            return { success: true };
+        }),
+    deleteThread: privateProcedure
+        .input(z.object({
+            accountId: z.string(),
+            threadId: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const account = await authoriseAccess(input.accountId, ctx.auth.userId);
+            
+            // Verify thread exists and belongs to account
+            const thread = await ctx.db.thread.findFirst({
+                where: {
+                    id: input.threadId,
+                    accountId: input.accountId,
+                },
+            });
+
+            if (!thread) {
+                throw new Error("Thread not found");
+            }
+
+            // Call API to delete thread (move to junk/trash)
+            const acc = new Account(account.accessToken as string, account.id);
+            await acc.deleteThread(thread.id);
+
+            // Update database: move to junk, remove from inbox
+            await ctx.db.thread.update({
+                where: { id: thread.id },
+                data: { 
+                    junkStatus: true,
+                    inboxStatus: false,
+                },
+            });
+
+            return { success: true };
+        }),
+    markAsUnread: privateProcedure
+        .input(z.object({
+            accountId: z.string(),
+            threadId: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+            const account = await authoriseAccess(input.accountId, ctx.auth.userId);
+            
+            // Verify thread exists and belongs to account
+            const thread = await ctx.db.thread.findFirst({
+                where: {
+                    id: input.threadId,
+                    accountId: input.accountId,
+                },
+                include: {
+                    emails: {
+                        select: { id: true, sysLabels: true },
+                    },
+                },
+            });
+
+            if (!thread) {
+                throw new Error("Thread not found");
+            }
+
+            // Call API to mark thread as unread
+            const acc = new Account(account.accessToken as string, account.id);
+            await acc.markAsUnread(thread.id);
+
+            // Update database: add 'unread' to all emails' sysLabels
+            await Promise.all(
+                thread.emails.map(email => {
+                    const currentLabels = email.sysLabels || [];
+                    const updatedLabels = currentLabels.includes('unread') 
+                        ? currentLabels 
+                        : [...currentLabels, 'unread'];
+                    
+                    return ctx.db.email.update({
+                        where: { id: email.id },
+                        data: { sysLabels: updatedLabels },
+                    });
+                })
+            );
+
+            return { success: true };
         }),
 });
 

@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 import AIComposeButton from './ai/compose/ai-compose-button'
 import { generate } from './ai/autocomplete/action'
 import { readStreamableValue } from '@ai-sdk/rsc'
-import { X, Minus, Sparkles, Mic, Bot, Paperclip, Trash2, ChevronDown, Calendar } from 'lucide-react'
+import { X, Minus, Sparkles, Mic, Bot, Paperclip, Trash2, ChevronDown, Calendar, Loader2, Pencil, MessageCircle, Bold, Italic, Underline, Strikethrough } from 'lucide-react'
 import {
     Dialog,
     DialogContent,
@@ -27,6 +27,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { format, addDays, setHours, setMinutes, nextMonday } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { Textarea } from "@/components/ui/textarea"
@@ -76,16 +84,20 @@ const EmailEditor = ({
     const [bccValues, setBccValues] = React.useState<{ label: string; value: string }[]>([])
     const [aiComposeOpen, setAiComposeOpen] = React.useState(false)
     const [aiPrompt, setAiPrompt] = React.useState('')
+    const [isAiComposing, setIsAiComposing] = React.useState(false)
     const [scheduledDate, setScheduledDate] = React.useState<Date | null>(null)
     const [customDateOpen, setCustomDateOpen] = React.useState(false)
+    const [scheduleDropdownOpen, setScheduleDropdownOpen] = React.useState(false)
     const [selectedDate, setSelectedDate] = React.useState<Date>()
     const [selectedTime, setSelectedTime] = React.useState<string>('12:00')
-    const [timezone] = React.useState<string>('GMT+01')
+    const [selectedTimezone, setSelectedTimezone] = React.useState<string>('GMT+01')
     const insertedTextRef = React.useRef<string>('')
     const aiGenerateRef = React.useRef<((editorInstance: any) => Promise<void>) | null>(null)
     const { account: accountData, threads, accountId } = useThreads()
     const [threadId] = useThread()
     const thread = threads?.find(t => t.id === threadId)
+    const [attachments, setAttachments] = React.useState<File[]>([])
+    const fileInputRef = React.useRef<HTMLInputElement>(null)
 
     const aiGenerate = React.useCallback(async (editorInstance: any) => {
         if (!editorInstance) return
@@ -127,6 +139,7 @@ const EmailEditor = ({
     const handleScheduleDate = (date: Date) => {
         setScheduledDate(date)
         setCustomDateOpen(false)
+        setScheduleDropdownOpen(false)
     }
 
     const handleCustomDateSave = () => {
@@ -139,7 +152,36 @@ const EmailEditor = ({
         }
     }
 
+    const handleAttachmentClick = () => {
+        fileInputRef.current?.click()
+    }
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files
+        if (files) {
+            const newFiles = Array.from(files)
+            setAttachments(prev => [...prev, ...newFiles])
+        }
+        // Reset input so the same file can be selected again
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ''
+        }
+    }
+
+    const handleRemoveAttachment = (index: number) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index))
+    }
+
+    const formatFileSize = (bytes: number) => {
+        if (bytes === 0) return '0 Bytes'
+        const k = 1024
+        const sizes = ['Bytes', 'KB', 'MB', 'GB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+    }
+
     const handleAiCompose = async (prompt: string) => {
+        setIsAiComposing(true)
         let context: string | undefined = ''
         if (!defaultToolbarExpanded) {
             for (const email of thread?.emails ?? []) {
@@ -175,6 +217,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                 }
             }
         }
+        setIsAiComposing(false)
         setAiComposeOpen(false)
         setAiPrompt('')
     }
@@ -203,6 +246,9 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
 
     const [isEditorFocused, setIsEditorFocused] = React.useState(false)
     const [cursorPosition, setCursorPosition] = React.useState(0)
+    const [toolbarPosition, setToolbarPosition] = React.useState<{ x: number; y: number } | null>(null)
+    const [hasSelection, setHasSelection] = React.useState(false)
+    const editorContainerRef = React.useRef<HTMLDivElement>(null)
 
     const editor = useEditor({
         autofocus: false,
@@ -222,8 +268,38 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
         },
         onSelectionUpdate: ({ editor }) => {
             // Update cursor position on selection change
-            const { from } = editor.state.selection
+            const { from, to } = editor.state.selection
             setCursorPosition(from)
+            
+            // Check if there's a text selection (not just a cursor)
+            const hasTextSelection = from !== to
+            
+            if (hasTextSelection && editor.view) {
+                try {
+                    // Get the start position of the selection
+                    const startPos = editor.view.coordsAtPos(from)
+                    
+                    if (startPos && editorContainerRef.current) {
+                        const containerRect = editorContainerRef.current.getBoundingClientRect()
+                        
+                        // Calculate position relative to the editor container
+                        // X-axis: fixed position (left edge of text content)
+                        const x = 16 // Fixed left padding (px-4 = 16px)
+                        
+                        // Y-axis: position above the selected text
+                        const y = startPos.top - containerRect.top - 8 // 8px above the selection
+                        
+                        setToolbarPosition({ x, y })
+                        setHasSelection(true)
+                    }
+                } catch (error) {
+                    // Silently handle any coordinate calculation errors
+                    console.debug('Error calculating toolbar position:', error)
+                }
+            } else {
+                setHasSelection(false)
+                setToolbarPosition(null)
+            }
         },
         onFocus: () => {
             setIsEditorFocused(true)
@@ -237,6 +313,9 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
         },
         onBlur: () => {
             setIsEditorFocused(false)
+            // Hide toolbar when editor loses focus
+            setHasSelection(false)
+            setToolbarPosition(null)
         }
     })
 
@@ -255,6 +334,56 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
             setCursorPosition(from)
         }
     }, [editor, isEditorFocused])
+
+    // Handle mouseup events to update selection toolbar
+    React.useEffect(() => {
+        if (!editor) return
+
+        const handleMouseUp = () => {
+            // Small delay to ensure selection is updated
+            setTimeout(() => {
+                if (!editor.view) return
+                
+                const { state } = editor
+                const { from, to } = state.selection
+                const hasTextSelection = from !== to
+                
+                if (hasTextSelection) {
+                    try {
+                        const startPos = editor.view.coordsAtPos(from)
+                        
+                        if (startPos && editorContainerRef.current) {
+                            const containerRect = editorContainerRef.current.getBoundingClientRect()
+                            
+                            // Calculate position relative to the editor container
+                            // X-axis: fixed position (left edge of text content)
+                            const x = 16 // Fixed left padding (px-4 = 16px)
+                            
+                            // Y-axis: position above the selected text
+                            const y = startPos.top - containerRect.top - 8 // 8px above the selection
+                            
+                            setToolbarPosition({ x, y })
+                            setHasSelection(true)
+                        }
+                    } catch (error) {
+                        // Silently handle any coordinate calculation errors
+                        console.debug('Error calculating toolbar position:', error)
+                    }
+                } else {
+                    setHasSelection(false)
+                    setToolbarPosition(null)
+                }
+            }, 10)
+        }
+
+        const editorElement = editor.view?.dom
+        if (editorElement) {
+            editorElement.addEventListener('mouseup', handleMouseUp)
+            return () => {
+                editorElement.removeEventListener('mouseup', handleMouseUp)
+            }
+        }
+    }, [editor])
 
     if (!editor) return null
 
@@ -368,8 +497,117 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                 </div>
 
                 {/* Editor Content */}
-                <div className='flex-1 overflow-y-auto relative'>
-                <EditorContent editor={editor} />
+                <div 
+                    ref={editorContainerRef}
+                    className='flex-1 overflow-y-auto relative'
+                >
+                    {/* Floating Toolbar - appears when text is selected */}
+                    {hasSelection && toolbarPosition && (
+                        <div
+                            className="absolute z-30 flex items-center gap-1 px-2 py-1.5 bg-muted/95 backdrop-blur-sm rounded-lg shadow-lg border border-border/50"
+                            style={{
+                                left: `${toolbarPosition.x}px`,
+                                top: `${toolbarPosition.y}px`,
+                                transform: 'translateY(-100%)',
+                            }}
+                            onMouseDown={(e) => {
+                                // Prevent toolbar from closing when clicking on it
+                                e.preventDefault()
+                            }}
+                        >
+                            {/* Text verbessern Button */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 gap-1.5 text-xs"
+                            >
+                                <Pencil className="h-3.5 w-3.5" />
+                                <span>Text verbessern</span>
+                            </Button>
+
+                            {/* Frag Levra Button */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 gap-1.5 text-xs"
+                            >
+                                <MessageCircle className="h-3.5 w-3.5" />
+                                <span>Frag Levra</span>
+                            </Button>
+
+                            {/* Separator */}
+                            <div className="h-4 w-px bg-border mx-1" />
+
+                            {/* Text Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 px-2 gap-1 text-xs"
+                                    >
+                                        <span>Text</span>
+                                        <ChevronDown className="h-3 w-3" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    {/* Dropdown content will be added later */}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
+                            {/* Bold Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleBold().run()}
+                            >
+                                <Bold className="h-4 w-4" />
+                            </Button>
+
+                            {/* Italic Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleItalic().run()}
+                            >
+                                <Italic className="h-4 w-4" />
+                            </Button>
+
+                            {/* Underline Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleUnderline().run()}
+                            >
+                                <Underline className="h-4 w-4" />
+                            </Button>
+
+                            {/* Strikethrough Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleStrike().run()}
+                            >
+                                <Strikethrough className="h-4 w-4" />
+                            </Button>
+
+                            {/* Attachment Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <Paperclip className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    )}
+                    
+                    <EditorContent editor={editor} />
                     {isEditorFocused && (!editor?.getText() || !editor.getText().trim()) && cursorPosition <= 1 && (
                         <div className='absolute top-3 left-4 pointer-events-none text-muted-foreground text-sm'>
                             Schreibe oder drücke die Leertaste für KI...
@@ -377,6 +615,36 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                     )}
                 </div>
             </div>
+
+            {/* Attachments Display */}
+            {attachments.length > 0 && (
+                <div className='px-4 py-2 border-t bg-muted/20 flex-shrink-0'>
+                    <div className='flex flex-wrap gap-2'>
+                        {attachments.map((file, index) => (
+                            <div
+                                key={index}
+                                className='flex items-center gap-2 px-3 py-1.5 bg-background border rounded-md text-sm'
+                            >
+                                <Paperclip className="h-3 w-3 text-muted-foreground" />
+                                <span className='text-xs max-w-[200px] truncate' title={file.name}>
+                                    {file.name}
+                                </span>
+                                <span className='text-xs text-muted-foreground'>
+                                    ({formatFileSize(file.size)})
+                                </span>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-5 w-5 ml-1"
+                                    onClick={() => handleRemoveAttachment(index)}
+                                >
+                                    <X className="h-3 w-3" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Bottom Toolbar and Send Button */}
             <div className='px-4 py-2 flex items-center justify-between border-t bg-muted/30 flex-shrink-0'>
@@ -393,7 +661,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                         >
                             {isSending ? 'Sending...' : 'Senden'}
                         </Button>
-                        <DropdownMenu>
+                        <DropdownMenu open={scheduleDropdownOpen} onOpenChange={setScheduleDropdownOpen}>
                             <DropdownMenuTrigger asChild>
                                 <Button 
                                     size="sm"
@@ -403,10 +671,18 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                     <ChevronDown className="h-3 w-3" />
                                 </Button>
                             </DropdownMenuTrigger>
-                        <DropdownMenuContent align="start" className="w-64">
+                        <DropdownMenuContent align="start" className="w-64" onCloseAutoFocus={(e) => {
+                            // Prevent closing when Popover is open
+                            if (customDateOpen) {
+                                e.preventDefault()
+                            }
+                        }}>
                             <DropdownMenuLabel>Versand planen</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleScheduleDate(getTomorrowMorning())}>
+                            <DropdownMenuItem 
+                                onClick={() => handleScheduleDate(getTomorrowMorning())}
+                                className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                            >
                                 <div className="flex items-center gap-2 w-full">
                                     <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-semibold">
                                         {format(getTomorrowMorning(), 'EEEE', { locale: de }).substring(0, 2).toUpperCase()}
@@ -419,7 +695,10 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                     </div>
                                 </div>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleScheduleDate(getTomorrowAfternoon())}>
+                            <DropdownMenuItem 
+                                onClick={() => handleScheduleDate(getTomorrowAfternoon())}
+                                className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                            >
                                 <div className="flex items-center gap-2 w-full">
                                     <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-semibold">
                                         {format(getTomorrowAfternoon(), 'EEEE', { locale: de }).substring(0, 2).toUpperCase()}
@@ -432,7 +711,10 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                     </div>
                                 </div>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleScheduleDate(getNextMondayMorning())}>
+                            <DropdownMenuItem 
+                                onClick={() => handleScheduleDate(getNextMondayMorning())}
+                                className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                            >
                                 <div className="flex items-center gap-2 w-full">
                                     <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-semibold">
                                         {format(getNextMondayMorning(), 'EEEE', { locale: de }).substring(0, 2).toUpperCase()}
@@ -446,9 +728,24 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <Popover open={customDateOpen} onOpenChange={setCustomDateOpen}>
+                            <Popover open={customDateOpen} onOpenChange={(open) => {
+                                setCustomDateOpen(open)
+                                if (open && !selectedDate) {
+                                    setSelectedDate(new Date())
+                                }
+                                // Keep dropdown open when popover opens
+                                if (open) {
+                                    setScheduleDropdownOpen(true)
+                                }
+                            }} modal={false}>
                                 <PopoverTrigger asChild>
-                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                    <DropdownMenuItem 
+                                        onSelect={(e) => {
+                                            e.preventDefault()
+                                            setCustomDateOpen(true)
+                                        }}
+                                        className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                                    >
                                         <div className="flex items-center gap-2 w-full">
                                             <Calendar className="h-4 w-4 text-primary" />
                                             <div className="flex-1">
@@ -457,7 +754,18 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                         </div>
                                     </DropdownMenuItem>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
+                                <PopoverContent 
+                                    className="w-auto p-0" 
+                                    align="start"
+                                    onInteractOutside={(e) => {
+                                        // Prevent closing when clicking outside
+                                        e.preventDefault()
+                                    }}
+                                    onEscapeKeyDown={(e) => {
+                                        // Prevent closing on escape, only close on button clicks
+                                        e.preventDefault()
+                                    }}
+                                >
                                     <div className="p-4 space-y-4">
                                         <div className="flex gap-2">
                                             <Input
@@ -474,6 +782,20 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                                 className="w-32"
                                             />
                                         </div>
+                                        <Select value={selectedTimezone} onValueChange={setSelectedTimezone}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select timezone" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="GMT+01">GMT+01 Zurich</SelectItem>
+                                                <SelectItem value="GMT+00">GMT+00 London</SelectItem>
+                                                <SelectItem value="GMT-05">GMT-05 New York</SelectItem>
+                                                <SelectItem value="GMT-08">GMT-08 Los Angeles</SelectItem>
+                                                <SelectItem value="GMT+09">GMT+09 Tokyo</SelectItem>
+                                                <SelectItem value="GMT+02">GMT+02 Berlin</SelectItem>
+                                                <SelectItem value="GMT+08">GMT+08 Beijing</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                         <CalendarComponent
                                             mode="single"
                                             selected={selectedDate}
@@ -481,10 +803,16 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                             initialFocus
                                         />
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="outline" size="sm" onClick={() => setCustomDateOpen(false)}>
+                                            <Button variant="outline" size="sm" onClick={() => {
+                                                setCustomDateOpen(false)
+                                            }}>
                                                 Schließen
                                             </Button>
-                                            <Button size="sm" onClick={handleCustomDateSave}>
+                                            <Button size="sm" onClick={() => {
+                                                handleCustomDateSave()
+                                                setCustomDateOpen(false)
+                                                setScheduleDropdownOpen(false)
+                                            }}>
                                                 Speichern
                                             </Button>
                                         </div>
@@ -497,7 +825,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                     {scheduledDate && (
                         <div className="flex items-center gap-2">
                             <span className="text-sm text-primary">
-                                {format(scheduledDate, 'MMM d, h:mm a', { locale: de })} {timezone}
+                                {format(scheduledDate, 'MMM d, h:mm a', { locale: de })} {selectedTimezone}
                             </span>
                             <Button
                                 variant="ghost"
@@ -513,38 +841,57 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                 
                 {/* Right Side Icons */}
                 <div className='flex items-center gap-2'>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => {
-                            // File attachment functionality - to be implemented
-                            console.log('Attachment clicked')
-                        }}
-                    >
-                        <Paperclip className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => {
-                            // Delete draft functionality
-                            if (onClose) {
-                                // Clear all fields
-                                setToValues([])
-                                setCcValues([])
-                                setBccValues([])
-                                setSubject('')
-                                if (editor) {
-                                    editor.commands.clearContent()
-                                }
-                                onClose()
-                            }
-                        }}
-                    >
-                        <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileSelect}
+                    />
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+                                onClick={handleAttachmentClick}
+                            >
+                                <Paperclip className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Datei anhängen</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+                                onClick={() => {
+                                    // Delete draft functionality
+                                    if (onClose) {
+                                        // Clear all fields
+                                        setToValues([])
+                                        setCcValues([])
+                                        setBccValues([])
+                                        setSubject('')
+                                        setAttachments([])
+                                        if (editor) {
+                                            editor.commands.clearContent()
+                                        }
+                                        onClose()
+                                    }
+                                }}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Entwurf löschen</p>
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
             </div>
 
@@ -555,6 +902,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                     overlayClassName="bg-transparent"
                     showCloseButton={false}
                 >
+                    <DialogTitle className="sr-only">AI E-Mail erstellen</DialogTitle>
                     <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-lg border">
                         {/* AI Icon */}
                         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-background flex items-center justify-center border">
@@ -568,7 +916,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                             value={aiPrompt}
                             onChange={(e) => setAiPrompt(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter' && aiPrompt.trim()) {
+                                if (e.key === 'Enter' && aiPrompt.trim() && !isAiComposing) {
                                     handleAiCompose(aiPrompt)
                                 }
                             }}
@@ -579,17 +927,25 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                         {/* Execute Button */}
                         <Button 
                             onClick={() => {
-                                if (aiPrompt.trim()) {
+                                if (aiPrompt.trim() && !isAiComposing) {
                                     handleAiCompose(aiPrompt)
                                 }
                             }}
                             size="icon"
-                            className="h-8 w-8 rounded-full flex-shrink-0"
-                            disabled={!aiPrompt.trim()}
+                            className={`h-8 w-8 rounded-full flex-shrink-0 transition-all ${
+                                isAiComposing 
+                                    ? 'bg-primary text-primary-foreground cursor-wait' 
+                                    : ''
+                            }`}
+                            disabled={!aiPrompt.trim() || isAiComposing}
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                            </svg>
+                            {isAiComposing ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                </svg>
+                            )}
                         </Button>
                     </div>
                 </DialogContent>

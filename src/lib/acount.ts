@@ -105,7 +105,9 @@ export class Account {
 
         if (account.provider === 'google') {
             const gmail = new GmailAPI(this.token);
-            const response = await gmail.listMessages(undefined, pageToken);
+            // Query for inbox messages to ensure we sync inbox emails
+            // Use 'in:inbox' to filter for inbox messages only
+            const response = await gmail.listMessages('in:inbox', pageToken);
             return {
                 records: response.messages,
                 nextPageToken: response.nextPageToken,
@@ -196,9 +198,10 @@ export class Account {
         }
 
         while (response.nextPageToken) {
-            // Add delay between pagination requests to avoid rate limits
-            // Gmail allows ~50 requests/second, so we'll add a small delay
-            await new Promise(resolve => setTimeout(resolve, 100))
+            // Add significant delay between pagination requests to avoid rate limits
+            // Gmail allows ~250 quota units per user per second, but we'll be conservative
+            // Wait 2 seconds between pagination requests
+            await new Promise(resolve => setTimeout(resolve, 2000))
             
             try {
                 response = await this.getUpdatedEmails({ 
@@ -212,7 +215,7 @@ export class Account {
             } catch (error) {
                 // If we hit rate limits during pagination, stop and use what we have
                 if (axios.isAxiosError(error) && error.response?.status === 429) {
-                    console.warn('Rate limit hit during pagination. Stopping sync and using emails fetched so far.')
+                    console.warn(`Rate limit hit during pagination. Stopping sync and using ${allEmails.length} emails fetched so far.`)
                     break
                 }
                 throw error
@@ -314,6 +317,81 @@ export class Account {
                 console.error('Error sending email:', JSON.stringify(error.response?.data, null, 2))
             } else {
                 console.error('Error sending email:', error)
+            }
+            throw error
+        }
+    }
+
+    async archiveThread(threadId: string): Promise<void> {
+        await this.ensureValidToken();
+        const account = await this.getAccount();
+        if (!account) throw new Error('Account not found');
+
+        try {
+            if (account.provider === 'google') {
+                const gmail = new GmailAPI(this.token);
+                await gmail.archiveThread(threadId);
+            } else if (account.provider === 'microsoft') {
+                const graph = new MicrosoftGraphAPI(this.token);
+                await graph.archiveThread(threadId);
+            } else {
+                throw new Error(`Unsupported provider: ${account.provider}`);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error archiving thread:', JSON.stringify(error.response?.data, null, 2))
+            } else {
+                console.error('Error archiving thread:', error)
+            }
+            throw error
+        }
+    }
+
+    async deleteThread(threadId: string): Promise<void> {
+        await this.ensureValidToken();
+        const account = await this.getAccount();
+        if (!account) throw new Error('Account not found');
+
+        try {
+            if (account.provider === 'google') {
+                const gmail = new GmailAPI(this.token);
+                await gmail.deleteThread(threadId);
+            } else if (account.provider === 'microsoft') {
+                const graph = new MicrosoftGraphAPI(this.token);
+                await graph.deleteThread(threadId);
+            } else {
+                throw new Error(`Unsupported provider: ${account.provider}`);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error deleting thread:', JSON.stringify(error.response?.data, null, 2))
+            } else {
+                console.error('Error deleting thread:', error)
+            }
+            throw error
+        }
+    }
+
+    async markAsUnread(threadId: string): Promise<void> {
+        await this.ensureValidToken();
+        const account = await this.getAccount();
+        if (!account) throw new Error('Account not found');
+
+        try {
+            if (account.provider === 'google') {
+                const gmail = new GmailAPI(this.token);
+                await gmail.markAsUnread(threadId);
+            } else if (account.provider === 'microsoft') {
+                const graph = new MicrosoftGraphAPI(this.token);
+                await graph.markAsUnread(threadId);
+            } else {
+                throw new Error(`Unsupported provider: ${account.provider}`);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error('Error marking thread as unread:', JSON.stringify(error.response?.data, null, 2))
+            } else {
+                console.error('Error marking thread as unread:', error)
             }
             throw error
         }

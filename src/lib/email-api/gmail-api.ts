@@ -3,6 +3,67 @@ import type { EmailMessage, EmailAddress, EmailAttachment } from '@/types'
 import { syncEmailsToDatabase } from '@/lib/sync-emails'
 import { db } from '@/server/db'
 
+/**
+ * Rate limiter to throttle Gmail API requests
+ * Gmail allows ~250 quota units per user per second
+ * - List messages: 5 units
+ * - Get message: 5 units
+ * - Profile: 1 unit
+ * We'll be very conservative: 1 request per 200ms = 5 requests/second max
+ * This is a singleton to coordinate across all GmailAPI instances
+ */
+class GmailRateLimiter {
+  private static instance: GmailRateLimiter
+  private queue: Array<() => void> = []
+  private processing = false
+  private readonly minDelayMs = 200 // Minimum 200ms between requests (5 req/sec max - very conservative)
+  private lastRequestTime = 0
+
+  static getInstance(): GmailRateLimiter {
+    if (!GmailRateLimiter.instance) {
+      GmailRateLimiter.instance = new GmailRateLimiter()
+    }
+    return GmailRateLimiter.instance
+  }
+
+  async throttle<T>(fn: () => Promise<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.queue.push(async () => {
+        try {
+          const result = await fn()
+          resolve(result)
+        } catch (error) {
+          reject(error)
+        }
+      })
+      this.processQueue()
+    })
+  }
+
+  private async processQueue() {
+    if (this.processing || this.queue.length === 0) return
+    
+    this.processing = true
+    
+    while (this.queue.length > 0) {
+      const now = Date.now()
+      const timeSinceLastRequest = now - this.lastRequestTime
+      
+      if (timeSinceLastRequest < this.minDelayMs) {
+        await new Promise(resolve => setTimeout(resolve, this.minDelayMs - timeSinceLastRequest))
+      }
+      
+      const task = this.queue.shift()
+      if (task) {
+        this.lastRequestTime = Date.now()
+        await task()
+      }
+    }
+    
+    this.processing = false
+  }
+}
+
 interface GmailProfile {
   emailAddress: string
   messagesTotal: number
@@ -41,12 +102,13 @@ interface GmailMessage {
 export class GmailAPI {
   private accessToken: string
   private baseUrl = 'https://gmail.googleapis.com/gmail/v1'
+  private rateLimiter = GmailRateLimiter.getInstance() // Use singleton to coordinate across all instances
 
   constructor(accessToken: string) {
     this.accessToken = accessToken
   }
 
-  private async request<T>(endpoint: string, params?: Record<string, string>, retries = 3): Promise<T> {
+  private async request<T>(endpoint: string, params?: Record<string, string>, retries = 4): Promise<T> {
     const url = new URL(`${this.baseUrl}${endpoint}`)
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -54,72 +116,179 @@ export class GmailAPI {
       })
     }
 
-    for (let attempt = 0; attempt <= retries; attempt++) {
-      try {
-        const response = await axios.get<T>(url.toString(), {
-          headers: {
-            Authorization: `Bearer ${this.accessToken}`,
-          },
-        })
+    return this.rateLimiter.throttle(async () => {
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const response = await axios.get<T>(url.toString(), {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`,
+            },
+          })
 
-        return response.data
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 429) {
-            // Rate limit exceeded
-            const retryAfter = error.response.headers['retry-after']
-              ? parseInt(error.response.headers['retry-after'])
-              : Math.pow(2, attempt) // Exponential backoff: 2s, 4s, 8s, 16s
-            
-            if (attempt < retries) {
-              console.warn(`Gmail API rate limit hit. Retrying after ${retryAfter}s (attempt ${attempt + 1}/${retries + 1})...`)
-              await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
-              continue
-            } else {
-              // All retries exhausted
-              console.error(`Gmail API rate limit exceeded after ${retries + 1} attempts. Please try again later.`)
+          return response.data
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 429) {
+              // Rate limit exceeded - parse retry-after header or use exponential backoff
+              let retryAfterSeconds: number
+              
+              // Try to get retry-after from header (in seconds)
+              const retryAfterHeader = error.response.headers['retry-after']
+              if (retryAfterHeader) {
+                retryAfterSeconds = parseInt(retryAfterHeader)
+              } else {
+                // Try to parse from error message
+                const errorData = error.response.data
+                const errorMessage = errorData?.error?.message || ''
+                
+                if (errorMessage.includes('Retry after')) {
+                  retryAfterSeconds = this.parseRetryAfterFromMessage(errorMessage)
+                } else {
+                  // Exponential backoff with jitter: 2s, 4s, 8s, 16s, 32s
+                  retryAfterSeconds = Math.pow(2, attempt) + Math.random()
+                }
+              }
+              
+              // Don't cap retry delay - respect Gmail's retry-after time fully
+              // But add a maximum of 300 seconds (5 minutes) to prevent infinite waits
+              retryAfterSeconds = Math.min(retryAfterSeconds, 300)
+              
+              if (attempt < retries) {
+                console.warn(`Gmail API rate limit hit on ${endpoint}. Retrying after ${retryAfterSeconds.toFixed(1)}s (attempt ${attempt + 1}/${retries + 1})...`)
+                // Wait the full retry time before attempting again
+                await new Promise(resolve => setTimeout(resolve, retryAfterSeconds * 1000))
+                continue
+              } else {
+                // All retries exhausted - throw a more informative error
+                console.error(`Gmail API rate limit exceeded after ${retries + 1} attempts on ${endpoint}. Please wait ${retryAfterSeconds} seconds before trying again.`)
+                const rateLimitError = new Error(`Gmail API rate limit exceeded. Please try again in ${Math.ceil(retryAfterSeconds)} seconds.`)
+                ;(rateLimitError as any).status = 429
+                ;(rateLimitError as any).retryAfter = retryAfterSeconds
+                throw rateLimitError
+              }
+            } else if (error.response?.status === 403) {
+              // Forbidden - likely token issue or insufficient permissions
+              console.error('Gmail API 403 Forbidden error:', {
+                url: url.toString(),
+                status: error.response.status,
+                statusText: error.response.statusText,
+                data: error.response.data,
+                errorMessage: error.response.data?.error?.message,
+                errorReason: error.response.data?.error?.errors?.[0]?.reason,
+              })
+              // Don't retry 403 errors - they indicate a permission/scope issue
+              throw error
+            } else if (error.response?.status === 401) {
+              // Unauthorized - token expired or invalid
+              console.error('Gmail API 401 Unauthorized error:', {
+                url: url.toString(),
+                status: error.response.status,
+                statusText: error.response.statusText,
+                data: error.response.data,
+              })
+              // Don't retry 401 errors - token needs to be refreshed
               throw error
             }
-          } else if (error.response?.status === 403) {
-            // Forbidden - likely token issue or insufficient permissions
-            console.error('Gmail API 403 Forbidden error:', {
-              url: url.toString(),
-              status: error.response.status,
-              statusText: error.response.statusText,
-              data: error.response.data,
-              errorMessage: error.response.data?.error?.message,
-              errorReason: error.response.data?.error?.errors?.[0]?.reason,
-            })
-            // Don't retry 403 errors - they indicate a permission/scope issue
-            throw error
-          } else if (error.response?.status === 401) {
-            // Unauthorized - token expired or invalid
-            console.error('Gmail API 401 Unauthorized error:', {
-              url: url.toString(),
-              status: error.response.status,
-              statusText: error.response.statusText,
-              data: error.response.data,
-            })
-            // Don't retry 401 errors - token needs to be refreshed
-            throw error
           }
+          throw error
         }
-        throw error
       }
-    }
-    
-    throw new Error('Max retries exceeded')
+      
+      throw new Error('Max retries exceeded')
+    })
   }
 
-  private async postRequest<T>(endpoint: string, data: any): Promise<T> {
-    const response = await axios.post<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    })
+  private async postRequest<T>(endpoint: string, data: any, retries = 4): Promise<T> {
+    return this.rateLimiter.throttle(async () => {
+      for (let attempt = 0; attempt <= retries; attempt++) {
+        try {
+          const response = await axios.post<T>(`${this.baseUrl}${endpoint}`, data, {
+            headers: {
+              Authorization: `Bearer ${this.accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          })
 
-    return response.data
+          return response.data
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 429) {
+              // Rate limit exceeded
+              let retryAfterSeconds: number
+              
+              // Try to get retry-after from header (in seconds)
+              const retryAfterHeader = error.response.headers['retry-after']
+              if (retryAfterHeader) {
+                retryAfterSeconds = parseInt(retryAfterHeader)
+              } else {
+                // Try to parse from error message
+                const errorData = error.response.data
+                const errorMessage = errorData?.error?.message || 
+                                     errorData?.error?.errors?.[0]?.message || 
+                                     ''
+                
+                if (errorMessage.includes('Retry after')) {
+                  retryAfterSeconds = this.parseRetryAfterFromMessage(errorMessage)
+                } else {
+                  // Exponential backoff with jitter: 2s, 4s, 8s, 16s, 32s
+                  retryAfterSeconds = Math.pow(2, attempt) + Math.random()
+                }
+              }
+              
+              // Don't cap retry delay - respect Gmail's retry-after time fully
+              // But add a maximum of 300 seconds (5 minutes) to prevent infinite waits
+              retryAfterSeconds = Math.min(retryAfterSeconds, 300)
+              
+              if (attempt < retries) {
+                console.warn(`Gmail API rate limit hit on POST ${endpoint}. Retrying after ${retryAfterSeconds.toFixed(1)}s (attempt ${attempt + 1}/${retries + 1})...`)
+                // Wait the full retry time before attempting again
+                await new Promise(resolve => setTimeout(resolve, retryAfterSeconds * 1000))
+                continue
+              } else {
+                // All retries exhausted - throw a more informative error
+                console.error(`Gmail API rate limit exceeded after ${retries + 1} attempts on POST ${endpoint}. Please wait ${retryAfterSeconds} seconds before trying again.`)
+                const rateLimitError = new Error(`Gmail API rate limit exceeded. Please try again in ${Math.ceil(retryAfterSeconds)} seconds.`)
+                ;(rateLimitError as any).status = 429
+                ;(rateLimitError as any).retryAfter = retryAfterSeconds
+                throw rateLimitError
+              }
+            } else if (error.response?.status === 403) {
+              // Forbidden - likely token issue or insufficient permissions
+              console.error('Gmail API 403 Forbidden error:', {
+                endpoint,
+                status: error.response.status,
+                statusText: error.response.statusText,
+                data: error.response.data,
+              })
+              throw error
+            } else if (error.response?.status === 401) {
+              // Unauthorized - token expired or invalid
+              console.error('Gmail API 401 Unauthorized error:', {
+                endpoint,
+                status: error.response.status,
+                statusText: error.response.statusText,
+              })
+              throw error
+            }
+          }
+          throw error
+        }
+      }
+      
+      throw new Error('Max retries exceeded')
+    })
+  }
+
+  private parseRetryAfterFromMessage(message: string): number {
+    // Parse "Retry after 2025-12-01T13:51:52.950Z" format
+    const match = message.match(/Retry after (.+)/)
+    if (match) {
+      const retryDate = new Date(match[1])
+      const now = new Date()
+      const waitSeconds = Math.ceil((retryDate.getTime() - now.getTime()) / 1000)
+      return Math.max(waitSeconds, 1) // At least 1 second
+    }
+    return 2 // Default 2 seconds
   }
 
   async getProfile(): Promise<{ emailAddress: string; name: string }> {
@@ -321,22 +490,22 @@ export class GmailAPI {
       return { messages: [], nextPageToken: listResponse.nextPageToken }
     }
 
-    // Fetch full message details in batches to avoid rate limits
-    // Gmail allows ~50 requests/second, so we'll do batches of 10 with 200ms delay
-    const BATCH_SIZE = 10
-    const BATCH_DELAY_MS = 200
+    // Fetch full message details sequentially to avoid rate limits
+    // Process messages one at a time with rate limiting built into the request method
     const messages: EmailMessage[] = []
 
-    for (let i = 0; i < listResponse.messages.length; i += BATCH_SIZE) {
-      const batch = listResponse.messages.slice(i, i + BATCH_SIZE)
-      const batchMessages = await Promise.all(
-        batch.map(msg => this.getMessageDetails(msg.id))
-      )
-      messages.push(...batchMessages)
-
-      // Add delay between batches (except for the last batch)
-      if (i + BATCH_SIZE < listResponse.messages.length) {
-        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS))
+    for (const msg of listResponse.messages) {
+      try {
+        const message = await this.getMessageDetails(msg.id)
+        messages.push(message)
+      } catch (error) {
+        // If we hit rate limits, log and continue with what we have
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          console.warn(`Rate limit hit while fetching message ${msg.id}. Stopping batch fetch.`)
+          break
+        }
+        // For other errors, log and continue
+        console.warn(`Error fetching message ${msg.id}:`, error)
       }
     }
 
@@ -370,14 +539,24 @@ export class GmailAPI {
       do {
         pageCount++
         console.log(`Fetching Gmail page ${pageCount}...`)
-        const response = await this.listMessages(query, nextPageToken, PAGE_SIZE)
-        console.log(`Page ${pageCount}: Found ${response.messages.length} messages`)
-        allMessages = allMessages.concat(response.messages)
-        nextPageToken = response.nextPageToken
-        
-        // Add a small delay between pages to avoid rate limits
-        if (nextPageToken) {
-          await new Promise(resolve => setTimeout(resolve, 500))
+        try {
+          const response = await this.listMessages(query, nextPageToken, PAGE_SIZE)
+          console.log(`Page ${pageCount}: Found ${response.messages.length} messages`)
+          allMessages = allMessages.concat(response.messages)
+          nextPageToken = response.nextPageToken
+          
+          // Add delay between pages to avoid rate limits (2 seconds between pages)
+          if (nextPageToken) {
+            await new Promise(resolve => setTimeout(resolve, 2000))
+          }
+        } catch (error) {
+          // If we hit rate limits during pagination, stop and use what we have
+          if (axios.isAxiosError(error) && error.response?.status === 429) {
+            console.warn(`Rate limit hit during initial sync at page ${pageCount}. Stopping sync and using ${allMessages.length} emails fetched so far.`)
+            break
+          }
+          // For other errors, throw to be handled by outer try-catch
+          throw error
         }
       } while (nextPageToken)
 
@@ -444,5 +623,32 @@ export class GmailAPI {
     })
 
     return response
+  }
+
+  /**
+   * Archive a thread by removing the INBOX label
+   */
+  async archiveThread(threadId: string): Promise<void> {
+    await this.postRequest(`/users/me/threads/${threadId}/modify`, {
+      removeLabelIds: ['INBOX'],
+    })
+  }
+
+  /**
+   * Delete a thread by adding the TRASH label (maps to junk in our system)
+   */
+  async deleteThread(threadId: string): Promise<void> {
+    await this.postRequest(`/users/me/threads/${threadId}/modify`, {
+      addLabelIds: ['TRASH'],
+    })
+  }
+
+  /**
+   * Mark a thread as unread by adding the UNREAD label
+   */
+  async markAsUnread(threadId: string): Promise<void> {
+    await this.postRequest(`/users/me/threads/${threadId}/modify`, {
+      addLabelIds: ['UNREAD'],
+    })
   }
 }

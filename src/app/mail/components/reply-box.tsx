@@ -89,7 +89,7 @@ const Component = ({ replyDetails, onSent }: { replyDetails: RouterOutputs['acco
     const to = toValues.map(v => v.value)
 
     return (
-        <div className="max-h-[300px] flex flex-col w-full m-0">
+        <div className="flex flex-col w-full m-0">
             <EmailEditor
                 subject={subject}
                 setSubject={setSubject}

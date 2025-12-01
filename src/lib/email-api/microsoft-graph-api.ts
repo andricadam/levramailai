@@ -121,6 +121,17 @@ export class MicrosoftGraphAPI {
     return response.data
   }
 
+  private async patchRequest<T>(endpoint: string, data: any): Promise<T> {
+    const response = await axios.patch<T>(`${this.baseUrl}${endpoint}`, data, {
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    return response.data
+  }
+
   async getProfile(): Promise<{ emailAddress: string; name: string }> {
     const profile = await this.request<GraphProfile>('/me')
     return {
@@ -442,5 +453,107 @@ export class MicrosoftGraphAPI {
 
     const response = await this.postRequest<{ id: string }>('/me/sendMail', message)
     return { id: response.id || 'sent' }
+  }
+
+  /**
+   * Get all messages in a conversation (thread)
+   */
+  private async getMessagesByConversationId(conversationId: string): Promise<GraphMessage[]> {
+    const response = await this.request<GraphMessageListResponse>('/me/messages', {
+      $filter: `conversationId eq '${conversationId}'`,
+      $select: 'id,conversationId',
+    })
+    return response.value
+  }
+
+  /**
+   * Get folder ID by well-known name (e.g., 'Archive', 'DeletedItems')
+   * Microsoft Graph has well-known folder names that can be used directly
+   */
+  private async getFolderIdByName(folderName: string): Promise<string> {
+    // Try well-known folder name first (these are standard folder names in Microsoft Graph)
+    const wellKnownFolders: Record<string, string> = {
+      'Archive': 'Archive',
+      'DeletedItems': 'DeletedItems',
+      'Inbox': 'Inbox',
+      'SentItems': 'SentItems',
+      'Drafts': 'Drafts',
+      'JunkEmail': 'JunkEmail',
+    }
+
+    if (wellKnownFolders[folderName]) {
+      try {
+        // Try to get the folder by well-known name
+        const folder = await this.request<{ id: string }>(`/me/mailFolders/${wellKnownFolders[folderName]}`)
+        return folder.id
+      } catch {
+        // If that fails, fall back to searching
+      }
+    }
+
+    // Fallback: search all folders
+    const folders = await this.request<{ value: Array<{ id: string; displayName: string }> }>('/me/mailFolders')
+    const folder = folders.value.find(f => f.displayName === folderName || f.id === folderName)
+    if (!folder) {
+      throw new Error(`Folder ${folderName} not found`)
+    }
+    return folder.id
+  }
+
+  /**
+   * Archive a thread by moving all messages to Archive folder
+   */
+  async archiveThread(threadId: string): Promise<void> {
+    // In Microsoft Graph, threadId is actually conversationId
+    const messages = await this.getMessagesByConversationId(threadId)
+    
+    // Get Archive folder ID
+    const archiveFolderId = await this.getFolderIdByName('Archive')
+
+    // Move each message to Archive folder
+    await Promise.all(
+      messages.map(message =>
+        this.postRequest(`/me/messages/${message.id}/move`, {
+          destinationId: archiveFolderId,
+        })
+      )
+    )
+  }
+
+  /**
+   * Delete a thread by moving all messages to DeletedItems folder (maps to junk in our system)
+   */
+  async deleteThread(threadId: string): Promise<void> {
+    // In Microsoft Graph, threadId is actually conversationId
+    const messages = await this.getMessagesByConversationId(threadId)
+    
+    // Get DeletedItems folder ID
+    const deletedItemsFolderId = await this.getFolderIdByName('DeletedItems')
+
+    // Move each message to DeletedItems folder
+    await Promise.all(
+      messages.map(message =>
+        this.postRequest(`/me/messages/${message.id}/move`, {
+          destinationId: deletedItemsFolderId,
+        })
+      )
+    )
+  }
+
+  /**
+   * Mark a thread as unread by setting isRead to false for all messages
+   */
+  async markAsUnread(threadId: string): Promise<void> {
+    // In Microsoft Graph, threadId is actually conversationId
+    const messages = await this.getMessagesByConversationId(threadId)
+
+    // Update each message to mark as unread
+    await Promise.all(
+      messages.map(message =>
+        this.patchRequest(`/me/messages/${message.id}`, {
+          isRead: false,
+        })
+      )
+    )
   }
 }

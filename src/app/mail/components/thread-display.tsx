@@ -1,9 +1,7 @@
 import {
   Inbox,
-  X,
   Clock,
   Forward,
-  MoreVertical,
   Reply,
   ReplyAll,
   Trash2,
@@ -11,6 +9,7 @@ import {
   Tag,
   Plus,
   Check,
+  X,
 } from "lucide-react"
 import {
   DropdownMenuContent,
@@ -54,6 +53,25 @@ import { SummaryButton } from "./ai/summary";
 import { ViewModeSelector, type ViewMode } from "./view-mode-selector";
 import NewLabelDialog from "./new-label-dialog";
 
+// Mark as unread icon - envelope with notification dot
+const MarkAsUnreadIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {/* Envelope outline */}
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    {/* Notification dot */}
+    <circle cx="18" cy="6" r="3" fill="currentColor" />
+  </svg>
+);
+
 interface ThreadDisplayProps {
   currentViewMode?: ViewMode;
   onViewModeChange?: (view: ViewMode) => void;
@@ -70,7 +88,6 @@ export function ThreadDisplay({
   const { threads, threadId, setThreadId } = useThreads()
   const today = new Date()
   const popoverId = useId()
-  const dropdownMenuId = useId()
   const _thread = threads?.find(t => t.id === threadId)
   const [isSearching] = useAtom(isSearchingAtom)
   const [showReplyBox, setShowReplyBox] = React.useState(false)
@@ -92,6 +109,32 @@ export function ThreadDisplay({
     { threadId: threadId ?? '' },
     { enabled: !!threadId }
   )
+
+  // Thread actions mutations
+  const archiveThread = api.mail.archiveThread.useMutation({
+    onSuccess: () => {
+      utils.mail.getThreadById.invalidate()
+      utils.account.getThreads.invalidate()
+      utils.mail.getNumThreads.invalidate()
+      setThreadId(null) // Close thread after archiving
+    }
+  })
+
+  const deleteThread = api.mail.deleteThread.useMutation({
+    onSuccess: () => {
+      utils.mail.getThreadById.invalidate()
+      utils.account.getThreads.invalidate()
+      utils.mail.getNumThreads.invalidate()
+      setThreadId(null) // Close thread after deleting
+    }
+  })
+
+  const markAsUnread = api.mail.markAsUnread.useMutation({
+    onSuccess: () => {
+      utils.mail.getThreadById.invalidate()
+      utils.account.getThreads.invalidate()
+    }
+  })
   const assignLabel = api.labels.assignLabelToThread.useMutation({
     onSuccess: () => {
       utils.mail.getThreadById.invalidate()
@@ -195,7 +238,16 @@ export function ThreadDisplay({
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!thread}>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                disabled={!thread || archiveThread.isPending}
+                onClick={() => {
+                  if (threadId && accountId) {
+                    archiveThread.mutate({ accountId, threadId })
+                  }
+                }}
+              >
                 <Inbox className="w-4 h-4" />
                 <span className="sr-only">Archive</span>
               </Button>
@@ -204,21 +256,39 @@ export function ThreadDisplay({
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!thread}>
-                <X className="w-4 h-4" />
-                <span className="sr-only">Move to junk</span>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                disabled={!thread || markAsUnread.isPending}
+                onClick={() => {
+                  if (threadId && accountId) {
+                    markAsUnread.mutate({ accountId, threadId })
+                  }
+                }}
+              >
+                <MarkAsUnreadIcon className="w-4 h-4" />
+                <span className="sr-only">Mark as unread</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Move to junk</TooltipContent>
+            <TooltipContent>Mark as unread</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={!thread}>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                disabled={!thread || deleteThread.isPending}
+                onClick={() => {
+                  if (threadId && accountId) {
+                    deleteThread.mutate({ accountId, threadId })
+                  }
+                }}
+              >
                 <Trash2 className="w-4 h-4" />
-                <span className="sr-only">Move to trash</span>
+                <span className="sr-only">Delete</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Move to trash</TooltipContent>
+            <TooltipContent>Delete</TooltipContent>
           </Tooltip>
           <Separator orientation="vertical" className="h-6 mx-1" />
           <Tooltip>
@@ -415,21 +485,6 @@ export function ThreadDisplay({
             <TooltipContent>Forward</TooltipContent>
           </Tooltip>
         </div>
-        <Separator orientation="vertical" className="h-6 mx-2" />
-        <DropdownMenu id={dropdownMenuId}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" disabled={!thread}>
-              <MoreVertical className="w-4 h-4" />
-              <span className="sr-only">More</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Mark as unread</DropdownMenuItem>
-            <DropdownMenuItem>Star thread</DropdownMenuItem>
-            <DropdownMenuItem>Add label</DropdownMenuItem>
-            <DropdownMenuItem>Mute thread</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <Separator />
       {summary && (
@@ -478,7 +533,7 @@ export function ThreadDisplay({
             {showReplyBox && (
               <>
                 <Separator className="flex-shrink-0" />
-                <div className="flex-shrink-0 max-h-[300px]">
+                <div className="flex-shrink-0">
                   <ReplyBox onSent={() => setShowReplyBox(false)} />
                 </div>
               </>

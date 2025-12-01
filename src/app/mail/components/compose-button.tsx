@@ -91,6 +91,7 @@ const ComposeButton = () => {
                 overlayClassName="bg-background/80 backdrop-blur-[0.5px]"
                 showCloseButton={false}
             >
+                <DialogTitle className="sr-only">Compose Email</DialogTitle>
                 <div className="flex-1 overflow-hidden flex flex-col">
                     <EmailEditor
                         toValues={toValues}

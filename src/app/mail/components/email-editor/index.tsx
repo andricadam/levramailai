@@ -1,115 +1,314 @@
 "use client";
-import GhostExtension from "./extension";
 import React from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
-import TipTapMenuBar from "./menu-bar";
 import Text from "@tiptap/extension-text";
 import { Button } from "@/components/ui/button";
-
 import { generate } from './ai/autocomplete/action';
 import { readStreamableValue } from '@ai-sdk/rsc';
-import { Separator } from "@/components/ui/separator";
-import { api } from "@/trpc/react";
 import { Input } from "@/components/ui/input";
-import TagInput from "./tag-input";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { useLocalStorage } from "usehooks-ts";
+import TagInput from '../tag-input';
 import AIComposeButton from "./ai/compose/ai-compose-button";
-import { Loader2 } from "lucide-react";
+import { Sparkles, Mic, Bot, Paperclip, Trash2, ChevronDown, Calendar, Loader2, X, Pencil, MessageCircle, Bold, Italic, Underline, Strikethrough } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { format, addDays, setHours, setMinutes, nextMonday } from 'date-fns';
+import { de } from 'date-fns/locale';
+import useThreads from '../../use-Threads';
+import { useThread } from '../../use-thread';
+import { turndown } from '@/lib/turndown';
+import { generateEmail } from './ai/compose/action';
 
 type EmailEditorProps = {
     toValues: { label: string, value: string }[];
     ccValues: { label: string, value: string }[];
-
+    setToValues: (values: { label: string, value: string }[]) => void;
+    setCcValues: (values: { label: string, value: string }[]) => void;
     subject: string;
     setSubject: (subject: string) => void;
     to: string[]
     handleSend: (value: string) => void;
     isSending: boolean;
-
-    onToChange: (values: { label: string, value: string }[]) => void;
-    onCcChange: (values: { label: string, value: string }[]) => void;
-
-    defaultToolbarExpand?: boolean;
+    defaultToolbarExpanded?: boolean;
     initialDraft?: string | null;
-    onFeedbackIdChange?: (feedbackId: string | null) => void; // Callback for AI compose feedback ID
+    onFeedbackIdChange?: (feedbackId: string | null) => void;
 }
 
-const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, isSending, onToChange, onCcChange, defaultToolbarExpand, initialDraft, onFeedbackIdChange }: EmailEditorProps) => {
+const EmailEditor = ({ 
+    toValues, 
+    ccValues, 
+    setToValues,
+    setCcValues,
+    subject, 
+    setSubject, 
+    to, 
+    handleSend, 
+    isSending, 
+    defaultToolbarExpanded = false,
+    initialDraft,
+    onFeedbackIdChange 
+}: EmailEditorProps) => {
+    const [value, setValue] = React.useState<string>('')
+    const [showCcBcc, setShowCcBcc] = React.useState(false)
+    const [bccValues, setBccValues] = React.useState<{ label: string; value: string }[]>([])
+    const [aiComposeOpen, setAiComposeOpen] = React.useState(false)
+    const [aiPrompt, setAiPrompt] = React.useState('')
+    const [isAiComposing, setIsAiComposing] = React.useState(false)
+    const [scheduledDate, setScheduledDate] = React.useState<Date | null>(null)
+    const [customDateOpen, setCustomDateOpen] = React.useState(false)
+    const [scheduleDropdownOpen, setScheduleDropdownOpen] = React.useState(false)
+    const [selectedDate, setSelectedDate] = React.useState<Date>()
+    const [selectedTime, setSelectedTime] = React.useState<string>('12:00')
+    const [selectedTimezone, setSelectedTimezone] = React.useState<string>('GMT+01')
+    const insertedTextRef = React.useRef<string>('')
+    const aiGenerateRef = React.useRef<((editorInstance: any) => Promise<void>) | null>(null)
+    const { account: accountData, threads, accountId } = useThreads()
+    const [threadId] = useThread()
+    const thread = threads?.find(t => t.id === threadId)
+    const [attachments, setAttachments] = React.useState<File[]>([])
+    const fileInputRef = React.useRef<HTMLInputElement>(null)
+    const [isEditorFocused, setIsEditorFocused] = React.useState(false)
+    const [cursorPosition, setCursorPosition] = React.useState(0)
+    const aiComposeRef = React.useRef<HTMLDivElement>(null)
+    const [toolbarPosition, setToolbarPosition] = React.useState<{ x: number; y: number } | null>(null)
+    const [hasSelection, setHasSelection] = React.useState(false)
+    const editorContainerRef = React.useRef<HTMLDivElement>(null)
 
-    const [ref] = useAutoAnimate();
-    const [accountId] = useLocalStorage('accountId', '');
-    const { data: suggestions } = api.mail.getEmailSuggestions.useQuery({ accountId: accountId, query: '' }, { enabled: !!accountId });
-
-
-    const [expanded, setExpanded] = React.useState(defaultToolbarExpand ?? false);
-
-    const [generation, setGeneration] = React.useState('');
-
-    const aiGenerate = async (prompt: string) => {
-        const { output } = await generate(prompt)
-
+    const aiGenerate = React.useCallback(async (editorInstance: any) => {
+        if (!editorInstance) return
+        const currentText = editorInstance.getText()
+        const { output } = await generate(currentText)
+        let accumulatedText = ''
+        insertedTextRef.current = ''
+        
         for await (const delta of readStreamableValue(output)) {
             if (delta) {
-                setGeneration(delta);
+                accumulatedText += delta
+                const newText = accumulatedText.slice(insertedTextRef.current.length)
+                if (newText) {
+                    editorInstance.commands.insertContent(newText)
+                    insertedTextRef.current = accumulatedText
+                }
             }
         }
+    }, [])
 
+    aiGenerateRef.current = aiGenerate
+
+    // Helper functions for scheduling
+    const getTomorrowMorning = () => {
+        const tomorrow = addDays(new Date(), 1)
+        return setHours(setMinutes(tomorrow, 45), 7)
     }
 
+    const getTomorrowAfternoon = () => {
+        const tomorrow = addDays(new Date(), 1)
+        return setHours(setMinutes(tomorrow, 28), 13)
+    }
 
+    const getNextMondayMorning = () => {
+        const monday = nextMonday(new Date())
+        return setHours(setMinutes(monday, 18), 8)
+    }
 
-    const customText = Text.extend({
+    const handleScheduleDate = (date: Date) => {
+        setScheduledDate(date)
+        setCustomDateOpen(false)
+        setScheduleDropdownOpen(false)
+    }
+
+    const handleCustomDateSave = () => {
+        if (selectedDate && selectedTime) {
+            const timeParts = selectedTime.split(':')
+            const hours = timeParts[0] ? Number(timeParts[0]) : 12
+            const minutes = timeParts[1] ? Number(timeParts[1]) : 0
+            const scheduled = setHours(setMinutes(selectedDate, minutes), hours)
+            handleScheduleDate(scheduled)
+        }
+    }
+
+    const handleAttachmentClick = () => {
+        fileInputRef.current?.click()
+    }
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files
+        if (files) {
+            const newFiles = Array.from(files)
+            setAttachments(prev => [...prev, ...newFiles])
+        }
+        // Reset input so the same file can be selected again
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ''
+        }
+    }
+
+    const handleRemoveAttachment = (index: number) => {
+        setAttachments(prev => prev.filter((_, i) => i !== index))
+    }
+
+    const formatFileSize = (bytes: number) => {
+        if (bytes === 0) return '0 Bytes'
+        const k = 1024
+        const sizes = ['Bytes', 'KB', 'MB', 'GB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+    }
+
+    const handleAiCompose = async (prompt: string) => {
+        setIsAiComposing(true)
+        let context: string | undefined = ''
+        if (!defaultToolbarExpanded) {
+            for (const email of thread?.emails ?? []) {
+                const content = `
+Subject: ${email.subject}
+From: ${email.from?.address || email.from || 'Unknown'}
+Sent: ${new Date(email.sentAt).toLocaleString()}
+Body: ${turndown.turndown(email.body ?? email.bodySnippet ?? "")}
+
+`
+                context += content
+            }
+        }
+        context += `
+My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
+`
+
+        const { output, feedbackId } = await generateEmail(context, prompt, {
+            accountId: accountId ?? undefined,
+            threadId: threadId ?? undefined,
+        })
+
+        if (feedbackId && onFeedbackIdChange) {
+            onFeedbackIdChange(feedbackId)
+        }
+
+        let accumulatedText = ''
+        for await (const delta of readStreamableValue(output)) {
+            if (delta) {
+                accumulatedText += delta
+                if (editor) {
+                    editor.commands.setContent(accumulatedText)
+                }
+            }
+        }
+        setIsAiComposing(false)
+        setAiComposeOpen(false)
+        setAiPrompt('')
+    }
+
+    const CustomText = Text.extend({
         addKeyboardShortcuts() {
             return {
-                "Meta-j": () => {
-                    aiGenerate(this.editor.getText());
-                    return true;
+                'Space': ({ editor }) => {
+                    const text = editor.getText()
+                    // Only trigger if editor is empty
+                    if (!text || text.trim() === '') {
+                        setAiComposeOpen(true)
+                        return true
+                    }
+                    return false
                 },
-            };
+                'Meta-j': () => {
+                    if (aiGenerateRef.current) {
+                        aiGenerateRef.current(this.editor).catch(console.error)
+                    }
+                    return true
+                }
+            }
         },
-    });
-
+    })
 
     const editor = useEditor({
         autofocus: false,
         immediatelyRender: false,
-        extensions: [StarterKit, customText, GhostExtension],
+        extensions: [StarterKit, CustomText],
+        content: '',
         editorProps: {
             attributes: {
-                placeholder: "Write your email here..."
+                class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] px-4 py-3',
+            },
+        },
+        onUpdate: ({ editor }) => {
+            setValue(editor.getHTML())
+            // Update cursor position
+            const { from } = editor.state.selection
+            setCursorPosition(from)
+        },
+        onSelectionUpdate: ({ editor }) => {
+            // Update cursor position on selection change
+            const { from, to } = editor.state.selection
+            setCursorPosition(from)
+            
+            // Check if there's a text selection (not just a cursor)
+            const hasTextSelection = from !== to
+            
+            if (hasTextSelection && editor.view) {
+                try {
+                    // Get the start position of the selection
+                    const startPos = editor.view.coordsAtPos(from)
+                    
+                    if (startPos && editorContainerRef.current) {
+                        const containerRect = editorContainerRef.current.getBoundingClientRect()
+                        
+                        // Calculate position relative to the editor container
+                        // X-axis: fixed position (left edge of text content)
+                        const x = 16 // Fixed left padding (px-4 = 16px)
+                        
+                        // Y-axis: position above the selected text
+                        const y = startPos.top - containerRect.top - 8 // 8px above the selection
+                        
+                        setToolbarPosition({ x, y })
+                        setHasSelection(true)
+                    }
+                } catch (error) {
+                    // Silently handle any coordinate calculation errors
+                    console.debug('Error calculating toolbar position:', error)
+                }
+            } else {
+                setHasSelection(false)
+                setToolbarPosition(null)
             }
         },
-        onUpdate: ({ editor, transaction }) => {
-            setValue(editor.getHTML())
+        onFocus: () => {
+            setIsEditorFocused(true)
+            // Update cursor position on focus - use setTimeout to ensure editor state is ready
+            setTimeout(() => {
+                if (editor) {
+                    const { from } = editor.state.selection
+                    setCursorPosition(from)
+                }
+            }, 0)
+        },
+        onBlur: () => {
+            setIsEditorFocused(false)
+            // Hide toolbar when editor loses focus
+            setHasSelection(false)
+            setToolbarPosition(null)
         }
-    });
+    })
 
-    React.useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Enter' && editor && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName || '')) {
-                editor.commands.focus();
-            }
-            if (event.key === 'Escape' && editor) {
-                editor.commands.blur();
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [editor]);
-
-    React.useEffect(() => {
-        if (!generation || !editor) return;
-        editor.commands.insertContent(generation)
-    }, [generation, editor]);
-
-    const [value, setValue] = React.useState('');
+    const onGenerate = React.useCallback((content: string) => {
+        if (editor) {
+            editor.commands.setContent(content)
+        }
+    }, [editor])
 
     // Load initial draft when editor is ready and draft is available
     React.useEffect(() => {
@@ -123,63 +322,619 @@ const EmailEditor = ({ toValues, ccValues, subject, setSubject, to, handleSend, 
         }
     }, [editor, initialDraft]);
 
+    // Ensure cursor position is tracked when editor is ready
+    React.useEffect(() => {
+        if (editor && isEditorFocused) {
+            const { from } = editor.state.selection
+            setCursorPosition(from)
+        }
+    }, [editor, isEditorFocused])
 
+    // Handle mouseup events to update selection toolbar
+    React.useEffect(() => {
+        if (!editor) return
 
+        const handleMouseUp = () => {
+            // Small delay to ensure selection is updated
+            setTimeout(() => {
+                if (!editor.view) return
+                
+                const { state } = editor
+                const { from, to } = state.selection
+                const hasTextSelection = from !== to
+                
+                if (hasTextSelection) {
+                    try {
+                        const startPos = editor.view.coordsAtPos(from)
+                        
+                        if (startPos && editorContainerRef.current) {
+                            const containerRect = editorContainerRef.current.getBoundingClientRect()
+                            
+                            // Calculate position relative to the editor container
+                            // X-axis: fixed position (left edge of text content)
+                            const x = 16 // Fixed left padding (px-4 = 16px)
+                            
+                            // Y-axis: position above the selected text
+                            const y = startPos.top - containerRect.top - 8 // 8px above the selection
+                            
+                            setToolbarPosition({ x, y })
+                            setHasSelection(true)
+                        }
+                    } catch (error) {
+                        // Silently handle any coordinate calculation errors
+                        console.debug('Error calculating toolbar position:', error)
+                    }
+                } else {
+                    setHasSelection(false)
+                    setToolbarPosition(null)
+                }
+            }, 10)
+        }
+
+        const editorElement = editor.view?.dom
+        if (editorElement) {
+            editorElement.addEventListener('mouseup', handleMouseUp)
+            return () => {
+                editorElement.removeEventListener('mouseup', handleMouseUp)
+            }
+        }
+    }, [editor])
+
+    // Close AI compose dialog when clicking outside
+    React.useEffect(() => {
+        if (!aiComposeOpen) return
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (aiComposeRef.current && !aiComposeRef.current.contains(event.target as Node)) {
+                setAiComposeOpen(false)
+                setAiPrompt('')
+            }
+        }
+
+        // Add event listener with a small delay to avoid immediate closure
+        const timeoutId = setTimeout(() => {
+            document.addEventListener('mousedown', handleClickOutside)
+        }, 100)
+
+        return () => {
+            clearTimeout(timeoutId)
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [aiComposeOpen])
+
+    if (!editor) return null
 
     return (
-        <div>
-            <div className="flex p-4 py-2 border-b">
-                {editor && <TipTapMenuBar editor={editor} />}
-            </div>
-
-            <div ref={ref} className="p-4 pb-0 space-y-2">
-                {expanded && (
-                    <>
-                        <TagInput suggestions={suggestions?.map(s => s.address) || []} value={toValues} placeholder="Add tags" label="To" onChange={onToChange} />
-                        <TagInput suggestions={suggestions?.map(s => s.address) || []} value={ccValues} placeholder="Add tags" label="Cc" onChange={onCcChange} />
-                        <Input id="subject" className="w-full" placeholder="Subject" value={subject} onChange={e => setSubject(e.target.value)} />
-                    </>
-                )}
-                <div className="flex items-center gap-2">
-                    <div className="cursor-pointer" onClick={() => setExpanded(e => !e)}>
-                        <span className="text-green-600 font-medium">
-                            Draft{' '}
-                        </span>
-                        <span>
-                            to {to.join(', ')}
-                        </span>
+        <div className="flex flex-col bg-background">
+            {/* To Field with Cc/Bcc Button */}
+            <div className='px-4 py-2 border-b flex-shrink-0'>
+                <div className='flex items-center justify-between gap-2'>
+                    <div className='flex-1'>
+                        <TagInput
+                            label='An'
+                            onChange={setToValues}
+                            placeholder='Empfänger/-in hinzufügen'
+                            value={toValues}
+                        />
                     </div>
-                    <AIComposeButton
-                        isComposing={defaultToolbarExpand}
-                        onGenerate={setGeneration}
-                        onFeedbackIdChange={onFeedbackIdChange}
-                    />
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs whitespace-nowrap"
+                        onClick={() => setShowCcBcc(!showCcBcc)}
+                    >
+                        Cc/Bcc
+                    </Button>
                 </div>
             </div>
 
-            <div className="prose w-full px-4">
-                <EditorContent value={value} editor={editor} placeholder="Write your email here..." />
+            {/* Cc and Bcc Fields - Shown when Cc/Bcc is clicked */}
+            {showCcBcc && (
+                <div className='px-4 py-2 space-y-2 border-b flex-shrink-0'>
+                    <TagInput
+                        label='Cc'
+                        onChange={setCcValues}
+                        placeholder='Empfänger/-in hinzufügen'
+                        value={ccValues}
+                    />
+                    <TagInput
+                        label='Bcc'
+                        onChange={setBccValues}
+                        placeholder='Empfänger/-in hinzufügen'
+                        value={bccValues}
+                    />
+                </div>
+            )}
+
+            {/* Subject Field */}
+            <div className='px-4 py-2 border-b flex-shrink-0'>
+                <Input 
+                    id='subject' 
+                    placeholder='Betreff' 
+                    value={subject} 
+                    onChange={(e) => setSubject(e.target.value)} 
+                    className="h-8 text-sm border-0 focus-visible:ring-0" 
+                />
             </div>
-            <Separator />
-            <div className="py-3 px-4 flex items-center justify-between">
-                <span className="text-sm">
-                    Tip: Press{" "}
-                    <kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">
-                        Cmd + J
-                    </kbd>{" "}
-                    for AI autocomplete
-                </span>
-                <Button onClick={async () => { editor?.commands.clearContent(); await handleSend(value) }} disabled={isSending}>
-                    {isSending ? (
-                        <>
-                            <Loader2 className="size-4 animate-spin" />
-                            Sending...
-                        </>
-                    ) : (
-                        'Send'
+
+            {/* Editor Area with Top Right Buttons */}
+            <div className='flex flex-col min-h-[200px] relative'>
+                {/* Top Right Buttons */}
+                <div className='absolute top-2 right-2 z-10 flex items-center gap-2'>
+                    <AIComposeButton 
+                        isComposing={defaultToolbarExpanded} 
+                        onGenerate={onGenerate}
+                        onFeedbackIdChange={onFeedbackIdChange}
+                    />
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => {
+                            // Placeholder for future STT functionality
+                            console.log('Mic button clicked - STT to be implemented')
+                        }}
+                    >
+                        <div className="relative">
+                            <Mic className="h-4 w-4" />
+                            <Sparkles className="h-2 w-2 absolute -top-1 -right-1" />
+                        </div>
+                    </Button>
+                </div>
+
+                {/* Editor Content */}
+                <div 
+                    ref={editorContainerRef}
+                    className='flex-1 overflow-y-auto relative min-h-[200px]'
+                >
+                    {/* AI Compose Dialog - Inline within editor */}
+                    {aiComposeOpen && (
+                        <div 
+                            ref={aiComposeRef}
+                            className="absolute top-12 left-4 right-4 z-20 max-w-2xl"
+                        >
+                            <div className="flex items-center gap-3 px-4 py-3 bg-muted/50 rounded-lg border shadow-sm">
+                                {/* AI Icon */}
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-background flex items-center justify-center border">
+                                    <Bot className="h-4 w-4" />
+                                </div>
+                                
+                                {/* Text Input */}
+                                <input
+                                    type="text"
+                                    placeholder="Bitte die KI, eine E-Mail zu entwerfen..."
+                                    value={aiPrompt}
+                                    onChange={(e) => setAiPrompt(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && aiPrompt.trim() && !isAiComposing) {
+                                            handleAiCompose(aiPrompt)
+                                        }
+                                        if (e.key === 'Escape') {
+                                            setAiComposeOpen(false)
+                                            setAiPrompt('')
+                                        }
+                                    }}
+                                    className="flex-1 bg-transparent border-0 outline-none text-sm placeholder:text-muted-foreground"
+                                    autoFocus
+                                />
+                                
+                                {/* Execute Button */}
+                                <Button 
+                                    onClick={() => {
+                                        if (aiPrompt.trim() && !isAiComposing) {
+                                            handleAiCompose(aiPrompt)
+                                        }
+                                    }}
+                                    size="icon"
+                                    className={`h-8 w-8 rounded-full flex-shrink-0 transition-all ${
+                                        isAiComposing 
+                                            ? 'bg-primary text-primary-foreground cursor-wait' 
+                                            : ''
+                                    }`}
+                                    disabled={!aiPrompt.trim() || isAiComposing}
+                                >
+                                    {isAiComposing ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                                        </svg>
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
                     )}
-                </Button>
+                    
+                    {/* Floating Toolbar - appears when text is selected */}
+                    {hasSelection && toolbarPosition && (
+                        <div
+                            className="absolute z-30 flex items-center gap-1 px-2 py-1.5 bg-muted/95 backdrop-blur-sm rounded-lg shadow-lg border border-border/50"
+                            style={{
+                                left: `${toolbarPosition.x}px`,
+                                top: `${toolbarPosition.y}px`,
+                                transform: 'translateY(-100%)',
+                            }}
+                            onMouseDown={(e) => {
+                                // Prevent toolbar from closing when clicking on it
+                                e.preventDefault()
+                            }}
+                        >
+                            {/* Text verbessern Button */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 gap-1.5 text-xs"
+                            >
+                                <Pencil className="h-3.5 w-3.5" />
+                                <span>Text verbessern</span>
+                            </Button>
+
+                            {/* Frag Levra Button */}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-7 px-2 gap-1.5 text-xs"
+                            >
+                                <MessageCircle className="h-3.5 w-3.5" />
+                                <span>Frag Levra</span>
+                            </Button>
+
+                            {/* Separator */}
+                            <div className="h-4 w-px bg-border mx-1" />
+
+                            {/* Text Dropdown */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 px-2 gap-1 text-xs"
+                                    >
+                                        <span>Text</span>
+                                        <ChevronDown className="h-3 w-3" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    {/* Dropdown content will be added later */}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
+                            {/* Bold Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleBold().run()}
+                            >
+                                <Bold className="h-4 w-4" />
+                            </Button>
+
+                            {/* Italic Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleItalic().run()}
+                            >
+                                <Italic className="h-4 w-4" />
+                            </Button>
+
+                            {/* Underline Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleUnderline().run()}
+                            >
+                                <Underline className="h-4 w-4" />
+                            </Button>
+
+                            {/* Strikethrough Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => editor?.chain().focus().toggleStrike().run()}
+                            >
+                                <Strikethrough className="h-4 w-4" />
+                            </Button>
+
+                            {/* Attachment Button */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <Paperclip className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    )}
+                    
+                    <EditorContent editor={editor} />
+                    {isEditorFocused && (!editor?.getText() || !editor.getText().trim()) && cursorPosition <= 1 && !aiComposeOpen && (
+                        <div className='absolute top-3 left-4 pointer-events-none text-muted-foreground text-sm'>
+                            Schreibe oder drücke die Leertaste für KI...
+                        </div>
+                    )}
+                </div>
             </div>
+
+            {/* Attachments Display */}
+            {attachments.length > 0 && (
+                <div className='px-4 py-2 border-t bg-muted/20 flex-shrink-0'>
+                    <div className='flex flex-wrap gap-2'>
+                        {attachments.map((file, index) => (
+                            <div
+                                key={index}
+                                className='flex items-center gap-2 px-3 py-1.5 bg-background border rounded-md text-sm'
+                            >
+                                <Paperclip className="h-3 w-3 text-muted-foreground" />
+                                <span className='text-xs max-w-[200px] truncate' title={file.name}>
+                                    {file.name}
+                                </span>
+                                <span className='text-xs text-muted-foreground'>
+                                    ({formatFileSize(file.size)})
+                                </span>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-5 w-5 ml-1"
+                                    onClick={() => handleRemoveAttachment(index)}
+                                >
+                                    <X className="h-3 w-3" />
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Bottom Toolbar and Send Button */}
+            <div className='px-4 py-2 flex items-center justify-between border-t bg-muted/30 flex-shrink-0'>
+                {/* Send Button with Dropdown and Scheduled Date */}
+                <div className='flex items-center gap-2'>
+                    <div className="flex items-center">
+                        <Button 
+                            size="sm"
+                            className="h-8 px-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-r-none border-r-0"
+                            onClick={async () => {
+                                await handleSend(value)
+                            }}
+                            disabled={isSending}
+                        >
+                            {isSending ? 'Sending...' : 'Senden'}
+                        </Button>
+                        <DropdownMenu open={scheduleDropdownOpen} onOpenChange={setScheduleDropdownOpen}>
+                            <DropdownMenuTrigger asChild>
+                                <Button 
+                                    size="sm"
+                                    className="h-8 px-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-l-none"
+                                    disabled={isSending}
+                                >
+                                    <ChevronDown className="h-3 w-3" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-64" onCloseAutoFocus={(e) => {
+                                // Prevent closing when Popover is open
+                                if (customDateOpen) {
+                                    e.preventDefault()
+                                }
+                            }}>
+                                <DropdownMenuLabel>Versand planen</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem 
+                                    onClick={() => handleScheduleDate(getTomorrowMorning())}
+                                    className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                                >
+                                    <div className="flex items-center gap-2 w-full">
+                                        <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-semibold">
+                                            {format(getTomorrowMorning(), 'EEEE', { locale: de }).substring(0, 2).toUpperCase()}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-sm">Morgen früh</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {format(getTomorrowMorning(), 'd. MMMM um HH:mm', { locale: de })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                    onClick={() => handleScheduleDate(getTomorrowAfternoon())}
+                                    className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                                >
+                                    <div className="flex items-center gap-2 w-full">
+                                        <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-semibold">
+                                            {format(getTomorrowAfternoon(), 'EEEE', { locale: de }).substring(0, 2).toUpperCase()}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-sm">Morgen Nachmittag</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {format(getTomorrowAfternoon(), 'd. MMMM um HH:mm', { locale: de })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                    onClick={() => handleScheduleDate(getNextMondayMorning())}
+                                    className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                                >
+                                    <div className="flex items-center gap-2 w-full">
+                                        <div className="w-6 h-6 rounded bg-red-500 flex items-center justify-center text-white text-xs font-semibold">
+                                            {format(getNextMondayMorning(), 'EEEE', { locale: de }).substring(0, 2).toUpperCase()}
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="text-sm">Montagmorgen</div>
+                                            <div className="text-xs text-muted-foreground">
+                                                {format(getNextMondayMorning(), 'd. MMMM um HH:mm', { locale: de })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <Popover open={customDateOpen} onOpenChange={(open) => {
+                                    setCustomDateOpen(open)
+                                    if (open && !selectedDate) {
+                                        setSelectedDate(new Date())
+                                    }
+                                    // Keep dropdown open when popover opens
+                                    if (open) {
+                                        setScheduleDropdownOpen(true)
+                                    }
+                                }} modal={false}>
+                                    <PopoverTrigger asChild>
+                                        <DropdownMenuItem 
+                                            onSelect={(e) => {
+                                                e.preventDefault()
+                                                setCustomDateOpen(true)
+                                            }}
+                                            className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
+                                        >
+                                            <div className="flex items-center gap-2 w-full">
+                                                <Calendar className="h-4 w-4 text-primary" />
+                                                <div className="flex-1">
+                                                    <div className="text-sm">Benutzerdefiniertes Datum</div>
+                                                </div>
+                                            </div>
+                                        </DropdownMenuItem>
+                                    </PopoverTrigger>
+                                    <PopoverContent 
+                                        className="w-auto p-0" 
+                                        align="start"
+                                        onInteractOutside={(e) => {
+                                            // Prevent closing when clicking outside
+                                            e.preventDefault()
+                                        }}
+                                        onEscapeKeyDown={(e) => {
+                                            // Prevent closing on escape, only close on button clicks
+                                            e.preventDefault()
+                                        }}
+                                    >
+                                        <div className="p-4 space-y-4">
+                                            <div className="flex gap-2">
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Date"
+                                                    value={selectedDate ? format(selectedDate, 'MMM d, yyyy') : ''}
+                                                    readOnly
+                                                    className="flex-1"
+                                                />
+                                                <Input
+                                                    type="time"
+                                                    value={selectedTime}
+                                                    onChange={(e) => setSelectedTime(e.target.value)}
+                                                    className="w-32"
+                                                />
+                                            </div>
+                                            <Select value={selectedTimezone} onValueChange={setSelectedTimezone}>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue placeholder="Select timezone" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="GMT+01">GMT+01 Zurich</SelectItem>
+                                                    <SelectItem value="GMT+00">GMT+00 London</SelectItem>
+                                                    <SelectItem value="GMT-05">GMT-05 New York</SelectItem>
+                                                    <SelectItem value="GMT-08">GMT-08 Los Angeles</SelectItem>
+                                                    <SelectItem value="GMT+09">GMT+09 Tokyo</SelectItem>
+                                                    <SelectItem value="GMT+02">GMT+02 Berlin</SelectItem>
+                                                    <SelectItem value="GMT+08">GMT+08 Beijing</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <CalendarComponent
+                                                mode="single"
+                                                selected={selectedDate}
+                                                onSelect={setSelectedDate}
+                                                initialFocus
+                                            />
+                                            <div className="flex justify-end gap-2">
+                                                <Button variant="outline" size="sm" onClick={() => {
+                                                    setCustomDateOpen(false)
+                                                }}>
+                                                    Schließen
+                                                </Button>
+                                                <Button size="sm" onClick={() => {
+                                                    handleCustomDateSave()
+                                                    setCustomDateOpen(false)
+                                                    setScheduleDropdownOpen(false)
+                                                }}>
+                                                    Speichern
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                    {scheduledDate && (
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-primary">
+                                {format(scheduledDate, 'MMM d, h:mm a', { locale: de })} {selectedTimezone}
+                            </span>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 text-xs"
+                                onClick={() => setScheduledDate(null)}
+                            >
+                                Entfernen
+                            </Button>
+                        </div>
+                    )}
+                </div>
+                
+                {/* Right Side Icons */}
+                <div className='flex items-center gap-2'>
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        className="hidden"
+                        onChange={handleFileSelect}
+                    />
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
+                                onClick={handleAttachmentClick}
+                            >
+                                <Paperclip className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Datei anhängen</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+                                onClick={() => {
+                                    // Clear all fields
+                                    setToValues([])
+                                    setCcValues([])
+                                    setBccValues([])
+                                    setSubject('')
+                                    setAttachments([])
+                                    if (editor) {
+                                        editor.commands.clearContent()
+                                    }
+                                }}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Entwurf löschen</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
+            </div>
+
         </div>
     );
 };

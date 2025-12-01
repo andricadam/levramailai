@@ -7,7 +7,7 @@ import React from 'react'
 import { format, differenceInDays } from 'date-fns'
 import { type RouterOutputs } from '@/trpc/react'
 import { cn } from '@/lib/utils'
-import { Inbox, Trash2, X } from 'lucide-react'
+import { Inbox, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -20,8 +20,29 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
+import { api } from '@/trpc/react'
+import { useLocalStorage } from 'usehooks-ts'
 
 type Thread = RouterOutputs["account"]["getThreads"][number]
+
+// Mark as unread icon - envelope with notification dot
+const MarkAsUnreadIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {/* Envelope outline */}
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    {/* Notification dot */}
+    <circle cx="18" cy="6" r="3" fill="currentColor" />
+  </svg>
+);
 
 const getPriorityBadgeVariant = (priority: 'high' | 'medium' | 'low' | undefined): ComponentProps<typeof Badge>['variant'] => {
     if (priority === 'high') return 'destructive'
@@ -44,6 +65,29 @@ const ThreadList = () => {
     const hoverTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
     const lastMouseEventRef = React.useRef<React.MouseEvent<HTMLDivElement> | null>(null)
     const threadItemRefs = React.useRef<Map<string, HTMLButtonElement>>(new Map())
+    const [accountId] = useLocalStorage('accountId', '')
+
+    // Thread actions mutations
+    const utils = api.useUtils()
+    const archiveThread = api.mail.archiveThread.useMutation({
+        onSuccess: () => {
+            utils.account.getThreads.invalidate()
+            utils.mail.getNumThreads.invalidate()
+        }
+    })
+
+    const deleteThread = api.mail.deleteThread.useMutation({
+        onSuccess: () => {
+            utils.account.getThreads.invalidate()
+            utils.mail.getNumThreads.invalidate()
+        }
+    })
+
+    const markAsUnread = api.mail.markAsUnread.useMutation({
+        onSuccess: () => {
+            utils.account.getThreads.invalidate()
+        }
+    })
 
     React.useEffect(() => {
         setMounted(true)
@@ -346,13 +390,17 @@ const ThreadList = () => {
                                                                         onClick={(e) => {
                                                                             e.stopPropagation()
                                                                             e.preventDefault()
-                                                                            // Archive action
+                                                                            if (accountId && thread.id) {
+                                                                                archiveThread.mutate({ accountId, threadId: thread.id })
+                                                                            }
                                                                         }}
                                                                         onKeyDown={(e) => {
                                                                             if (e.key === 'Enter' || e.key === ' ') {
                                                                                 e.stopPropagation()
                                                                                 e.preventDefault()
-                                                                                // Archive action
+                                                                                if (accountId && thread.id) {
+                                                                                    archiveThread.mutate({ accountId, threadId: thread.id })
+                                                                                }
                                                                             }
                                                                         }}
                                                                     >
@@ -370,13 +418,17 @@ const ThreadList = () => {
                                                                         onClick={(e) => {
                                                                             e.stopPropagation()
                                                                             e.preventDefault()
-                                                                            // Delete action
+                                                                            if (accountId && thread.id) {
+                                                                                deleteThread.mutate({ accountId, threadId: thread.id })
+                                                                            }
                                                                         }}
                                                                         onKeyDown={(e) => {
                                                                             if (e.key === 'Enter' || e.key === ' ') {
                                                                                 e.stopPropagation()
                                                                                 e.preventDefault()
-                                                                                // Delete action
+                                                                                if (accountId && thread.id) {
+                                                                                    deleteThread.mutate({ accountId, threadId: thread.id })
+                                                                                }
                                                                             }
                                                                         }}
                                                                     >
@@ -394,17 +446,21 @@ const ThreadList = () => {
                                                                         onClick={(e) => {
                                                                             e.stopPropagation()
                                                                             e.preventDefault()
-                                                                            // Mark as read/unread
+                                                                            if (accountId && thread.id) {
+                                                                                markAsUnread.mutate({ accountId, threadId: thread.id })
+                                                                            }
                                                                         }}
                                                                         onKeyDown={(e) => {
                                                                             if (e.key === 'Enter' || e.key === ' ') {
                                                                                 e.stopPropagation()
                                                                                 e.preventDefault()
-                                                                                // Mark as read/unread
+                                                                                if (accountId && thread.id) {
+                                                                                    markAsUnread.mutate({ accountId, threadId: thread.id })
+                                                                                }
                                                                             }
                                                                         }}
                                                                     >
-                                                                        <X className="w-4 h-4" />
+                                                                        <MarkAsUnreadIcon className="w-4 h-4" />
                                                                     </div>
                                                                 </TooltipTrigger>
                                                                 <TooltipContent>Mark as unread</TooltipContent>
