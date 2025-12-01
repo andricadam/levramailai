@@ -140,7 +140,7 @@ const ThreadList = () => {
                                 const threadRect = threadItem.getBoundingClientRect()
                                 const mouseX = e.clientX
                                 const centerX = threadRect.left + threadRect.width / 2
-                                const side = mouseX < centerX ? 'left' : 'right'
+                                const side: 'left' | 'right' = mouseX < centerX ? 'left' : 'right'
                                 
                                 // Calculate position with bounds checking
                                 const popoverWidth = 384 // w-96 = 24rem = 384px
@@ -200,7 +200,7 @@ const ThreadList = () => {
                                                 const threadRect = threadItem.getBoundingClientRect()
                                                 const mouseX = lastMouseEventRef.current.clientX
                                                 const centerX = threadRect.left + threadRect.width / 2
-                                                const side = mouseX < centerX ? 'left' : 'right'
+                                                const side: 'left' | 'right' = mouseX < centerX ? 'left' : 'right'
                                                 
                                                 const popoverWidth = 384
                                                 const padding = 10
@@ -274,20 +274,20 @@ const ThreadList = () => {
                                                 }}
                                                 onClick={() => setThreadId(thread.id)}
                                                 className={cn(
-                                                    'flex items-center gap-1.5 rounded-lg border p-2 text-left text-sm transition-all w-full max-w-full overflow-hidden',
+                                                    'flex items-center gap-1.5 rounded-lg border p-5 text-left text-sm transition-all w-full max-w-full overflow-hidden min-h-[60px]',
                                                     'bg-[#fafafa] hover:bg-[#f0f0f0]',
                                                     threadId === thread.id && 'bg-accent'
                                                 )}
                                             >
                                                 {/* Left: Sender Name - Fixed Width */}
-                                                <div className='font-semibold flex-shrink-0 w-[80px] truncate text-xs'>
+                                                <div className='font-semibold flex-shrink-0 w-[200px] truncate text-[15px]'>
                                                     {thread.emails.at(-1)?.from?.name || 'Unknown'}
                                                 </div>
                                                 
                                                 {/* Center: Subject and Preview - Fixed alignment */}
-                                                <div className='flex-1 flex flex-col gap-0.5 min-w-0'>
+                                                <div className='flex-1 flex flex-col gap-0.5 min-w-0 mr-2'>
                                                     {thread.subject && (
-                                                        <div className='text-xs font-medium truncate'>{thread.subject}</div>
+                                                        <div className='text-[12px] font-medium truncate'>{thread.subject}</div>
                                                     )}
                                                     {thread.emails.at(-1)?.bodySnippet && (
                                                         <div 
@@ -301,18 +301,18 @@ const ThreadList = () => {
                                                 </div>
                                                 
                                                 {/* Labels: User Label (top) and Priority Label (bottom) - Stacked vertically */}
-                                                <div className='flex-shrink-0 flex flex-col gap-0.5 items-center justify-center w-[50px]'>
+                                                <div className='flex-shrink-0 flex flex-col gap-0.5 items-center justify-center w-[150px] -ml-2'>
                                                     {/* User Label - Display on top if exists */}
                                                     {thread.threadLabels && thread.threadLabels.length > 0 && thread.threadLabels[0]?.label && (
                                                         <Badge 
                                                             variant="secondary"
-                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight'
+                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight w-[60px] h-[20px] flex items-center justify-center'
                                                             style={{ 
                                                                 backgroundColor: thread.threadLabels[0].label.color || undefined,
                                                                 color: thread.threadLabels[0].label.color ? '#fff' : undefined
                                                             }}
                                                         >
-                                                            {thread.threadLabels[0].label.name}
+                                                            <span className='truncate'>{thread.threadLabels[0].label.name}</span>
                                                         </Badge>
                                                     )}
                                                     
@@ -320,9 +320,9 @@ const ThreadList = () => {
                                                     {thread.emails.at(-1)?.priority && (
                                                         <Badge 
                                                             variant={getPriorityBadgeVariant(thread.emails.at(-1)?.priority)}
-                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight'
+                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight w-[60px] h-[20px] flex items-center justify-center'
                                                         >
-                                                            {getPriorityLabel(thread.emails.at(-1)?.priority)}
+                                                            <span className='truncate'>{getPriorityLabel(thread.emails.at(-1)?.priority)}</span>
                                                         </Badge>
                                                     )}
                                                 </div>
@@ -414,8 +414,8 @@ const ThreadList = () => {
                                                         <div className='text-right min-w-0'>
                                                             {dateInfo.showTime ? (
                                                                 <div className='flex flex-col items-end'>
-                                                                    <div className='text-[10px] font-medium leading-tight'>{dateInfo.day}</div>
-                                                                    <div className='text-[10px] text-muted-foreground leading-tight'>{dateInfo.time}</div>
+                                                                    <div className='text-[15px] font-medium leading-tight'>{dateInfo.day}</div>
+                                                                    <div className='text-[12px] text-muted-foreground leading-tight'>{dateInfo.time}</div>
                                                                 </div>
                                                             ) : (
                                                                 <div className='text-[10px] text-muted-foreground leading-tight'>{dateInfo.date}</div>

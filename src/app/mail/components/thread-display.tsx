@@ -8,10 +8,14 @@ import {
   ReplyAll,
   Trash2,
   ArrowLeft,
+  Tag,
+  Plus,
+  Check,
 } from "lucide-react"
 import {
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import {
   Avatar,
@@ -48,6 +52,7 @@ import { useId } from "react";
 import React from "react";
 import { SummaryButton } from "./ai/summary";
 import { ViewModeSelector, type ViewMode } from "./view-mode-selector";
+import NewLabelDialog from "./new-label-dialog";
 
 interface ThreadDisplayProps {
   currentViewMode?: ViewMode;
@@ -70,6 +75,8 @@ export function ThreadDisplay({
   const [isSearching] = useAtom(isSearchingAtom)
   const [showReplyBox, setShowReplyBox] = React.useState(false)
   const [summary, setSummary] = React.useState<string>('')
+  const [showLabelDialog, setShowLabelDialog] = React.useState(false)
+  const [editingLabel, setEditingLabel] = React.useState<{ id: string; name: string; description?: string | null; color?: string } | null>(null)
 
   const [accountId] = useLocalStorage('accountId', '')
   const { data: foundThread } = api.mail.getThreadById.useQuery({
@@ -77,6 +84,79 @@ export function ThreadDisplay({
     threadId: threadId ?? ''
   }, { enabled: !_thread && !!threadId })
   const thread = _thread ?? foundThread
+
+  // Label management
+  const utils = api.useUtils()
+  const { data: labels = [], isLoading: labelsLoading } = api.labels.getLabels.useQuery()
+  const { data: threadLabels } = api.labels.getThreadLabels.useQuery(
+    { threadId: threadId ?? '' },
+    { enabled: !!threadId }
+  )
+  const assignLabel = api.labels.assignLabelToThread.useMutation({
+    onSuccess: () => {
+      utils.mail.getThreadById.invalidate()
+      utils.account.getThreads.invalidate()
+      utils.labels.getThreadLabels.invalidate()
+    }
+  })
+  const removeLabel = api.labels.removeLabelFromThread.useMutation({
+    onSuccess: () => {
+      utils.mail.getThreadById.invalidate()
+      utils.account.getThreads.invalidate()
+      utils.labels.getThreadLabels.invalidate()
+    }
+  })
+  const createLabel = api.labels.createLabel.useMutation({
+    onSuccess: () => {
+      utils.labels.getLabels.invalidate()
+      setShowLabelDialog(false)
+      setEditingLabel(null)
+    }
+  })
+  const updateLabel = api.labels.updateLabel.useMutation({
+    onSuccess: () => {
+      utils.labels.getLabels.invalidate()
+      setEditingLabel(null)
+      setShowLabelDialog(false)
+    }
+  })
+
+  const handleCreateLabel = (name: string, description: string, color?: string) => {
+    if (editingLabel) {
+      updateLabel.mutate({
+        id: editingLabel.id,
+        name,
+        description,
+        ...(color && { color }),
+      })
+    } else {
+      createLabel.mutate({
+        name,
+        description,
+        color: color || '#6b7280',
+      })
+    }
+  }
+
+  const handleLabelSelect = (labelId: string) => {
+    if (!threadId) return
+    
+    const isAssigned = threadLabels?.some(tl => tl.labelId === labelId) ?? false
+    if (isAssigned) {
+      removeLabel.mutate({ threadId, labelId })
+    } else {
+      assignLabel.mutate({ threadId, labelId })
+    }
+  }
+
+  const isLabelAssigned = (labelId: string) => {
+    return threadLabels?.some(tl => tl.labelId === labelId) ?? false
+  }
+
+  // Get the currently assigned label (first one)
+  const currentLabel = threadLabels && threadLabels.length > 0 
+    ? threadLabels[0]?.label 
+    : null
 
   // Reset reply box and summary when thread changes
   React.useEffect(() => {
@@ -200,6 +280,94 @@ export function ThreadDisplay({
             </Popover>
             <TooltipContent>Snooze</TooltipContent>
           </Tooltip>
+          {/* Label Selector */}
+          <Tooltip>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <TooltipTrigger asChild>
+                  {currentLabel ? (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      disabled={!thread}
+                      className="h-8 px-2 gap-1.5"
+                    >
+                      <Tag 
+                        className="w-3.5 h-3.5 shrink-0"
+                        style={{ color: currentLabel.color || '#6b7280' }}
+                      />
+                      <span className="text-xs font-medium">{currentLabel.name}</span>
+                      <span className="sr-only">Change label</span>
+                    </Button>
+                  ) : (
+                    <Button variant="ghost" size="icon" disabled={!thread}>
+                      <Tag className="w-4 h-4" />
+                      <span className="sr-only">Add label</span>
+                    </Button>
+                  )}
+                </TooltipTrigger>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                {labelsLoading ? (
+                  <DropdownMenuItem disabled>Loading labels...</DropdownMenuItem>
+                ) : labels.length === 0 ? (
+                  <>
+                    <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                      No labels yet
+                    </div>
+                    <DropdownMenuItem onClick={() => setShowLabelDialog(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create label
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <div className="px-2 py-1.5 text-sm font-medium text-foreground">
+                      label hinzufügen
+                    </div>
+                    {labels.map((label) => (
+                      <DropdownMenuItem
+                        key={label.id}
+                        onClick={() => handleLabelSelect(label.id)}
+                        className="flex items-center gap-2"
+                      >
+                        <Tag 
+                          className="w-4 h-4 shrink-0"
+                          style={{ color: label.color || '#6b7280' }}
+                        />
+                        <span className="flex-1">{label.name}</span>
+                        {isLabelAssigned(label.id) && (
+                          <Check className="w-4 h-4" />
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                    {currentLabel && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            if (threadId && currentLabel.id) {
+                              removeLabel.mutate({ threadId, labelId: currentLabel.id })
+                            }
+                          }}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <X className="w-4 h-4 mr-2" />
+                          Remove label
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowLabelDialog(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create new label
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <TooltipContent>{currentLabel ? "Change label" : "Add label"}</TooltipContent>
+          </Tooltip>
         </div>
         <div className="flex items-center gap-2 ml-auto">
           <Tooltip>
@@ -322,6 +490,17 @@ export function ThreadDisplay({
           </div>
         )
       )}
+      <NewLabelDialog
+        open={showLabelDialog}
+        onOpenChange={(open) => {
+          setShowLabelDialog(open)
+          if (!open) {
+            setEditingLabel(null)
+          }
+        }}
+        onSubmit={handleCreateLabel}
+        editLabel={editingLabel}
+      />
     </div>
   )
 }

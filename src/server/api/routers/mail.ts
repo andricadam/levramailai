@@ -84,6 +84,11 @@ export const mailRouter = createTRPCRouter({
                             id: true,
                             sentAt: true,
                         }
+                    },
+                    threadLabels: {
+                        include: {
+                            label: true,
+                        }
                     }
                 }
             });

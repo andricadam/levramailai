@@ -1,16 +1,13 @@
 'use client'
 import { Button } from "@/components/ui/button"
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
-import { Pencil } from "lucide-react"
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Pencil, X, Minus } from "lucide-react"
 
 import React from 'react'
 import EmailEditor from "./email-editor"
@@ -82,16 +79,19 @@ const ComposeButton = () => {
 
 
     return (
-        <Drawer open={open} onOpenChange={setOpen}>
-            <DrawerTrigger asChild>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
                 <Button>
                     <Pencil className='size-4 mr-1' />
                     Compose
                 </Button>
-            </DrawerTrigger>
-            <DrawerContent className="">
-                <DrawerHeader>
-                    <DrawerTitle>Compose Email</DrawerTitle>
+            </DialogTrigger>
+            <DialogContent 
+                className="max-w-[calc(100%-2rem)] sm:max-w-7xl h-[90vh] p-0 flex flex-col overflow-hidden"
+                overlayClassName="bg-background/80 backdrop-blur-[0.5px]"
+                showCloseButton={false}
+            >
+                <div className="flex-1 overflow-hidden flex flex-col">
                     <EmailEditor
                         toValues={toValues}
                         setToValues={setToValues}
@@ -99,18 +99,17 @@ const ComposeButton = () => {
                         setCcValues={setCcValues}
                         subject={subject}
                         setSubject={setSubject}
-
+                        account={account}
                         to={toValues.map(to => to.value)}
                         defaultToolbarExpanded={true}
-
                         handleSend={handleSend}
                         isSending={sendEmail.isPending}
                         onFeedbackIdChange={setInstantReplyFeedbackId}
+                        onClose={() => setOpen(false)}
                     />
-                </DrawerHeader>
-            </DrawerContent>
-
-        </Drawer>
+                </div>
+            </DialogContent>
+        </Dialog>
     )
 }
 
