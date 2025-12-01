@@ -1,6 +1,12 @@
 "use server"
 import { db } from "@/server/db";
 import type { EmailMessage, EmailAddress as AurinkoEmailAddress } from "@/types";
+import { OramaClient } from "./orama";
+import { getEmbeddings } from "./embedding";
+import { turndown } from "./turndown";
+import { determineEmailPriority } from "@/app/mail/components/ai/priority";
+import { shouldGenerateReply } from "@/app/mail/components/ai/instant-reply/should-reply";
+import { generateInstantReplyServer } from "@/app/mail/components/ai/instant-reply/generate-reply-server";
 
 /**
  * Safely parses a date string to a Date object, with fallback handling
@@ -129,6 +135,7 @@ async function ensureEmailAddress(
 
 /**
  * Syncs emails to the database, creating threads, emails, and related records
+ * Also vectorizes emails and stores them in Orama for RAG, and generates instant replies
  */
 export async function syncEmailsToDatabase(
     accountId: string,
@@ -140,6 +147,11 @@ export async function syncEmailsToDatabase(
     }
 
     console.log(`Starting sync for ${emails.length} emails...`);
+
+    // Initialize Orama client for vectorization
+    const orama = new OramaClient(accountId);
+    await orama.initialize();
+    const oramaDocuments: any[] = [];
 
     // Group emails by threadId
     const emailsByThread = new Map<string, EmailMessage[]>();
@@ -191,6 +203,128 @@ export async function syncEmailsToDatabase(
 
         // Process each email in the thread
         for (const email of threadEmails) {
+            // Determine email label type
+            const emailLabelType = mapEmailLabel(email.sysLabels);
+
+            // Determine priority for inbox emails only
+            let emailPriority: 'high' | 'medium' | 'low' = 'medium';
+            if (emailLabelType === 'inbox') {
+                // Check if Gmail has marked this email as important
+                if (email.sysLabels.includes('important')) {
+                    emailPriority = 'high';
+                } else {
+                    // Otherwise, use AI to determine priority
+                    try {
+                        emailPriority = await determineEmailPriority(
+                            email.body ?? email.bodySnippet ?? '',
+                            email.subject || "(No subject)",
+                            email.from.name || email.from.address,
+                            new Date(email.sentAt).toLocaleString()
+                        );
+                    } catch (error) {
+                        console.error(`Error determining priority for email ${email.id}:`, error);
+                        emailPriority = 'medium';
+                    }
+                }
+            }
+
+            // Determine if we should generate an auto-reply draft
+            let autoReplyDraft: string | null = null;
+
+            // Only generate for incoming inbox emails (not sent, drafts, spam, or junk)
+            if (emailLabelType === 'inbox') {
+                try {
+                    const shouldReply = await shouldGenerateReply(
+                        email.body ?? email.bodySnippet ?? '',
+                        email.subject || "(No subject)",
+                        email.from.name || email.from.address,
+                        new Date(email.sentAt).toLocaleString(),
+                        email.sysLabels,
+                        email.sysClassifications || []
+                    );
+
+                    // If eligible, generate the reply draft
+                    if (shouldReply) {
+                        try {
+                            // Get account info for context
+                            const account = await db.account.findUnique({
+                                where: { id: accountId },
+                                select: { name: true, emailAddress: true }
+                            });
+
+                            // Build context from thread emails (existing ones in DB)
+                            const existingThreadEmails = await db.email.findMany({
+                                where: { threadId: email.threadId },
+                                orderBy: { sentAt: 'asc' },
+                                include: { from: true }
+                            });
+
+                            let context = '';
+                            // Add existing thread emails
+                            for (const threadEmail of existingThreadEmails) {
+                                context += `
+Subject: ${threadEmail.subject}
+From: ${threadEmail.from.address}
+Sent: ${new Date(threadEmail.sentAt).toLocaleString()}
+Body: ${turndown.turndown(threadEmail.body ?? threadEmail.bodySnippet ?? "")}
+
+`;
+                            }
+                            
+                            // Add the current email being processed
+                            context += `
+Subject: ${email.subject || "(No subject)"}
+From: ${email.from.address}
+Sent: ${new Date(email.sentAt).toLocaleString()}
+Body: ${turndown.turndown(email.body ?? email.bodySnippet ?? "")}
+
+`;
+                            
+                            if (account) {
+                                context += `
+My name is ${account.name} and my email is ${account.emailAddress}.
+`;
+                            }
+
+                            // Generate the reply (server-side, non-streaming)
+                            autoReplyDraft = await generateInstantReplyServer(context);
+                            console.log(`Generated auto-reply draft for email ${email.id}`);
+                        } catch (replyError) {
+                            console.error(`Error generating reply draft for email ${email.id}:`, replyError);
+                            // Continue without draft if generation fails
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error determining reply eligibility for email ${email.id}:`, error);
+                }
+            }
+
+            // Vectorize email for RAG
+            try {
+                const body = turndown.turndown(email.body ?? email.bodySnippet ?? '');
+                // Generate embeddings from full email context (subject + body + sender) for better search
+                const emailText = `Subject: ${email.subject || "(No subject)"}\nFrom: ${email.from.name || email.from.address}\nBody: ${body}`;
+                const embeddings = await getEmbeddings(emailText);
+                
+                // Collect Orama documents for batch insert
+                oramaDocuments.push({
+                    subject: email.subject || "(No subject)",
+                    body: body,
+                    rowBody: email.bodySnippet ?? '',
+                    from: email.from.address,
+                    to: email.to.map(to => to.address),
+                    sentAt: new Date(email.sentAt).toLocaleString(),
+                    threadId: email.threadId,
+                    source: 'email', // CRITICAL: Add source field to identify as email
+                    sourceId: email.id, // CRITICAL: Add sourceId to link back to email
+                    fileName: '', // Not applicable for emails
+                    embeddings
+                });
+            } catch (error) {
+                console.error(`Error vectorizing email ${email.id}:`, error);
+                // Continue even if vectorization fails
+            }
+
             // Ensure email addresses exist
             const fromId = await ensureEmailAddress(accountId, email.from);
             
@@ -262,7 +396,9 @@ export async function syncEmailsToDatabase(
                 nativeProperties: email.nativeProperties as unknown as Record<string, any>,
                 folderId: email.folderId || null,
                 omitted: email.omitted || [],
-                emailLabel: mapEmailLabel(email.sysLabels),
+                emailLabel: emailLabelType,
+                priority: emailPriority,
+                autoReplyDraft: autoReplyDraft,
                 to: {
                     set: toIds.map(id => ({ id })),
                 },
@@ -364,6 +500,13 @@ export async function syncEmailsToDatabase(
                 }
             }
         }
+    }
+
+    // Batch insert all Orama documents and save index once
+    if (oramaDocuments.length > 0) {
+        console.log(`Vectorizing and inserting ${oramaDocuments.length} emails into Orama...`);
+        await orama.insertBatch(oramaDocuments);
+        console.log(`Successfully vectorized and stored ${oramaDocuments.length} emails in Orama`);
     }
 
     console.log(`Successfully synced ${emails.length} emails across ${emailsByThread.size} threads`);

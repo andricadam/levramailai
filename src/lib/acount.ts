@@ -92,10 +92,25 @@ export class Account {
 
             this.token = newTokens.access_token;
             console.log(`Token refreshed for account ${account.emailAddress}`);
+            return newTokens.access_token;
         } catch (error) {
             console.error('Token refresh failed:', error);
             throw new Error('Token refresh failed. Please reconnect your account.');
         }
+    }
+
+    /**
+     * Creates a token refresh callback function for API instances
+     * This will be called automatically when a 401 error occurs
+     */
+    private createTokenRefreshCallback(): () => Promise<string> {
+        return async () => {
+            const account = await this.getAccount();
+            if (!account) {
+                throw new Error('Account not found');
+            }
+            return await this.refreshAccessToken(account);
+        };
     }
     
     async getUpdatedEmails({ deltaToken, pageToken }: { deltaToken?: string, pageToken?: string}) {
@@ -103,8 +118,10 @@ export class Account {
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
 
+        const tokenRefreshCallback = this.createTokenRefreshCallback();
+
         if (account.provider === 'google') {
-            const gmail = new GmailAPI(this.token);
+            const gmail = new GmailAPI(this.token, tokenRefreshCallback);
             // Query for inbox messages to ensure we sync inbox emails
             // Use 'in:inbox' to filter for inbox messages only
             const response = await gmail.listMessages('in:inbox', pageToken);
@@ -114,7 +131,7 @@ export class Account {
                 nextDeltaToken: response.nextDeltaToken,
             };
         } else if (account.provider === 'microsoft') {
-            const graph = new MicrosoftGraphAPI(this.token);
+            const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
             // For Microsoft Graph, use 'Inbox' folder if no deltaToken (for regular syncs)
             // Delta queries work on all messages, so folderId is not needed
             const folderId = deltaToken ? undefined : 'Inbox'
@@ -134,9 +151,11 @@ export class Account {
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
 
+        const tokenRefreshCallback = this.createTokenRefreshCallback();
+
         try {
             if (account.provider === 'google') {
-                const gmail = new GmailAPI(this.token);
+                const gmail = new GmailAPI(this.token, tokenRefreshCallback);
                 await gmail.performInitialSync(account.id);
                 // Get updated delta token
                 const updatedAccount = await db.account.findUnique({
@@ -148,7 +167,7 @@ export class Account {
                     deltaToken: updatedAccount?.nextDeltaToken || ''
                 };
             } else if (account.provider === 'microsoft') {
-                const graph = new MicrosoftGraphAPI(this.token);
+                const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
                 await graph.performInitialSync(account.id);
                 // Get updated delta token
                 const updatedAccount = await db.account.findUnique({
@@ -282,9 +301,11 @@ export class Account {
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
 
+        const tokenRefreshCallback = this.createTokenRefreshCallback();
+
         try {
             if (account.provider === 'google') {
-                const gmail = new GmailAPI(this.token);
+                const gmail = new GmailAPI(this.token, tokenRefreshCallback);
                 return await gmail.sendEmail({
                     from,
                     to,
@@ -297,7 +318,7 @@ export class Account {
                     references,
                 });
             } else if (account.provider === 'microsoft') {
-                const graph = new MicrosoftGraphAPI(this.token);
+                const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
                 return await graph.sendEmail({
                     from,
                     to,
@@ -327,12 +348,14 @@ export class Account {
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
 
+        const tokenRefreshCallback = this.createTokenRefreshCallback();
+
         try {
             if (account.provider === 'google') {
-                const gmail = new GmailAPI(this.token);
+                const gmail = new GmailAPI(this.token, tokenRefreshCallback);
                 await gmail.archiveThread(threadId);
             } else if (account.provider === 'microsoft') {
-                const graph = new MicrosoftGraphAPI(this.token);
+                const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
                 await graph.archiveThread(threadId);
             } else {
                 throw new Error(`Unsupported provider: ${account.provider}`);
@@ -352,12 +375,14 @@ export class Account {
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
 
+        const tokenRefreshCallback = this.createTokenRefreshCallback();
+
         try {
             if (account.provider === 'google') {
-                const gmail = new GmailAPI(this.token);
+                const gmail = new GmailAPI(this.token, tokenRefreshCallback);
                 await gmail.deleteThread(threadId);
             } else if (account.provider === 'microsoft') {
-                const graph = new MicrosoftGraphAPI(this.token);
+                const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
                 await graph.deleteThread(threadId);
             } else {
                 throw new Error(`Unsupported provider: ${account.provider}`);
@@ -377,12 +402,14 @@ export class Account {
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
 
+        const tokenRefreshCallback = this.createTokenRefreshCallback();
+
         try {
             if (account.provider === 'google') {
-                const gmail = new GmailAPI(this.token);
+                const gmail = new GmailAPI(this.token, tokenRefreshCallback);
                 await gmail.markAsUnread(threadId);
             } else if (account.provider === 'microsoft') {
-                const graph = new MicrosoftGraphAPI(this.token);
+                const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
                 await graph.markAsUnread(threadId);
             } else {
                 throw new Error(`Unsupported provider: ${account.provider}`);

@@ -75,9 +75,12 @@ interface GraphMessageListResponse {
 export class MicrosoftGraphAPI {
   private accessToken: string
   private baseUrl = 'https://graph.microsoft.com/v1.0'
+  private onTokenRefresh?: () => Promise<string> // Callback to refresh token on 401
+  private tokenRefreshAttempted = false // Track if we've already tried refreshing
 
-  constructor(accessToken: string) {
+  constructor(accessToken: string, onTokenRefresh?: () => Promise<string>) {
     this.accessToken = accessToken
+    this.onTokenRefresh = onTokenRefresh
   }
 
   private async request<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
@@ -96,9 +99,34 @@ export class MicrosoftGraphAPI {
         },
       })
 
+      // Reset token refresh flag on successful request
+      this.tokenRefreshAttempted = false
       return response.data
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        // Handle 401 Unauthorized - try to refresh token
+        if (error.response?.status === 401 && this.onTokenRefresh && !this.tokenRefreshAttempted) {
+          try {
+            console.log('Token expired, attempting to refresh...')
+            this.tokenRefreshAttempted = true
+            const newToken = await this.onTokenRefresh()
+            this.accessToken = newToken
+            console.log('Token refreshed successfully, retrying request...')
+            // Retry the request with the new token
+            const response = await axios.get<T>(url.toString(), {
+              headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+              },
+            })
+            this.tokenRefreshAttempted = false
+            return response.data
+          } catch (refreshError) {
+            console.error('Failed to refresh token:', refreshError)
+            this.tokenRefreshAttempted = false
+            // Fall through to throw the original 401 error
+          }
+        }
+        
         console.error('Microsoft Graph API error:', {
           url: url.toString(),
           status: error.response?.status,
@@ -111,25 +139,87 @@ export class MicrosoftGraphAPI {
   }
 
   private async postRequest<T>(endpoint: string, data: any): Promise<T> {
-    const response = await axios.post<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    })
+    try {
+      const response = await axios.post<T>(`${this.baseUrl}${endpoint}`, data, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
 
-    return response.data
+      // Reset token refresh flag on successful request
+      this.tokenRefreshAttempted = false
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Handle 401 Unauthorized - try to refresh token
+        if (error.response?.status === 401 && this.onTokenRefresh && !this.tokenRefreshAttempted) {
+          try {
+            console.log('Token expired, attempting to refresh...')
+            this.tokenRefreshAttempted = true
+            const newToken = await this.onTokenRefresh()
+            this.accessToken = newToken
+            console.log('Token refreshed successfully, retrying request...')
+            // Retry the request with the new token
+            const response = await axios.post<T>(`${this.baseUrl}${endpoint}`, data, {
+              headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+                'Content-Type': 'application/json',
+              },
+            })
+            this.tokenRefreshAttempted = false
+            return response.data
+          } catch (refreshError) {
+            console.error('Failed to refresh token:', refreshError)
+            this.tokenRefreshAttempted = false
+            // Fall through to throw the original 401 error
+          }
+        }
+      }
+      throw error
+    }
   }
 
   private async patchRequest<T>(endpoint: string, data: any): Promise<T> {
-    const response = await axios.patch<T>(`${this.baseUrl}${endpoint}`, data, {
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    })
+    try {
+      const response = await axios.patch<T>(`${this.baseUrl}${endpoint}`, data, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
 
-    return response.data
+      // Reset token refresh flag on successful request
+      this.tokenRefreshAttempted = false
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Handle 401 Unauthorized - try to refresh token
+        if (error.response?.status === 401 && this.onTokenRefresh && !this.tokenRefreshAttempted) {
+          try {
+            console.log('Token expired, attempting to refresh...')
+            this.tokenRefreshAttempted = true
+            const newToken = await this.onTokenRefresh()
+            this.accessToken = newToken
+            console.log('Token refreshed successfully, retrying request...')
+            // Retry the request with the new token
+            const response = await axios.patch<T>(`${this.baseUrl}${endpoint}`, data, {
+              headers: {
+                Authorization: `Bearer ${this.accessToken}`,
+                'Content-Type': 'application/json',
+              },
+            })
+            this.tokenRefreshAttempted = false
+            return response.data
+          } catch (refreshError) {
+            console.error('Failed to refresh token:', refreshError)
+            this.tokenRefreshAttempted = false
+            // Fall through to throw the original 401 error
+          }
+        }
+      }
+      throw error
+    }
   }
 
   async getProfile(): Promise<{ emailAddress: string; name: string }> {
@@ -267,17 +357,43 @@ export class MicrosoftGraphAPI {
             Authorization: `Bearer ${this.accessToken}`,
           },
         })
+        this.tokenRefreshAttempted = false
         response = axiosResponse.data
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error('Microsoft Graph API error (nextLink):', {
-            url: pageToken,
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            data: error.response?.data,
-          })
+          // Handle 401 Unauthorized - try to refresh token
+          if (error.response?.status === 401 && this.onTokenRefresh && !this.tokenRefreshAttempted) {
+            try {
+              console.log('Token expired, attempting to refresh...')
+              this.tokenRefreshAttempted = true
+              const newToken = await this.onTokenRefresh()
+              this.accessToken = newToken
+              console.log('Token refreshed successfully, retrying request...')
+              // Retry the request with the new token
+              const axiosResponse = await axios.get<GraphMessageListResponse>(pageToken, {
+                headers: {
+                  Authorization: `Bearer ${this.accessToken}`,
+                },
+              })
+              this.tokenRefreshAttempted = false
+              response = axiosResponse.data
+            } catch (refreshError) {
+              console.error('Failed to refresh token:', refreshError)
+              this.tokenRefreshAttempted = false
+              // Fall through to throw the original 401 error
+            }
+          } else {
+            console.error('Microsoft Graph API error (nextLink):', {
+              url: pageToken,
+              status: error.response?.status,
+              statusText: error.response?.statusText,
+              data: error.response?.data,
+            })
+            throw error
+          }
+        } else {
+          throw error
         }
-        throw error
       }
     } else {
       // Build the endpoint and params normally
