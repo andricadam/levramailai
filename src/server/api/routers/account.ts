@@ -399,37 +399,63 @@ export const accountRouter = createTRPCRouter({
         // Verify the account belongs to the user
         const account = await authoriseAccess(input.accountId, ctx.auth.userId)
         
-        console.log(`Starting manual sync for account ${account.id}...`);
+        console.log(`Starting manual sync for account ${account.id} (provider: ${account.provider})...`);
         
         try {
             // Create Account instance and perform initial sync
             const acc = new Account(account.accessToken as string, account.id);
             const response = await acc.performInitialSync();
             
-            if (!response) {
-                throw new Error("Failed to perform initial sync - no response from Aurinko");
+            // For Gmail/Microsoft, performInitialSync already syncs emails to database
+            // For Aurinko, we need to sync the emails ourselves
+            if (account.provider === 'google' || account.provider === 'microsoft') {
+                if (!response) {
+                    throw new Error(`Failed to perform initial sync for ${account.provider} account`);
+                }
+                
+                // Count emails synced by checking database
+                const emailCount = await ctx.db.email.count({
+                    where: {
+                        thread: {
+                            accountId: account.id
+                        }
+                    }
+                });
+                
+                console.log(`Successfully synced ${account.provider} account ${account.id}. Total emails in database: ${emailCount}`);
+                
+                return { 
+                    success: true, 
+                    emailsSynced: emailCount,
+                    message: `Sync completed. ${emailCount} emails available.`
+                };
+            } else {
+                // Aurinko provider - original logic
+                if (!response) {
+                    throw new Error("Failed to perform initial sync - no response from Aurinko");
+                }
+                
+                const { emails, deltaToken } = response;
+                
+                console.log(`Fetched ${emails.length} emails from Aurinko`);
+                
+                // Sync emails to database
+                await syncEmailsToDatabase(account.id, emails);
+                
+                // Update the delta token for future incremental syncs
+                await ctx.db.account.update({
+                    where: { id: account.id },
+                    data: { nextDeltaToken: deltaToken }
+                });
+                
+                console.log(`Successfully synced ${emails.length} emails for account ${account.id}`);
+                
+                return { 
+                    success: true, 
+                    emailsSynced: emails.length,
+                    message: `Successfully synced ${emails.length} emails`
+                };
             }
-            
-            const { emails, deltaToken } = response;
-            
-            console.log(`Fetched ${emails.length} emails from Aurinko`);
-            
-            // Sync emails to database
-            await syncEmailsToDatabase(account.id, emails);
-            
-            // Update the delta token for future incremental syncs
-            await ctx.db.account.update({
-                where: { id: account.id },
-                data: { nextDeltaToken: deltaToken }
-            });
-            
-            console.log(`Successfully synced ${emails.length} emails for account ${account.id}`);
-            
-            return { 
-                success: true, 
-                emailsSynced: emails.length,
-                message: `Successfully synced ${emails.length} emails`
-            };
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
             console.error('Error syncing account:', errorMessage);
