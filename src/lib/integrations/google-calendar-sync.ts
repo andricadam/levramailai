@@ -252,7 +252,14 @@ export async function createGoogleCalendarEvent(
       createdEvent.end?.dateTime || endDateTime,
     ].filter(Boolean).join('\n')
 
-    const embeddings = await getEmbeddings(content.substring(0, 8000))
+    // Try to generate embeddings, but don't fail if it doesn't work
+    let embeddings: number[] = []
+    try {
+      embeddings = await getEmbeddings(content.substring(0, 8000))
+    } catch (error) {
+      console.warn('Failed to generate embeddings for calendar event (event will still be created):', error)
+      // Continue without embeddings - event creation should not fail due to embedding issues
+    }
 
     // Initialize pgvector client
     const vectorClient = new PgVectorClient(connection.accountId || connection.userId)
@@ -286,20 +293,27 @@ export async function createGoogleCalendarEvent(
       },
     })
 
-    // Index in Orama
-    await vectorClient.insert({
-      subject: createdEvent.summary || title,
-      body: content,
-      rowBody: content,
-      from: connection.userId,
-      to: [],
-      sentAt: createdEvent.start?.dateTime || startDateTime,
-      threadId: createdEvent.id,
-      source: 'google_calendar',
-      sourceId: createdEvent.id,
-      fileName: createdEvent.summary || title,
-      embeddings,
-    } as any)
+    // Index in Orama (only if we have embeddings)
+    if (embeddings.length > 0) {
+      try {
+        await vectorClient.insert({
+          subject: createdEvent.summary || title,
+          body: content,
+          rowBody: content,
+          from: connection.userId,
+          to: [],
+          sentAt: createdEvent.start?.dateTime || startDateTime,
+          threadId: createdEvent.id,
+          source: 'google_calendar',
+          sourceId: createdEvent.id,
+          fileName: createdEvent.summary || title,
+          embeddings,
+        } as any)
+      } catch (error) {
+        console.warn('Failed to index event in Orama:', error)
+        // Don't fail event creation if indexing fails
+      }
+    }
 
     return {
       id: createdEvent.id,
