@@ -44,7 +44,7 @@ export async function summarizeEmail(emailContent: string, subject: string, from
 
     (async () => {
         const { textStream } = await streamText({
-            model: openai('gpt-4-turbo'),
+            model: openai('gpt-3.5-turbo'),
             prompt: `
             You are an AI email assistant. Your task is to summarize the following email in a clear, concise, and easy-to-understand way.
             

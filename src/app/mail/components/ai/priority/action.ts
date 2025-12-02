@@ -46,7 +46,7 @@ export async function determineEmailPriority(
 
     try {
         const { text } = await generateText({
-            model: openai('gpt-4-turbo'),
+            model: openai('gpt-3.5-turbo'),
             prompt: `
             You are an AI email assistant. Your task is to determine the priority level of an incoming email.
             

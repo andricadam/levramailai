@@ -57,7 +57,7 @@ export async function shouldGenerateReply(
 
     try {
         const { text } = await generateText({
-            model: openai('gpt-4-turbo'),
+            model: openai('gpt-3.5-turbo'),
             prompt: `
             You are an AI email assistant. Determine if an incoming email should receive an automatic reply draft.
             

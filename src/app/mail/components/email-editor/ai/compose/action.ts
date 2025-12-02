@@ -26,7 +26,7 @@ export async function generateEmail(
     (async () => {
         // Step 1: Generate initial email with base model (GPT-4)
         const { textStream } = await streamText({
-            model: openai('gpt-4-turbo'),
+            model: openai('gpt-4'),
             prompt: `
             You are an AI email assistant embedded in an email client app. Your purpose is to help the user compose emails by providing suggestions and relevant information based on the context of their previous emails.
             
@@ -95,7 +95,7 @@ export async function generateEmail(
                         generatedReply: fullGeneratedText,
                         finalSentReply: null, // Will be updated when email is sent
                         wasEdited: false,
-                        modelVersion: 'gpt-4-turbo-revised', // Track which model generated this
+                        modelVersion: 'gpt-4-revised', // Track which model generated this
                     }
                 });
                 feedbackId = feedback.id;

@@ -26,7 +26,7 @@ export async function generateInstantReply(
     (async () => {
         // Step 1: Generate initial reply with base model (GPT-4)
         const { textStream } = await streamText({
-            model: openai('gpt-4-turbo'),
+            model: openai('gpt-4'),
             prompt: `
             You are an AI email assistant embedded in an email client app. Your purpose is to automatically generate a helpful and appropriate reply to the most recent email in the conversation thread.
             
@@ -91,7 +91,7 @@ export async function generateInstantReply(
                         generatedReply: fullGeneratedText,
                         finalSentReply: null, // Will be updated when email is sent
                         wasEdited: false,
-                        modelVersion: 'gpt-4-turbo-revised', // Track which model generated this
+                        modelVersion: 'gpt-4-revised', // Track which model generated this
                     }
                 });
                 feedbackId = feedback.id;

@@ -12,7 +12,7 @@ export async function generateInstantReplyServer(context: string): Promise<strin
     
     try {
         const { text } = await generateText({
-            model: openai('gpt-4-turbo'),
+            model: openai('gpt-4'),
             prompt: `
             You are an AI email assistant embedded in an email client app. Your purpose is to automatically generate a helpful and appropriate reply to the most recent email in the conversation thread.
             
