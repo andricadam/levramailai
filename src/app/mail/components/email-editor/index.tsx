@@ -485,7 +485,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                 {/* Editor Content */}
                 <div 
                     ref={editorContainerRef}
-                    className='flex-1 overflow-y-auto relative min-h-[200px]'
+                    className='flex-1 overflow-y-auto relative min-h-[200px] pr-24'
                 >
                     {/* AI Compose Dialog - Inline within editor */}
                     {aiComposeOpen && (

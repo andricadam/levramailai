@@ -364,7 +364,7 @@ const ThreadList = () => {
                                                     {thread.emails.at(-1)?.priority && (
                                                         <Badge 
                                                             variant={getPriorityBadgeVariant(thread.emails.at(-1)?.priority)}
-                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight w-[60px] h-[20px] flex items-center justify-center'
+                                                            className='rounded-full text-[10px] px-1 py-0.5 leading-tight w-[60px] h-[20px] flex items-center justify-center text-white'
                                                         >
                                                             <span className='truncate'>{getPriorityLabel(thread.emails.at(-1)?.priority)}</span>
                                                         </Badge>

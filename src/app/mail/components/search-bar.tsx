@@ -1,16 +1,14 @@
 'use client'
 import { motion } from 'framer-motion'
 import { Input } from '@/components/ui/input'
-import { Loader2, Search, X } from 'lucide-react'
+import { Search, X } from 'lucide-react'
 import React from 'react'
-import useThreads from '../use-Threads'
 import { atom, useAtom } from 'jotai'
 
 export const isSearchingAtom = atom(false)
 export const searchValueAtom = atom('')
 
 const SearchBar = () => {
-    const { isFetching } = useThreads()
     const [searchValue, setSearchValue] = useAtom(searchValueAtom)
     const [isSearching, setIsSearching] = useAtom(isSearchingAtom)
     const ref = React.useRef<HTMLInputElement>(null)
@@ -49,7 +47,6 @@ const SearchBar = () => {
                     onBlur={handleBlur}
                 />
                 <div className="absolute right-2 top-2.5 flex items-center gap-2">
-                    {isFetching && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                     <button
                         className="rounded-sm hover:bg-accent"
                         onClick={() => {
