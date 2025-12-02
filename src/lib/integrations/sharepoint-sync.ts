@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { db } from '@/server/db'
 import { getEmbeddings } from '@/lib/embedding'
-import { OramaClient } from '@/lib/orama'
+import { PgVectorClient } from '@/lib/pgvector'
 import { MicrosoftOAuth } from './microsoft-oauth'
 
 export async function syncSharePoint(connectionId: string) {
@@ -53,8 +53,8 @@ export async function syncSharePoint(connectionId: string) {
     console.log(`Found ${sites.length} SharePoint sites for connection ${connectionId}`)
 
     // Initialize Orama
-    const orama = new OramaClient(connection.accountId || connection.userId)
-    await orama.initialize()
+    const vectorClient = new PgVectorClient(connection.accountId || connection.userId)
+    await vectorClient.initialize()
 
     let processedCount = 0
 
@@ -155,7 +155,7 @@ export async function syncSharePoint(connectionId: string) {
               })
 
               // Index in Orama
-              await orama.insert({
+              await vectorClient.insert({
                 subject: item.name,
                 body: content.substring(0, 5000),
                 rowBody: content.substring(0, 5000),

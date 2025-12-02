@@ -184,7 +184,8 @@ exports.Prisma.EmailScalarFieldEnum = {
   omitted: 'omitted',
   emailLabel: 'emailLabel',
   priority: 'priority',
-  autoReplyDraft: 'autoReplyDraft'
+  autoReplyDraft: 'autoReplyDraft',
+  embeddings: 'embeddings'
 };
 
 exports.Prisma.EmailAddressScalarFieldEnum = {

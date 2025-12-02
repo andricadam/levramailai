@@ -118,6 +118,7 @@ model Email {
     emailLabel EmailLabel @default(inbox)
     priority EmailPriority @default(medium)
     autoReplyDraft String?
+    embeddings Float[] // Vector embeddings for pgvector search
 
     @@index([threadId])
     @@index([emailLabel])

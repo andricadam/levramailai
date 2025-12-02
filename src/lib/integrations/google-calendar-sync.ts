@@ -1,7 +1,7 @@
 import { google } from 'googleapis'
 import { db } from '@/server/db'
 import { getEmbeddings } from '@/lib/embedding'
-import { OramaClient } from '@/lib/orama'
+import { PgVectorClient } from '@/lib/pgvector'
 import { GoogleOAuth } from './google-oauth'
 
 export async function syncGoogleCalendar(connectionId: string) {
@@ -74,7 +74,7 @@ export async function syncGoogleCalendar(connectionId: string) {
     console.log(`Found ${allEvents.length} events to sync for Google Calendar connection ${connectionId}`)
 
     // Initialize Orama
-    const orama = new OramaClient(connection.accountId || connection.userId)
+    const vectorClient = new PgVectorClient(connection.accountId || connection.userId)
     await orama.initialize()
 
     let processedCount = 0
@@ -121,7 +121,7 @@ export async function syncGoogleCalendar(connectionId: string) {
         })
 
         // Index in Orama
-        await orama.insert({
+        await vectorClient.insert({
           subject: event.summary || 'Untitled Event',
           body: content,
           rowBody: content,

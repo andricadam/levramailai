@@ -4,7 +4,7 @@ import { db, retryDbOperation } from "@/server/db";
 import { emailAddressSchema } from "@/types";
 import { Account } from "@/lib/acount";
 import { syncEmailsToDatabase } from "@/lib/sync-emails";
-import { OramaClient } from "@/lib/orama";
+import { PgVectorClient } from "@/lib/pgvector";
 import { FREE_CREDITS_PER_DAY } from "@/constants";
 
 export const authoriseAccess = async (accountId: string, userId: string) => {
@@ -480,9 +480,9 @@ export const accountRouter = createTRPCRouter({
         query: z.string()
     })).mutation(async ({ctx, input})=>{
         const account = await authoriseAccess(input.accountId, ctx.auth.userId)
-        const orama = new OramaClient(account.id)
-        await orama.initialize()
-        const results = await orama.search({ term: input.query })
+        const vectorClient = new PgVectorClient(account.id)
+        await vectorClient.initialize()
+        const results = await vectorClient.search({ term: input.query })
         return results
     }),
     searchThreadsForContext: privateProcedure.input(z.object({

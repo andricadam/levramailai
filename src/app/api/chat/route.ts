@@ -2,7 +2,7 @@ import { streamText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 
 import { NextResponse } from "next/server";
-import { OramaClient } from "@/lib/orama";
+import { PgVectorClient } from "@/lib/pgvector";
 import { QACacheClient } from "@/lib/qa-cache";
 import { db, retryDbOperation } from "@/server/db";
 import { auth } from "@clerk/nextjs/server";
@@ -367,29 +367,29 @@ Guidelines:
         // Perform vector search
         let context;
         try {
-            console.log("Initializing OramaClient with accountId:", accountId);
-            const oramaManager = new OramaClient(accountId)
-            await oramaManager.initialize()
-            console.log("OramaClient initialized successfully");
+            console.log("Initializing PgVectorClient with accountId:", accountId);
+            const vectorManager = new PgVectorClient(accountId)
+            await vectorManager.initialize()
+            console.log("PgVectorClient initialized successfully");
             
             // Check index size for debugging
-            const docCount = await oramaManager.getDocumentCount();
-            console.log(`[Orama] Index contains approximately ${docCount} documents`);
+            const docCount = await vectorManager.getDocumentCount();
+            console.log(`[PgVector] Index contains approximately ${docCount} documents`);
             
-            // If context emails provided, prioritize them in search
-            context = await oramaManager.vectorSearch({ 
+            // Search all sources (emails, files, integrations) using multi-source vector search
+            context = await vectorManager.vectorSearchAllSources({ 
                 term: lastMessageContent,
                 preferredEmailIds: contextEmailIds.length > 0 ? contextEmailIds : undefined
             })
-            console.log("Vector search completed");
-            console.log(`Vector search found ${context.hits.length} results`);
+            console.log("Multi-source vector search completed");
+            console.log(`Vector search found ${context.hits.length} results across all sources`);
             
             // Always perform keyword search as well to find emails without embeddings
             // This ensures we find emails even if they weren't vectorized (e.g., due to quota errors)
             if (lastMessageContent) {
                 try {
                     console.log("Performing keyword search to find emails without embeddings...");
-                    const keywordSearch = await oramaManager.search({ 
+                    const keywordSearch = await vectorManager.search({ 
                         term: lastMessageContent 
                     });
                     console.log(`Keyword search found ${keywordSearch.hits.length} total results`);
@@ -418,21 +418,21 @@ Guidelines:
                     // Continue with vector search results only
                 }
             }
-        } catch (oramaError) {
-            console.error("Orama error:", oramaError);
-            const oramaErrorMessage = oramaError instanceof Error ? oramaError.message : String(oramaError);
-            console.error("Orama error message:", oramaErrorMessage);
-            console.error("Orama error stack:", oramaError instanceof Error ? oramaError.stack : 'No stack');
+        } catch (vectorError) {
+            console.error("PgVector error:", vectorError);
+            const vectorErrorMessage = vectorError instanceof Error ? vectorError.message : String(vectorError);
+            console.error("PgVector error message:", vectorErrorMessage);
+            console.error("PgVector error stack:", vectorError instanceof Error ? vectorError.stack : 'No stack');
             
             // Try keyword search as fallback if vector search failed
-            if (oramaErrorMessage.includes("quota") || oramaErrorMessage.includes("exceeded") || oramaErrorMessage.includes("billing")) {
+            if (vectorErrorMessage.includes("quota") || vectorErrorMessage.includes("exceeded") || vectorErrorMessage.includes("billing")) {
                 console.warn("[QUOTA] Vector search failed due to quota, trying keyword search fallback");
                 try {
-                    const oramaManager = new OramaClient(accountId);
-                    await oramaManager.initialize();
-                    const docCount = await oramaManager.getDocumentCount();
+                    const vectorManager = new PgVectorClient(accountId);
+                    await vectorManager.initialize();
+                    const docCount = await vectorManager.getDocumentCount();
                     console.log(`[QUOTA] Index contains approximately ${docCount} documents`);
-                    const keywordResults = await oramaManager.search({ term: lastMessageContent });
+                    const keywordResults = await vectorManager.search({ term: lastMessageContent });
                     console.log(`[QUOTA] Keyword search found ${keywordResults.hits.length} total results`);
                     // Filter to only include emails (backward compatible with old indexes)
                     const emailHits = keywordResults.hits.filter((hit: any) => {
@@ -447,7 +447,7 @@ Guidelines:
                     context = { hits: [] };
                 }
             } else {
-                // If Orama fails for other reasons, continue with empty context
+                // If PgVector fails for other reasons, continue with empty context
                 context = { hits: [] };
             }
         }
@@ -522,20 +522,45 @@ Guidelines:
         
         // Truncate context documents to prevent exceeding token limits
         const formatContextDocument = (doc: any) => {
-            const truncated = {
-                subject: doc.subject?.substring(0, MAX_CONTEXT_LENGTH) || '',
-                body: doc.body?.substring(0, MAX_CONTEXT_LENGTH) || '',
-                from: doc.from || '',
-                sentAt: doc.sentAt || '',
-            };
-            return truncated;
+            // Handle different source types
+            if (doc.source === 'file') {
+                return {
+                    type: 'file',
+                    fileName: doc.fileName?.substring(0, MAX_CONTEXT_LENGTH) || '',
+                    content: doc.extractedText?.substring(0, MAX_CONTEXT_LENGTH) || doc.body?.substring(0, MAX_CONTEXT_LENGTH) || '',
+                };
+            } else if (doc.source && ['google_drive', 'sharepoint', 'google_calendar'].includes(doc.source)) {
+                return {
+                    type: 'integration',
+                    source: doc.source,
+                    title: doc.fileName || doc.subject || doc.title || '',
+                    content: doc.content?.substring(0, MAX_CONTEXT_LENGTH) || doc.body?.substring(0, MAX_CONTEXT_LENGTH) || '',
+                    url: doc.url || '',
+                };
+            } else {
+                // Email or default
+                return {
+                    type: 'email',
+                    subject: doc.subject?.substring(0, MAX_CONTEXT_LENGTH) || '',
+                    body: doc.body?.substring(0, MAX_CONTEXT_LENGTH) || '',
+                    from: doc.from || '',
+                    sentAt: doc.sentAt || '',
+                };
+            }
         };
         
-        // Combine context emails with vector search results
+        // Combine context from all sources (emails, files, integrations)
         const vectorContextText = limitedHits.length > 0
             ? limitedHits.map((hit) => {
                 const doc = formatContextDocument(hit.document);
-                return `Subject: ${doc.subject}\nFrom: ${doc.from}\nDate: ${doc.sentAt}\nBody: ${doc.body}`;
+                
+                if (doc.type === 'file') {
+                    return `[FILE] ${doc.fileName}\nContent:\n${doc.content}`;
+                } else if (doc.type === 'integration') {
+                    return `[${doc.source.toUpperCase()}] ${doc.title}${doc.url ? `\nURL: ${doc.url}` : ''}\nContent:\n${doc.content}`;
+                } else {
+                    return `[EMAIL] Subject: ${doc.subject}\nFrom: ${doc.from}\nDate: ${doc.sentAt}\nBody: ${doc.body}`;
+                }
             }).join('\n\n---\n\n')
             : '';
 
@@ -553,7 +578,7 @@ Guidelines:
         } else if (contextEmailsText) {
             contextText = contextEmailsText
             if (vectorContextText) {
-                contextText += '\n\n---\n\nADDITIONAL RELEVANT EMAILS:\n\n' + vectorContextText
+                contextText += '\n\n---\n\nADDITIONAL RELEVANT CONTEXT (from emails, files, and integrations):\n\n' + vectorContextText
             }
         } else {
             // If no vector context found, try to be more helpful

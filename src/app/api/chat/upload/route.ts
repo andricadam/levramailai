@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { db } from '@/server/db'
 import { processFile, MAX_FILE_SIZE } from '@/lib/file-processor'
-import { OramaClient } from '@/lib/orama'
+import { PgVectorClient } from '@/lib/pgvector'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 
@@ -75,12 +75,12 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    // Index in Orama if added to knowledge base
+    // Index in pgvector if added to knowledge base
     if (addToKnowledgeBase) {
-      const orama = new OramaClient(accountId)
-      await orama.initialize()
+      const vectorClient = new PgVectorClient(accountId)
+      await vectorClient.initialize()
       
-      await orama.insert({
+      await vectorClient.insert({
         subject: file.name,
         body: processed.text,
         rowBody: processed.text,

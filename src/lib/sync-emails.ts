@@ -1,7 +1,7 @@
 "use server"
 import { db, retryDbOperation } from "@/server/db";
 import type { EmailMessage, EmailAddress as AurinkoEmailAddress } from "@/types";
-import { OramaClient } from "./orama";
+import { PgVectorClient } from "./pgvector";
 import { getEmbeddings } from "./embedding";
 import { turndown } from "./turndown";
 import { determineEmailPriority } from "@/app/mail/components/ai/priority";
@@ -157,10 +157,10 @@ export async function syncEmailsToDatabase(
 
     console.log(`Starting sync for ${emails.length} emails...`);
 
-    // Initialize Orama client for vectorization
-    const orama = new OramaClient(accountId);
-    await orama.initialize();
-    const oramaDocuments: any[] = [];
+    // Initialize PgVector client for vectorization
+    const vectorClient = new PgVectorClient(accountId);
+    await vectorClient.initialize();
+    const vectorDocuments: any[] = [];
 
     // Group emails by threadId
     const emailsByThread = new Map<string, EmailMessage[]>();
@@ -372,9 +372,21 @@ My name is ${account.name} and my email is ${account.emailAddress}.
                 // Continue without embeddings - email will still be searchable via keyword search
             }
             
-            // Always add email to Orama, even without embeddings (for keyword search)
-            // This ensures emails are searchable even if vectorization fails
-            oramaDocuments.push({
+            // Store embeddings directly in Email table for pgvector
+            // Update the email record with embeddings
+            if (emailRecord && embeddings && embeddings.length > 0) {
+                try {
+                    await db.email.update({
+                        where: { id: emailRecord.id },
+                        data: { embeddings: embeddings }
+                    });
+                } catch (error) {
+                    console.error(`Error storing embeddings for email ${email.id}:`, error);
+                }
+            }
+            
+            // Also add to vectorDocuments for batch processing if needed
+            vectorDocuments.push({
                 subject: email.subject || "(No subject)",
                 body: body,
                 rowBody: email.bodySnippet ?? '',
@@ -382,10 +394,10 @@ My name is ${account.name} and my email is ${account.emailAddress}.
                 to: email.to.map(to => to.address),
                 sentAt: new Date(email.sentAt).toLocaleString(),
                 threadId: email.threadId,
-                source: 'email', // CRITICAL: Add source field to identify as email
-                sourceId: email.id, // CRITICAL: Add sourceId to link back to email
-                fileName: '', // Not applicable for emails
-                embeddings: embeddings || [] // Use empty array if no embeddings (allows keyword search)
+                source: 'email',
+                sourceId: email.id,
+                fileName: '',
+                embeddings: embeddings || []
             });
 
             // Ensure email addresses exist
@@ -583,11 +595,11 @@ My name is ${account.name} and my email is ${account.emailAddress}.
         }
     }
 
-    // Batch insert all Orama documents and save index once
-    if (oramaDocuments.length > 0) {
-        console.log(`Vectorizing and inserting ${oramaDocuments.length} emails into Orama...`);
-        await orama.insertBatch(oramaDocuments);
-        console.log(`Successfully vectorized and stored ${oramaDocuments.length} emails in Orama`);
+    // Batch insert all vector documents into pgvector
+    if (vectorDocuments.length > 0) {
+        console.log(`Storing ${vectorDocuments.length} emails with embeddings in pgvector...`);
+        await vectorClient.insertBatch(vectorDocuments);
+        console.log(`Successfully stored ${vectorDocuments.length} emails in pgvector`);
     }
 
     console.log(`Successfully synced ${emails.length} emails across ${emailsByThread.size} threads`);

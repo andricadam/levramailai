@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { db } from '@/server/db'
 import { getEmbeddings } from '@/lib/embedding'
-import { OramaClient } from '@/lib/orama'
+import { PgVectorClient } from '@/lib/pgvector'
 import { MicrosoftEmailOAuth } from '../email-oauth/microsoft-email-oauth'
 
 interface GraphCalendarEvent {
@@ -106,8 +106,8 @@ export async function syncMicrosoftCalendar(connectionId: string) {
     console.log(`Found ${allEvents.length} events to sync for Microsoft Calendar connection ${connectionId}`)
 
     // Initialize Orama
-    const orama = new OramaClient(connection.accountId || connection.userId)
-    await orama.initialize()
+    const vectorClient = new PgVectorClient(connection.accountId || connection.userId)
+    await vectorClient.initialize()
 
     let processedCount = 0
     for (const event of allEvents) {
@@ -153,7 +153,7 @@ export async function syncMicrosoftCalendar(connectionId: string) {
         })
 
         // Index in Orama
-        await orama.insert({
+        await vectorClient.insert({
           subject: event.subject || 'Untitled Event',
           body: content,
           rowBody: content,

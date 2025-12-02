@@ -1,4 +1,4 @@
-import { OramaClient } from './orama'
+import { PgVectorClient } from './pgvector'
 import { UI_KNOWLEDGE_BASE } from './ui-knowledge-base'
 import { getEmbeddings } from './embedding'
 import { db } from '@/server/db'
@@ -30,8 +30,8 @@ export async function initializeUIKnowledge() {
  */
 export async function initializeUIKnowledgeForAccount(accountId: string) {
   try {
-    const orama = new OramaClient(accountId)
-    await orama.initialize()
+    const vectorClient = new PgVectorClient(accountId)
+    await vectorClient.initialize()
 
     let indexedCount = 0
 
@@ -75,11 +75,11 @@ export async function initializeUIKnowledgeForAccount(accountId: string) {
  */
 export async function isUIKnowledgeInitialized(accountId: string): Promise<boolean> {
   try {
-    const orama = new OramaClient(accountId)
-    await orama.initialize()
+    const vectorClient = new PgVectorClient(accountId)
+    await vectorClient.initialize()
 
     // Search for any UI help items using vector search
-    const results = await orama.vectorSearch({
+    const results = await vectorClient.vectorSearch({
       term: 'how to use the app',
       limit: 10,
     })

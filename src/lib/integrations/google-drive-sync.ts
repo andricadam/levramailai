@@ -1,7 +1,7 @@
 import { google } from 'googleapis'
 import { db } from '@/server/db'
 import { getEmbeddings } from '@/lib/embedding'
-import { OramaClient } from '@/lib/orama'
+import { PgVectorClient } from '@/lib/pgvector'
 import { GoogleOAuth } from './google-oauth'
 
 export async function syncGoogleDrive(connectionId: string) {
@@ -67,8 +67,8 @@ export async function syncGoogleDrive(connectionId: string) {
     console.log(`Found ${allFiles.length} files to sync for Google Drive connection ${connectionId}`)
 
     // Initialize Orama for this account
-    const orama = new OramaClient(connection.accountId || connection.userId)
-    await orama.initialize()
+    const vectorClient = new PgVectorClient(connection.accountId || connection.userId)
+    await vectorClient.initialize()
 
     // Process and index each file
     let processedCount = 0
@@ -136,7 +136,7 @@ export async function syncGoogleDrive(connectionId: string) {
         })
 
         // Index in Orama
-        await orama.insert({
+        await vectorClient.insert({
           subject: file.name || 'Untitled',
           body: content.substring(0, 5000),
           rowBody: content.substring(0, 5000),
