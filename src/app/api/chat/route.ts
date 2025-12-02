@@ -372,12 +372,17 @@ Guidelines:
             await oramaManager.initialize()
             console.log("OramaClient initialized successfully");
             
+            // Check index size for debugging
+            const docCount = await oramaManager.getDocumentCount();
+            console.log(`[Orama] Index contains approximately ${docCount} documents`);
+            
             // If context emails provided, prioritize them in search
             context = await oramaManager.vectorSearch({ 
                 term: lastMessageContent,
                 preferredEmailIds: contextEmailIds.length > 0 ? contextEmailIds : undefined
             })
             console.log("Vector search completed");
+            console.log(`Vector search found ${context.hits.length} results`);
             
             // Always perform keyword search as well to find emails without embeddings
             // This ensures we find emails even if they weren't vectorized (e.g., due to quota errors)
@@ -387,6 +392,7 @@ Guidelines:
                     const keywordSearch = await oramaManager.search({ 
                         term: lastMessageContent 
                     });
+                    console.log(`Keyword search found ${keywordSearch.hits.length} total results`);
                     
                     // Merge keyword results with vector results, avoiding duplicates
                     const existingIds = new Set(context.hits.map((h: any) => {
@@ -396,8 +402,9 @@ Guidelines:
                     const additionalHits = keywordSearch.hits
                         .filter((hit: any) => {
                             const doc = hit.document;
-                            // Only include emails (source === 'email')
-                            if (doc?.source !== 'email') return false;
+                            // Include emails: either source === 'email' OR source is undefined/null (backward compatibility)
+                            // Exclude only if source is explicitly set to something other than 'email' (e.g., 'file')
+                            if (doc?.source && doc?.source !== 'email') return false;
                             // Avoid duplicates
                             const id = doc.threadId || doc.sourceId;
                             return id && !existingIds.has(id);
@@ -423,9 +430,18 @@ Guidelines:
                 try {
                     const oramaManager = new OramaClient(accountId);
                     await oramaManager.initialize();
+                    const docCount = await oramaManager.getDocumentCount();
+                    console.log(`[QUOTA] Index contains approximately ${docCount} documents`);
                     const keywordResults = await oramaManager.search({ term: lastMessageContent });
-                    context = keywordResults;
-                    console.log(`[QUOTA] Keyword search found ${keywordResults.hits.length} results`);
+                    console.log(`[QUOTA] Keyword search found ${keywordResults.hits.length} total results`);
+                    // Filter to only include emails (backward compatible with old indexes)
+                    const emailHits = keywordResults.hits.filter((hit: any) => {
+                        const doc = hit.document;
+                        // Include emails: either source === 'email' OR source is undefined/null (backward compatibility)
+                        return !doc?.source || doc?.source === 'email';
+                    });
+                    context = { ...keywordResults, hits: emailHits };
+                    console.log(`[QUOTA] Filtered to ${emailHits.length} email results`);
                 } catch (keywordError) {
                     console.error("Keyword search fallback also failed:", keywordError);
                     context = { hits: [] };

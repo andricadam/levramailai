@@ -38,6 +38,7 @@ export class OramaClient {
             this.orama = await restore('json', account.oramaIndex as any)
             // Check if schema needs migration (for existing indexes)
             // If source field doesn't exist, we'll need to handle it gracefully
+            console.log(`[Orama] Restored index from database for account ${this.accountId}`);
         } else {
             this.orama = await create({
                 schema: {
@@ -56,6 +57,7 @@ export class OramaClient {
                 }
             })
             await this.saveIndex()
+            console.log(`[Orama] Created new empty index for account ${this.accountId}`);
         }
     }
 
@@ -130,10 +132,30 @@ export class OramaClient {
     }
 
     async insertBatch(documents: any[]) {
+        console.log(`[Orama] Inserting ${documents.length} documents into index for account ${this.accountId}`);
         for (const document of documents) {
             await insert(this.orama, document)
         }
         // Save index once after batch insert
         await this.saveIndex()
+        console.log(`[Orama] Successfully inserted and saved ${documents.length} documents`);
+    }
+
+    /**
+     * Get approximate count of documents in the index by performing a broad search
+     * This is useful for debugging to check if emails are actually indexed
+     */
+    async getDocumentCount(): Promise<number> {
+        try {
+            // Perform a very broad search to get all documents
+            const results = await search(this.orama, {
+                term: '*',
+                limit: 10000 // Large limit to get all documents
+            });
+            return results.hits.length;
+        } catch (error) {
+            console.error("[Orama] Error getting document count:", error);
+            return 0;
+        }
     }
 }
