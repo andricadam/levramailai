@@ -642,7 +642,15 @@ GUIDELINES:
                         await qaCache.addQA(lastMessageContent, result.text || '', null);
                         console.log("Added new Q&A to cache");
                     } catch (cacheError) {
-                        console.error("Failed to add Q&A to cache:", cacheError);
+                        const errorMessage = cacheError instanceof Error ? cacheError.message : String(cacheError);
+                        
+                        // Check if it's a quota error
+                        if (errorMessage.includes("quota") || errorMessage.includes("exceeded") || errorMessage.includes("billing")) {
+                            console.warn("[QUOTA] Failed to add Q&A to cache - OpenAI quota exceeded. Q&A will not be cached but response was still generated.");
+                        } else {
+                            console.error("Failed to add Q&A to cache:", cacheError);
+                        }
+                        // Don't fail the request if cache fails
                     }
                     
                     // Store sources for this response (we'll need to pass them to the client)

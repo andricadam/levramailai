@@ -350,8 +350,16 @@ My name is ${account.name} and my email is ${account.emailAddress}.
                     embeddings
                 });
             } catch (error) {
-                console.error(`Error vectorizing email ${email.id}:`, error);
-                // Continue even if vectorization fails
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                
+                // Check if it's a quota error
+                if (errorMessage.includes("quota") || errorMessage.includes("exceeded") || errorMessage.includes("billing")) {
+                    console.warn(`[QUOTA] Skipping vectorization for email ${email.id} - OpenAI quota exceeded. Email will be synced without embeddings.`);
+                    // Continue without embeddings - email will still be searchable via keyword search
+                } else {
+                    console.error(`Error vectorizing email ${email.id}:`, error);
+                }
+                // Continue even if vectorization fails - email will be synced without embeddings
             }
 
             // Ensure email addresses exist
