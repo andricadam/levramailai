@@ -379,24 +379,35 @@ Guidelines:
             })
             console.log("Vector search completed");
             
-            // If vector search returns few results, try keyword search as fallback
-            if (context.hits.length < 3 && lastMessageContent) {
+            // Always perform keyword search as well to find emails without embeddings
+            // This ensures we find emails even if they weren't vectorized (e.g., due to quota errors)
+            if (lastMessageContent) {
                 try {
-                    console.log("Vector search returned few results, trying keyword search fallback");
+                    console.log("Performing keyword search to find emails without embeddings...");
                     const keywordSearch = await oramaManager.search({ 
                         term: lastMessageContent 
                     });
                     
                     // Merge keyword results with vector results, avoiding duplicates
-                    const existingIds = new Set(context.hits.map((h: any) => h.document?.threadId));
+                    const existingIds = new Set(context.hits.map((h: any) => {
+                        const doc = h.document;
+                        return doc?.threadId || doc?.sourceId;
+                    }));
                     const additionalHits = keywordSearch.hits
-                        .filter((hit: any) => hit.document?.threadId && !existingIds.has(hit.document.threadId))
-                        .slice(0, 3); // Add up to 3 additional results
+                        .filter((hit: any) => {
+                            const doc = hit.document;
+                            // Only include emails (source === 'email')
+                            if (doc?.source !== 'email') return false;
+                            // Avoid duplicates
+                            const id = doc.threadId || doc.sourceId;
+                            return id && !existingIds.has(id);
+                        })
+                        .slice(0, 5); // Add up to 5 additional results
                     
                     context.hits = [...context.hits, ...additionalHits];
                     console.log(`Added ${additionalHits.length} keyword search results, total: ${context.hits.length}`);
                 } catch (keywordError) {
-                    console.error("Keyword search fallback error:", keywordError);
+                    console.error("Keyword search error:", keywordError);
                     // Continue with vector search results only
                 }
             }
@@ -405,8 +416,24 @@ Guidelines:
             const oramaErrorMessage = oramaError instanceof Error ? oramaError.message : String(oramaError);
             console.error("Orama error message:", oramaErrorMessage);
             console.error("Orama error stack:", oramaError instanceof Error ? oramaError.stack : 'No stack');
-            // If Orama fails, continue with empty context
-            context = { hits: [] };
+            
+            // Try keyword search as fallback if vector search failed
+            if (oramaErrorMessage.includes("quota") || oramaErrorMessage.includes("exceeded") || oramaErrorMessage.includes("billing")) {
+                console.warn("[QUOTA] Vector search failed due to quota, trying keyword search fallback");
+                try {
+                    const oramaManager = new OramaClient(accountId);
+                    await oramaManager.initialize();
+                    const keywordResults = await oramaManager.search({ term: lastMessageContent });
+                    context = keywordResults;
+                    console.log(`[QUOTA] Keyword search found ${keywordResults.hits.length} results`);
+                } catch (keywordError) {
+                    console.error("Keyword search fallback also failed:", keywordError);
+                    context = { hits: [] };
+                }
+            } else {
+                // If Orama fails for other reasons, continue with empty context
+                context = { hits: [] };
+            }
         }
         
         // Limit context hits and truncate content to prevent context length issues
@@ -513,7 +540,12 @@ Guidelines:
                 contextText += '\n\n---\n\nADDITIONAL RELEVANT EMAILS:\n\n' + vectorContextText
             }
         } else {
-            contextText = vectorContextText || 'No relevant email context found.'
+            // If no vector context found, try to be more helpful
+            if (!vectorContextText || vectorContextText.trim() === '') {
+                contextText = 'No relevant email context found in the search index. This could mean:\n- Emails are still being indexed\n- The search query didn\'t match any emails\n- Emails may not have been vectorized (e.g., due to quota limits)\n\nYou can still answer general questions or ask the user to use the "Add email context" button to select specific emails.'
+            } else {
+                contextText = vectorContextText;
+            }
         }
 
         // Perform web search if enabled
@@ -563,15 +595,21 @@ CONTEXT:
 ${finalContextText}
 
 GUIDELINES:
-- Use context to answer questions
+- Use context to answer questions about specific emails, people, dates, requests, etc.
+- If the user asks about a specific person (e.g., "what did [Name] request"), search the context for that person's name
+- If the user asks about "latest email" or "recent email", look for the most recent email in the context
 - Use web search results for current information or general knowledge
 - Use UI help documentation to answer questions about how to use the app
 - If the user asks "how to" or "where is" questions, prioritize UI help content
-- If context is insufficient, try to infer from available information or ask for clarification
+- IMPORTANT: Even if the context says "No relevant email context found", you should still try to help the user:
+  * If they ask about a specific person, try searching the context for that name
+  * If they ask about "recent emails" or "latest email", look for the most recent information in the context
+  * If you truly cannot find relevant information, politely explain: "I couldn't find specific email information about [topic] in my search. Could you provide more details or use the 'Add email context' button to select the specific emails you'd like me to analyze?"
+  * Always suggest using the "Add email context" button as a helpful next step
 - Be proactive and helpful - provide what information you can even if context is limited
 - Be concise and helpful
 - Don't invent information not in the context
-- At the end of your response, mention which sources you used (emails/attachments/web/ui help)`
+- If you found relevant emails, mention them at the end of your response`
         };
 
         // Convert messages to format expected by streamText

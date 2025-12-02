@@ -1,5 +1,5 @@
 "use server"
-import { db } from "@/server/db";
+import { db, retryDbOperation } from "@/server/db";
 import type { EmailMessage, EmailAddress as AurinkoEmailAddress } from "@/types";
 import { OramaClient } from "./orama";
 import { getEmbeddings } from "./embedding";
@@ -114,24 +114,30 @@ async function ensureEmailAddress(
     accountId: string,
     address: AurinkoEmailAddress
 ): Promise<string> {
-    const emailAddress = await db.emailAddress.upsert({
-        where: {
-            accountId_address: {
-                accountId,
-                address: address.address,
-            },
+    const emailAddress = await retryDbOperation(
+        async () => {
+            return await db.emailAddress.upsert({
+                where: {
+                    accountId_address: {
+                        accountId,
+                        address: address.address,
+                    },
+                },
+                create: {
+                    accountId,
+                    address: address.address,
+                    name: address.name || null,
+                    raw: address.raw || null,
+                },
+                update: {
+                    name: address.name || null,
+                    raw: address.raw || null,
+                },
+            });
         },
-        create: {
-            accountId,
-            address: address.address,
-            name: address.name || null,
-            raw: address.raw || null,
-        },
-        update: {
-            name: address.name || null,
-            raw: address.raw || null,
-        },
-    });
+        3,
+        1000
+    );
     
     return emailAddress.id;
 }
@@ -197,23 +203,29 @@ export async function syncEmailsToDatabase(
         
         // Create or update the thread
         // Use Aurinko's threadId as our thread ID
-        const thread = await db.thread.upsert({
-            where: { id: aurinkoThreadId },
-            create: {
-                id: aurinkoThreadId,
-                accountId,
-                subject: firstEmail.subject || "(No subject)",
-                lastMessageDate: safeDateParse(lastEmail.sentAt),
-                participantIds,
-                ...threadStatus,
+        const thread = await retryDbOperation(
+            async () => {
+                return await db.thread.upsert({
+                    where: { id: aurinkoThreadId },
+                    create: {
+                        id: aurinkoThreadId,
+                        accountId,
+                        subject: firstEmail.subject || "(No subject)",
+                        lastMessageDate: safeDateParse(lastEmail.sentAt),
+                        participantIds,
+                        ...threadStatus,
+                    },
+                    update: {
+                        subject: firstEmail.subject || "(No subject)",
+                        lastMessageDate: safeDateParse(lastEmail.sentAt),
+                        participantIds,
+                        ...threadStatus,
+                    },
+                });
             },
-            update: {
-                subject: firstEmail.subject || "(No subject)",
-                lastMessageDate: safeDateParse(lastEmail.sentAt),
-                participantIds,
-                ...threadStatus,
-            },
-        });
+            3,
+            1000
+        );
         
         // DEBUG: Log final thread status after upsert
         console.log(`[DEBUG] Thread ${aurinkoThreadId} upserted successfully - inboxStatus: ${threadStatus.inboxStatus}, sentStatus: ${threadStatus.sentStatus}, spamStatus: ${threadStatus.spamStatus}`);
@@ -276,17 +288,29 @@ export async function syncEmailsToDatabase(
                     if (shouldReply) {
                         try {
                             // Get account info for context
-                            const account = await db.account.findUnique({
-                                where: { id: accountId },
-                                select: { name: true, emailAddress: true }
-                            });
+                            const account = await retryDbOperation(
+                                async () => {
+                                    return await db.account.findUnique({
+                                        where: { id: accountId },
+                                        select: { name: true, emailAddress: true }
+                                    });
+                                },
+                                3,
+                                1000
+                            );
 
                             // Build context from thread emails (existing ones in DB)
-                            const existingThreadEmails = await db.email.findMany({
-                                where: { threadId: email.threadId },
-                                orderBy: { sentAt: 'asc' },
-                                include: { from: true }
-                            });
+                            const existingThreadEmails = await retryDbOperation(
+                                async () => {
+                                    return await db.email.findMany({
+                                        where: { threadId: email.threadId },
+                                        orderBy: { sentAt: 'asc' },
+                                        include: { from: true }
+                                    });
+                                },
+                                3,
+                                1000
+                            );
 
                             let context = '';
                             // Add existing thread emails
@@ -329,38 +353,40 @@ My name is ${account.name} and my email is ${account.emailAddress}.
             }
 
             // Vectorize email for RAG
+            const body = turndown.turndown(email.body ?? email.bodySnippet ?? '');
+            let embeddings: number[] | null = null;
+            
             try {
-                const body = turndown.turndown(email.body ?? email.bodySnippet ?? '');
                 // Generate embeddings from full email context (subject + body + sender) for better search
                 const emailText = `Subject: ${email.subject || "(No subject)"}\nFrom: ${email.from.name || email.from.address}\nBody: ${body}`;
-                const embeddings = await getEmbeddings(emailText);
-                
-                // Collect Orama documents for batch insert
-                oramaDocuments.push({
-                    subject: email.subject || "(No subject)",
-                    body: body,
-                    rowBody: email.bodySnippet ?? '',
-                    from: email.from.address,
-                    to: email.to.map(to => to.address),
-                    sentAt: new Date(email.sentAt).toLocaleString(),
-                    threadId: email.threadId,
-                    source: 'email', // CRITICAL: Add source field to identify as email
-                    sourceId: email.id, // CRITICAL: Add sourceId to link back to email
-                    fileName: '', // Not applicable for emails
-                    embeddings
-                });
+                embeddings = await getEmbeddings(emailText);
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : String(error);
                 
                 // Check if it's a quota error
                 if (errorMessage.includes("quota") || errorMessage.includes("exceeded") || errorMessage.includes("billing")) {
-                    console.warn(`[QUOTA] Skipping vectorization for email ${email.id} - OpenAI quota exceeded. Email will be synced without embeddings.`);
-                    // Continue without embeddings - email will still be searchable via keyword search
+                    console.warn(`[QUOTA] Skipping vectorization for email ${email.id} - OpenAI quota exceeded. Email will be synced without embeddings but still searchable via keyword.`);
                 } else {
                     console.error(`Error vectorizing email ${email.id}:`, error);
                 }
-                // Continue even if vectorization fails - email will be synced without embeddings
+                // Continue without embeddings - email will still be searchable via keyword search
             }
+            
+            // Always add email to Orama, even without embeddings (for keyword search)
+            // This ensures emails are searchable even if vectorization fails
+            oramaDocuments.push({
+                subject: email.subject || "(No subject)",
+                body: body,
+                rowBody: email.bodySnippet ?? '',
+                from: email.from.address,
+                to: email.to.map(to => to.address),
+                sentAt: new Date(email.sentAt).toLocaleString(),
+                threadId: email.threadId,
+                source: 'email', // CRITICAL: Add source field to identify as email
+                sourceId: email.id, // CRITICAL: Add sourceId to link back to email
+                fileName: '', // Not applicable for emails
+                embeddings: embeddings || [] // Use empty array if no embeddings (allows keyword search)
+            });
 
             // Ensure email addresses exist
             const fromId = await ensureEmailAddress(accountId, email.from);
@@ -451,28 +477,34 @@ My name is ${account.name} and my email is ${account.emailAddress}.
             };
 
             try {
-                await db.email.upsert({
-                    where: { id: email.id },
-                    create: {
-                        id: email.id,
-                        threadId: thread.id,
-                        internetMessageId: email.internetMessageId,
-                        ...emailUpdateData,
-                        to: {
-                            connect: toIds.map(id => ({ id })),
-                        },
-                        cc: {
-                            connect: ccIds.map(id => ({ id })),
-                        },
-                        bcc: {
-                            connect: bccIds.map(id => ({ id })),
-                        },
-                        replyTo: {
-                            connect: replyToIds.map(id => ({ id })),
-                        },
+                await retryDbOperation(
+                    async () => {
+                        return await db.email.upsert({
+                            where: { id: email.id },
+                            create: {
+                                id: email.id,
+                                threadId: thread.id,
+                                internetMessageId: email.internetMessageId,
+                                ...emailUpdateData,
+                                to: {
+                                    connect: toIds.map(id => ({ id })),
+                                },
+                                cc: {
+                                    connect: ccIds.map(id => ({ id })),
+                                },
+                                bcc: {
+                                    connect: bccIds.map(id => ({ id })),
+                                },
+                                replyTo: {
+                                    connect: replyToIds.map(id => ({ id })),
+                                },
+                            },
+                            update: emailUpdateData,
+                        });
                     },
-                    update: emailUpdateData,
-                });
+                    3,
+                    1000
+                );
             } catch (error: any) {
                 // Handle unique constraint violation (race condition)
                 // If email already exists due to concurrent processing, just update it
@@ -483,15 +515,27 @@ My name is ${account.name} and my email is ${account.emailAddress}.
                 if (isUniqueConstraintError) {
                     console.warn(`Email ${email.id} already exists (likely race condition), updating instead...`);
                     try {
-                        await db.email.update({
-                            where: { id: email.id },
-                            data: emailUpdateData,
-                        });
+                        await retryDbOperation(
+                            async () => {
+                                return await db.email.update({
+                                    where: { id: email.id },
+                                    data: emailUpdateData,
+                                });
+                            },
+                            3,
+                            1000
+                        );
                     } catch (updateError: any) {
                         // If update fails (email doesn't exist after all), try to find it first
-                        const existingEmail = await db.email.findUnique({
-                            where: { id: email.id },
-                        });
+                        const existingEmail = await retryDbOperation(
+                            async () => {
+                                return await db.email.findUnique({
+                                    where: { id: email.id },
+                                });
+                            },
+                            3,
+                            1000
+                        );
                         
                         if (!existingEmail) {
                             // Email doesn't exist, log the error but continue

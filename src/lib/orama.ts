@@ -66,23 +66,37 @@ export class OramaClient {
         term: string
         preferredEmailIds?: string[]
     }) {
-        const embeddings = await getEmbeddings(term)
-        const results = await search(this.orama, {
-            mode: 'hybrid',
-            term: term,
-            vector: {
-                value: embeddings,
-                property: 'embeddings'
-            },
-            similarity: 0.6, // Lowered from 0.8 to find more relevant emails
-            limit: 20 // Get more results to allow for filtering/prioritization
-        })
-        
-        // Note: preferredEmailIds are handled in the API route by fetching emails directly from DB
-        // This allows us to include exact email content even if it's not in the top vector results
-        // The API route will combine context emails with vector search results
-        
-        return results
+        try {
+            const embeddings = await getEmbeddings(term)
+            const results = await search(this.orama, {
+                mode: 'hybrid',
+                term: term,
+                vector: {
+                    value: embeddings,
+                    property: 'embeddings'
+                },
+                similarity: 0.6, // Lowered from 0.8 to find more relevant emails
+                limit: 20 // Get more results to allow for filtering/prioritization
+            })
+            
+            // Note: preferredEmailIds are handled in the API route by fetching emails directly from DB
+            // This allows us to include exact email content even if it's not in the top vector results
+            // The API route will combine context emails with vector search results
+            
+            return results
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            // If quota error or embedding error, fallback to keyword search
+            if (errorMessage.includes("quota") || errorMessage.includes("exceeded") || errorMessage.includes("billing") || errorMessage.includes("embedding")) {
+                console.warn("[QUOTA] Vector search failed due to quota/embedding error, falling back to keyword search");
+                // Fallback to keyword-only search
+                return await search(this.orama, {
+                    term: term,
+                    limit: 20
+                });
+            }
+            throw error;
+        }
     }
 
     async search({ term }: { term: string }) {
