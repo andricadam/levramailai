@@ -113,7 +113,7 @@ export class Account {
         };
     }
     
-    async getUpdatedEmails({ deltaToken, pageToken }: { deltaToken?: string, pageToken?: string}) {
+    async getUpdatedEmails({ deltaToken, pageToken, recentOnly = false }: { deltaToken?: string, pageToken?: string, recentOnly?: boolean}) {
         await this.ensureValidToken();
         const account = await this.getAccount();
         if (!account) throw new Error('Account not found');
@@ -122,9 +122,17 @@ export class Account {
 
         if (account.provider === 'google') {
             const gmail = new GmailAPI(this.token, tokenRefreshCallback);
-            // Query for inbox messages to ensure we sync inbox emails
-            // Use 'in:inbox' to filter for inbox messages only
-            const response = await gmail.listMessages('in:inbox', pageToken);
+            // For recent emails, query for emails from the last 2 hours to ensure we get the newest ones
+            // Gmail API might have a slight delay in indexing, so we use 2 hours to be safe
+            let query = 'in:inbox';
+            if (recentOnly) {
+                const twoHoursAgo = new Date();
+                twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+                const dateStr = twoHoursAgo.toISOString().split('T')[0].replace(/-/g, '/');
+                query = `in:inbox after:${dateStr}`;
+                console.log(`[SYNC] Querying for recent emails: ${query}`);
+            }
+            const response = await gmail.listMessages(query, pageToken);
             return {
                 records: response.messages,
                 nextPageToken: response.nextPageToken,
@@ -205,52 +213,124 @@ export class Account {
             }
         }
         
-        // Google and Microsoft can sync without delta token (they'll handle it in their API clients)
-        let response = await this.getUpdatedEmails({
-            deltaToken: account.nextDeltaToken || undefined
-        })
-        let allEmails: EmailMessage[] = response.records
-        let storedDeltaToken: string = account.nextDeltaToken || ''
-
-        if (response.nextDeltaToken) {
-            storedDeltaToken = response.nextDeltaToken
-        }
-
-        while (response.nextPageToken) {
-            // Add significant delay between pagination requests to avoid rate limits
-            // Gmail allows ~250 quota units per user per second, but we'll be conservative
-            // Wait 2 seconds between pagination requests
-            await new Promise(resolve => setTimeout(resolve, 2000))
-            
-            try {
-                response = await this.getUpdatedEmails({ 
-                    deltaToken: storedDeltaToken || undefined,
-                    pageToken: response.nextPageToken 
-                })
-                allEmails = allEmails.concat(response.records)
-                if (response.nextDeltaToken) {
-                    storedDeltaToken = response.nextDeltaToken
-                }
-            } catch (error) {
-                // If we hit rate limits during pagination, stop and use what we have
-                if (axios.isAxiosError(error) && error.response?.status === 429) {
-                    console.warn(`Rate limit hit during pagination. Stopping sync and using ${allEmails.length} emails fetched so far.`)
-                    break
-                }
-                throw error
-            }
-        }
-
+        console.log(`[SYNC] Starting email sync for account ${account.id} (provider: ${account.provider})`);
+        
+        // First, sync recent emails (last 2 hours) to ensure we get the newest ones immediately
+        // This is especially important for Vercel where the function might timeout
+        let allEmails: EmailMessage[] = [];
+        let storedDeltaToken: string = account.nextDeltaToken || '';
+        const existingEmailIds = new Set<string>();
+        
         try {
-            console.log(`Syncing ${allEmails.length} emails to database`)
-            await syncEmailsToDatabase(account.id, allEmails)
+            console.log(`[SYNC] Step 1: Syncing recent emails (last 2 hours)...`);
+            let recentResponse = await this.getUpdatedEmails({
+                deltaToken: account.nextDeltaToken || undefined,
+                recentOnly: true
+            });
+            
+            allEmails = recentResponse.records;
+            allEmails.forEach(e => existingEmailIds.add(e.id));
+            console.log(`[SYNC] Found ${allEmails.length} recent emails`);
+            
+            if (recentResponse.nextDeltaToken) {
+                storedDeltaToken = recentResponse.nextDeltaToken;
+            }
+            
+            // Sync recent emails to database immediately
+            if (allEmails.length > 0) {
+                try {
+                    console.log(`[SYNC] Syncing ${allEmails.length} recent emails to database...`);
+                    await syncEmailsToDatabase(account.id, allEmails);
+                    console.log(`[SYNC] Successfully synced ${allEmails.length} recent emails`);
+                } catch (error) {
+                    console.error('[SYNC] Error syncing recent emails to database:', error);
+                }
+            }
         } catch (error) {
-            console.error('Error syncing emails to database:', error);
+            console.error('[SYNC] Error syncing recent emails:', error);
+            // Continue with full sync even if recent sync fails
+        }
+        
+        // Then, do a full sync to catch any emails we might have missed
+        // But limit pagination to avoid timeouts on Vercel
+        try {
+            console.log(`[SYNC] Step 2: Syncing all inbox emails...`);
+            let response = await this.getUpdatedEmails({
+                deltaToken: account.nextDeltaToken || undefined,
+                recentOnly: false
+            });
+            
+            // Merge with recent emails, avoiding duplicates
+            const newEmails = response.records.filter(e => !existingEmailIds.has(e.id));
+            allEmails = allEmails.concat(newEmails);
+            newEmails.forEach(e => existingEmailIds.add(e.id));
+            
+            if (response.nextDeltaToken) {
+                storedDeltaToken = response.nextDeltaToken;
+            }
+            
+            console.log(`[SYNC] Found ${newEmails.length} additional emails from full sync`);
+            
+            // Limit pagination to 3 pages max to avoid Vercel timeouts
+            let pageCount = 0;
+            const MAX_PAGES = 3;
+            
+            while (response.nextPageToken && pageCount < MAX_PAGES) {
+                pageCount++;
+                console.log(`[SYNC] Fetching page ${pageCount + 1}...`);
+                
+                // Add delay between pagination requests to avoid rate limits
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                try {
+                    response = await this.getUpdatedEmails({ 
+                        deltaToken: storedDeltaToken || undefined,
+                        pageToken: response.nextPageToken,
+                        recentOnly: false
+                    });
+                    
+                    const additionalNewEmails = response.records.filter(e => !existingEmailIds.has(e.id));
+                    allEmails = allEmails.concat(additionalNewEmails);
+                    additionalNewEmails.forEach(e => existingEmailIds.add(e.id));
+                    
+                    if (response.nextDeltaToken) {
+                        storedDeltaToken = response.nextDeltaToken;
+                    }
+                    
+                    console.log(`[SYNC] Page ${pageCount + 1}: Found ${additionalNewEmails.length} new emails`);
+                } catch (error) {
+                    // If we hit rate limits during pagination, stop and use what we have
+                    if (axios.isAxiosError(error) && error.response?.status === 429) {
+                        console.warn(`[SYNC] Rate limit hit during pagination. Stopping sync and using ${allEmails.length} emails fetched so far.`);
+                        break;
+                    }
+                    console.error(`[SYNC] Error fetching page ${pageCount + 1}:`, error);
+                    break; // Stop pagination on error
+                }
+            }
+            
+            if (pageCount >= MAX_PAGES) {
+                console.log(`[SYNC] Reached max page limit (${MAX_PAGES}), stopping pagination`);
+            }
+        } catch (error) {
+            console.error('[SYNC] Error during full sync:', error);
+            // Continue with what we have
         }
 
-        console.log('Waiting 2 seconds before updating account delta token...');
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Sync all collected emails to database (final sync to ensure everything is up to date)
+        if (allEmails.length > 0) {
+            try {
+                console.log(`[SYNC] Final sync: Syncing ${allEmails.length} total emails to database...`);
+                await syncEmailsToDatabase(account.id, allEmails);
+                console.log(`[SYNC] Successfully synced ${allEmails.length} emails to database`);
+            } catch (error) {
+                console.error('[SYNC] Error syncing emails to database:', error);
+            }
+        } else {
+            console.log(`[SYNC] No new emails to sync`);
+        }
 
+        // Update delta token
         try {
             await retryDbOperation(
                 async () => {
@@ -262,12 +342,14 @@ export class Account {
                 5,
                 2000
             );
-            console.log('Successfully updated account delta token');
+            console.log(`[SYNC] Successfully updated account delta token`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
-            console.error('Failed to update account delta token after retries:', errorMessage);
+            console.error('[SYNC] Failed to update account delta token after retries:', errorMessage);
         }
 
+        console.log(`[SYNC] Email sync completed for account ${account.id}. Total emails synced: ${allEmails.length}`);
+        
         return {
             emails: allEmails,
             deltaToken: storedDeltaToken
