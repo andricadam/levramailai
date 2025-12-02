@@ -1,9 +1,10 @@
 'use client'
+// Ask AI component with improved loading indicators and email context access
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef } from 'react'
-import { Send, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Send, ThumbsUp, ThumbsDown, Loader2 } from 'lucide-react';
 import { useLocalStorage } from 'usehooks-ts';
 import { cn } from '@/lib/utils';
 import { SparklesIcon } from '@heroicons/react/24/solid';
@@ -339,7 +340,12 @@ const AskAI = ({ onClose }: AskAIProps) => {
                                         exit={{ opacity: 0, y: -10 }}
                                     >
                                         <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                                            {content || (role === 'assistant' && status === 'streaming' ? '...' : '')}
+                                            {content || (role === 'assistant' && (status === 'streaming' || status === 'submitted') ? (
+                                                <div className="flex items-center gap-2 text-muted-foreground">
+                                                    <Loader2 className="size-4 animate-spin" />
+                                                    <span>Generating answer...</span>
+                                                </div>
+                                            ) : '')}
                                         </div>
                                         
                                         {/* Source Citations */}
@@ -387,6 +393,20 @@ const AskAI = ({ onClose }: AskAIProps) => {
                                 );
                             })}
                         </AnimatePresence>
+                        {/* Loading indicator when message is being sent/processed */}
+                        {(status === 'submitted' || status === 'streaming') && messages.length > 0 && messages[messages.length - 1]?.role === 'user' && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0 }}
+                                className="max-w-[85%] mr-auto bg-muted text-foreground rounded-lg px-4 py-3"
+                            >
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Loader2 className="size-4 animate-spin" />
+                                    <span className="text-sm">Generating answer...</span>
+                                </div>
+                            </motion.div>
+                        )}
                     </div>
                 )}
 
