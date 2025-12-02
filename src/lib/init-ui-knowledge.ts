@@ -42,7 +42,7 @@ export async function initializeUIKnowledgeForAccount(accountId: string) {
       try {
         const itemEmbeddings = await getEmbeddings(itemText.substring(0, 8000))
 
-        await orama.insert({
+        await vectorClient.insert({
           subject: item.title,
           body: itemText,
           rowBody: itemText,

@@ -73,9 +73,9 @@ export async function syncGoogleCalendar(connectionId: string) {
 
     console.log(`Found ${allEvents.length} events to sync for Google Calendar connection ${connectionId}`)
 
-    // Initialize Orama
+    // Initialize pgvector client
     const vectorClient = new PgVectorClient(connection.accountId || connection.userId)
-    await orama.initialize()
+    await vectorClient.initialize()
 
     let processedCount = 0
     for (const event of allEvents) {

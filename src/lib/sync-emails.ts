@@ -374,10 +374,10 @@ My name is ${account.name} and my email is ${account.emailAddress}.
             
             // Store embeddings directly in Email table for pgvector
             // Update the email record with embeddings
-            if (emailRecord && embeddings && embeddings.length > 0) {
+            if (embeddings && embeddings.length > 0) {
                 try {
                     await db.email.update({
-                        where: { id: emailRecord.id },
+                        where: { id: email.id },
                         data: { embeddings: embeddings }
                     });
                 } catch (error) {

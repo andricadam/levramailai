@@ -1,6 +1,6 @@
 import { db } from '@/server/db';
 import type { SyncUpdatedResponse, EmailMessage, EmailAddress, EmailAttachment, EmailHeader } from '@/types';
-import { OramaClient } from './orama';
+import { PgVectorClient } from './pgvector';
 // TODO: Implement these modules
 import { getEmbeddings } from '@/lib/embedding';
 import { turndown } from './turndown';
@@ -11,40 +11,16 @@ import { generateInstantReplyServer } from '@/app/mail/components/ai/instant-rep
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
     console.log(`attempting to sync emails to database ${emails.length}`)
 
-
-    const orama = new OramaClient(accountId)
-    await orama.initialize()
     try {
-        // Batch Orama inserts to avoid saving index after every email
-        const oramaDocuments: any[] = []
-        
-        // Sync emails to database
+        // Sync emails to database with embeddings
         for (const [index, email] of emails.entries()) {
             const body = turndown.turndown(email.body ?? email.bodySnippet ?? '')
             // Generate embeddings from full email context (subject + body + sender) for better search
             const emailText = `Subject: ${email.subject}\nFrom: ${email.from.name || email.from.address}\nBody: ${body}`
             const embeddings = await getEmbeddings(emailText)
             
-            // Collect Orama documents for batch insert
-            oramaDocuments.push({
-                subject: email.subject,
-                body: body,
-                from: email.from.address,
-                rawBody: email.bodySnippet ?? '',
-                to: email.to.map(to => to.address),
-                sentAt: email.sentAt.toLocaleString(),
-                threadId: email.threadId,
-                source: 'email', // CRITICAL: Add source field to identify as email
-                sourceId: email.id, // CRITICAL: Add sourceId to link back to email
-                embeddings
-            })
-            
-            await upsertEmail(email, index, accountId);
-        }
-
-        // Batch insert all Orama documents and save index once
-        if (oramaDocuments.length > 0) {
-            await orama.insertBatch(oramaDocuments)
+            // Embeddings are stored directly in Email table via upsertEmail
+            await upsertEmail(email, index, accountId, embeddings);
         }
 
         // TODO: Implement Orama sync when modules are available
@@ -78,7 +54,7 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
 
 }
 
-async function upsertEmail(email: EmailMessage, index: number, accountId: string) {
+async function upsertEmail(email: EmailMessage, index: number, accountId: string, embeddings: number[]) {
     console.log(`upserting email ${index}`);
     try {
 
@@ -291,6 +267,7 @@ My name is ${account.name} and my email is ${account.emailAddress}.
                 emailLabel: emailLabelType,
                 priority: emailPriority,
                 autoReplyDraft: autoReplyDraft,
+                embeddings: embeddings, // Store embeddings directly in Email table
             },
             create: {
                 id: email.id,
@@ -324,6 +301,7 @@ My name is ${account.name} and my email is ${account.emailAddress}.
                 nativeProperties: email.nativeProperties as any,
                 folderId: email.folderId,
                 omitted: email.omitted,
+                embeddings: embeddings, // Store embeddings directly in Email table
             }
         });
 

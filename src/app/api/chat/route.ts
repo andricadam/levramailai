@@ -716,9 +716,14 @@ GUIDELINES:
                     
                     // Add new Q&A to cache for future use (async, don't block)
                     try {
-                        const qaCache = new QACacheClient(accountId);
-                        await qaCache.initialize();
-                        await qaCache.addQA(lastMessageContent, result.text || '', null);
+                        try {
+                            const qaCache = new QACacheClient(accountId);
+                            await qaCache.initialize();
+                            await qaCache.addQA(lastMessageContent, result.text || '', null);
+                        } catch (qaError) {
+                            console.error('[Chat] Error caching QA:', qaError);
+                            // Continue without caching
+                        }
                         console.log("Added new Q&A to cache");
                     } catch (cacheError) {
                         const errorMessage = cacheError instanceof Error ? cacheError.message : String(cacheError);
