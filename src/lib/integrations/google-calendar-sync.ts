@@ -172,6 +172,7 @@ export async function createGoogleCalendarEvent(
   title: string,
   startDateTime: string,
   endDateTime: string,
+  allDay: boolean = false,
   description?: string,
   location?: string
 ) {
@@ -216,18 +217,30 @@ export async function createGoogleCalendarEvent(
 
   try {
     // Create the event
-    const event = {
+    const event: any = {
       summary: title,
       description: description || '',
       location: location || '',
-      start: {
+    }
+
+    if (allDay) {
+      // For all-day events, use date only (YYYY-MM-DD format)
+      event.start = {
+        date: startDateTime,
+      }
+      event.end = {
+        date: endDateTime, // Should be exclusive (day after last day)
+      }
+    } else {
+      // For timed events, use dateTime with timezone
+      event.start = {
         dateTime: startDateTime,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      },
-      end: {
+      }
+      event.end = {
         dateTime: endDateTime,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      },
+      }
     }
 
     const response = await calendar.events.insert({

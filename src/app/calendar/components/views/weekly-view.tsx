@@ -41,11 +41,22 @@ export function WeeklyView() {
   )
 
   // IMPORTANT: All hooks must be called before any conditional returns
-  // Group events by date
+  // Group events by date and separate all-day events
   const eventsByDate = React.useMemo(() => {
     const grouped: Record<string, typeof events> = {}
     events.forEach((event) => {
-      const eventDate = new Date(event.start).toISOString().split('T')[0]
+      // Extract date in local timezone to avoid timezone shift issues
+      // For all-day events, start is already in YYYY-MM-DD format
+      let eventDate: string
+      if (event.allDay) {
+        eventDate = event.start.split('T')[0] // Already in YYYY-MM-DD format
+      } else {
+        const eventDateObj = new Date(event.start)
+        const year = eventDateObj.getFullYear()
+        const month = String(eventDateObj.getMonth() + 1).padStart(2, '0')
+        const day = String(eventDateObj.getDate()).padStart(2, '0')
+        eventDate = `${year}-${month}-${day}`
+      }
       if (!grouped[eventDate]) {
         grouped[eventDate] = []
       }
@@ -53,6 +64,34 @@ export function WeeklyView() {
     })
     return grouped
   }, [events])
+
+  // Separate all-day events from timed events
+  const allDayEventsByDate = React.useMemo(() => {
+    const grouped: Record<string, typeof events> = {}
+    const timedEventsByDate: Record<string, typeof events> = {}
+    
+    Object.keys(eventsByDate).forEach((date) => {
+      const allDay: typeof events = []
+      const timed: typeof events = []
+      
+      eventsByDate[date].forEach((event) => {
+        if (event.allDay) {
+          allDay.push(event)
+        } else {
+          timed.push(event)
+        }
+      })
+      
+      if (allDay.length > 0) {
+        grouped[date] = allDay
+      }
+      if (timed.length > 0) {
+        timedEventsByDate[date] = timed
+      }
+    })
+    
+    return { allDay: grouped, timed: timedEventsByDate }
+  }, [eventsByDate])
 
   const navigateWeek = (direction: 'prev' | 'next') => {
     setCurrentDate((prev) => 
@@ -126,8 +165,13 @@ export function WeeklyView() {
 
           {/* Days */}
           {weekDays.map((day, dayIdx) => {
-            const dayStr = day.toISOString().split('T')[0]
-            const dayEvents = eventsByDate[dayStr] || []
+            // Extract date in local timezone to avoid timezone shift issues
+            const year = day.getFullYear()
+            const month = String(day.getMonth() + 1).padStart(2, '0')
+            const dayNum = String(day.getDate()).padStart(2, '0')
+            const dayStr = `${year}-${month}-${dayNum}`
+            const dayAllDayEvents = allDayEventsByDate.allDay[dayStr] || []
+            const dayTimedEvents = allDayEventsByDate.timed[dayStr] || []
             const isCurrentDay = isToday(day)
 
             return (
@@ -152,6 +196,36 @@ export function WeeklyView() {
                   </div>
                 </div>
 
+                {/* All-day events bar */}
+                {dayAllDayEvents.length > 0 && (
+                  <div className="border-b bg-muted/20 px-1 py-0.5 space-y-0.5">
+                    {dayAllDayEvents.map((event) => {
+                      // Check if event spans multiple days
+                      const startDate = event.start.split('T')[0]
+                      const endDate = event.end.split('T')[0]
+                      const eventStart = new Date(startDate)
+                      const eventEnd = new Date(endDate)
+                      const daysDiff = Math.ceil((eventEnd.getTime() - eventStart.getTime()) / (1000 * 60 * 60 * 24))
+                      const isMultiDay = daysDiff > 1
+                      
+                      return (
+                        <div
+                          key={event.id}
+                          className="rounded bg-blue-100 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-700 px-2 py-1 text-xs cursor-pointer hover:shadow-md"
+                          title={event.title}
+                        >
+                          <div className="font-medium truncate">{event.title}</div>
+                          {isMultiDay && (
+                            <div className="text-muted-foreground text-[10px]">
+                              {daysDiff} Tage
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
                 {/* Time slots */}
                 <div className="relative">
                   {hours.map((hour) => (
@@ -161,8 +235,8 @@ export function WeeklyView() {
                     />
                   ))}
 
-                  {/* Events */}
-                  {dayEvents.map((event) => {
+                  {/* Timed Events */}
+                  {dayTimedEvents.map((event) => {
                     const start = new Date(event.start)
                     const end = new Date(event.end)
                     const startHour = start.getHours() + start.getMinutes() / 60

@@ -204,6 +204,7 @@ export async function createMicrosoftCalendarEvent(
   title: string,
   startDateTime: string,
   endDateTime: string,
+  allDay: boolean = false,
   description?: string,
   location?: string
 ) {
@@ -244,23 +245,39 @@ export async function createMicrosoftCalendarEvent(
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
     // Create the event
-    const eventData = {
+    const eventData: any = {
       subject: title,
       body: {
         contentType: 'text' as const,
         content: description || '',
       },
-      start: {
-        dateTime: startDateTime,
-        timeZone: timeZone,
-      },
-      end: {
-        dateTime: endDateTime,
-        timeZone: timeZone,
-      },
       location: location ? {
         displayName: location,
       } : undefined,
+    }
+
+    if (allDay) {
+      // For all-day events, use date only (YYYY-MM-DD format)
+      // Microsoft Graph API expects isAllDay: true and date format
+      eventData.isAllDay = true
+      eventData.start = {
+        date: startDateTime,
+        timeZone: timeZone,
+      }
+      eventData.end = {
+        date: endDateTime, // Should be exclusive (day after last day)
+        timeZone: timeZone,
+      }
+    } else {
+      // For timed events, use dateTime with timezone
+      eventData.start = {
+        dateTime: startDateTime,
+        timeZone: timeZone,
+      }
+      eventData.end = {
+        dateTime: endDateTime,
+        timeZone: timeZone,
+      }
     }
 
     const response = await axios.post<GraphCalendarEvent>(

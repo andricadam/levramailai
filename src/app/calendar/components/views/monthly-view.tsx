@@ -53,7 +53,12 @@ export function MonthlyView() {
   const eventsByDate = React.useMemo(() => {
     const grouped: Record<string, CalendarEvent[]> = {}
     events.forEach((event) => {
-      const eventDate = new Date(event.start).toISOString().split('T')[0]
+      // Extract date in local timezone to avoid timezone shift issues
+      const eventDateObj = new Date(event.start)
+      const year = eventDateObj.getFullYear()
+      const month = String(eventDateObj.getMonth() + 1).padStart(2, '0')
+      const day = String(eventDateObj.getDate()).padStart(2, '0')
+      const eventDate = `${year}-${month}-${day}`
       if (!grouped[eventDate]) {
         grouped[eventDate] = []
       }
@@ -140,7 +145,11 @@ export function MonthlyView() {
 
           {/* Calendar days */}
           {days.map((day, dayIdx) => {
-            const dayStr = day.toISOString().split('T')[0]
+            // Extract date in local timezone to avoid timezone shift issues
+            const year = day.getFullYear()
+            const month = String(day.getMonth() + 1).padStart(2, '0')
+            const dayNum = String(day.getDate()).padStart(2, '0')
+            const dayStr = `${year}-${month}-${dayNum}`
             const dayEvents = eventsByDate[dayStr] || []
             const isCurrentMonth = isSameMonth(day, currentDate)
             const isCurrentDay = isToday(day)

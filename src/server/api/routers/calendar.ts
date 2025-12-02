@@ -14,16 +14,36 @@ function isDateString(str: string): boolean {
 }
 
 /**
+ * Check if a string looks like an email address
+ */
+function isEmailAddress(str: string): boolean {
+  if (!str) return false
+  // Simple email regex: something@something.something
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str.trim())
+}
+
+/**
  * Parse event data from content string
  * The content format from sync is:
  * [title]\n[description]\n[location]\n[attendees]\n[organizer]\n[startDateTime]\n[endDateTime]
  * Note: Empty fields are filtered out, so indices may vary
  */
+/**
+ * Check if a date string represents an all-day event
+ * All-day events have format YYYY-MM-DD (no time component)
+ */
+function isAllDayEvent(dateString: string | null): boolean {
+  if (!dateString) return false
+  // All-day events are in format YYYY-MM-DD (exactly 10 characters, no 'T')
+  return /^\d{4}-\d{2}-\d{2}$/.test(dateString.trim())
+}
+
 function parseEventData(content: string, title: string): {
   start: string | null;
   end: string | null;
   description?: string;
   location?: string;
+  allDay?: boolean;
 } {
   const lines = content.split('\n').filter(Boolean);
   
@@ -60,15 +80,21 @@ function parseEventData(content: string, title: string): {
   }
   
   // Try to identify location (often contains address keywords)
+  // Exclude email addresses from being recognized as locations
   let location: string | undefined;
-  const locationKeywords = ['location', 'address', 'at ', 'in ', '@'];
-  const locationIndex = nonDateLines.findIndex(line =>
-    locationKeywords.some(keyword => line.toLowerCase().includes(keyword)) ||
-    line.includes(',') || // Addresses often have commas
-    /^\d+/.test(line) // May start with street number
-  );
-  
-  if (locationIndex >= 0) {
+  const locationKeywords = ['location', 'address', 'at ', 'in '];
+  const locationIndex = nonDateLines.findIndex(line => {
+    // Skip if it's an email address
+    if (isEmailAddress(line)) {
+      return false
+    }
+    // Check for location keywords (excluding '@' to avoid matching emails)
+    return locationKeywords.some(keyword => line.toLowerCase().includes(keyword)) ||
+      (line.includes(',') && !isEmailAddress(line)) || // Addresses often have commas, but not emails
+      /^\d+/.test(line) // May start with street number
+  });
+
+  if (locationIndex >= 0 && !isEmailAddress(nonDateLines[locationIndex] || '')) {
     location = nonDateLines[locationIndex];
     nonDateLines.splice(locationIndex, 1);
   }
@@ -76,11 +102,15 @@ function parseEventData(content: string, title: string): {
   // Remaining lines are likely description/attendees/organizer
   const description = nonDateLines.filter(Boolean).join('\n') || undefined;
   
+  // Check if this is an all-day event
+  const allDay = startTime ? isAllDayEvent(startTime) : false;
+  
   return {
     start: startTime,
     end: endTime,
     description,
     location,
+    allDay,
   };
 }
 
@@ -130,13 +160,13 @@ async function fetchCalendarEvents(
   // Transform and parse events
   const allEvents = syncedItems
     .map((item) => {
-      const { start, end, description, location } = parseEventData(item.content, item.title);
+      const { start, end, description, location, allDay } = parseEventData(item.content, item.title);
       
       // Skip events without valid dates
       if (!start) {
         return null;
       }
-
+      
       return {
         id: item.id,
         title: item.title,
@@ -144,6 +174,7 @@ async function fetchCalendarEvents(
         location,
         start: start,
         end: end || start, // Default to start if no end time
+        allDay: allDay ?? false,
         url: item.url || undefined,
         modifiedAt: item.modifiedAt?.toISOString(),
       };
@@ -232,8 +263,9 @@ export const calendarRouter = createTRPCRouter({
     .input(
       z.object({
         title: z.string().min(1),
-        startDateTime: z.string(), // ISO date string
-        endDateTime: z.string(), // ISO date string
+        startDateTime: z.string(), // ISO date string or YYYY-MM-DD for all-day
+        endDateTime: z.string(), // ISO date string or YYYY-MM-DD for all-day
+        allDay: z.boolean().optional().default(false),
         description: z.string().optional(),
         location: z.string().optional(),
         accountId: z.string().optional(), // Filter by account ID
@@ -269,6 +301,7 @@ export const calendarRouter = createTRPCRouter({
               input.title,
               input.startDateTime,
               input.endDateTime,
+              input.allDay ?? false,
               input.description,
               input.location
             )
@@ -278,6 +311,7 @@ export const calendarRouter = createTRPCRouter({
               input.title,
               input.startDateTime,
               input.endDateTime,
+              input.allDay ?? false,
               input.description,
               input.location
             )

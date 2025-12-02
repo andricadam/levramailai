@@ -39,10 +39,25 @@ export function DailyView() {
   )
 
   // IMPORTANT: All hooks must be called before any conditional returns
-  const sortedEvents = React.useMemo(() => {
-    return [...events].sort((a, b) => {
+  // Separate all-day events from timed events
+  const { allDayEvents, timedEvents } = React.useMemo(() => {
+    const allDay: typeof events = []
+    const timed: typeof events = []
+    
+    events.forEach((event) => {
+      if (event.allDay) {
+        allDay.push(event)
+      } else {
+        timed.push(event)
+      }
+    })
+    
+    // Sort timed events by start time
+    timed.sort((a, b) => {
       return new Date(a.start).getTime() - new Date(b.start).getTime()
     })
+    
+    return { allDayEvents: allDay, timedEvents: timed }
   }, [events])
 
   const navigateDay = (direction: 'prev' | 'next') => {
@@ -116,6 +131,41 @@ export function DailyView() {
 
           {/* Time slots with events */}
           <div className="relative border-r">
+            {/* All-day events bar at the top */}
+            {allDayEvents.length > 0 && (
+              <div className="border-b bg-muted/20 px-2 py-1 space-y-1">
+                {allDayEvents.map((event) => {
+                  // Check if event spans multiple days
+                  const startDate = event.start.split('T')[0]
+                  const endDate = event.end.split('T')[0]
+                  const eventStart = new Date(startDate)
+                  const eventEnd = new Date(endDate)
+                  const daysDiff = Math.ceil((eventEnd.getTime() - eventStart.getTime()) / (1000 * 60 * 60 * 24))
+                  const isMultiDay = daysDiff > 1
+                  
+                  return (
+                    <div
+                      key={event.id}
+                      className="rounded bg-blue-100 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-700 px-2 py-1.5 cursor-pointer hover:shadow-md"
+                      title={event.title}
+                    >
+                      <div className="font-medium text-sm">{event.title}</div>
+                      {isMultiDay && (
+                        <div className="text-muted-foreground text-xs mt-0.5">
+                          {daysDiff} Tage
+                        </div>
+                      )}
+                      {event.location && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.location) && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          📍 {event.location}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
             {hours.map((hour) => (
               <div
                 key={hour}
@@ -123,8 +173,8 @@ export function DailyView() {
               />
             ))}
 
-            {/* Events */}
-            {sortedEvents.map((event) => {
+            {/* Timed Events */}
+            {timedEvents.map((event) => {
               const start = new Date(event.start)
               const end = new Date(event.end)
               const startHour = start.getHours() + start.getMinutes() / 60
@@ -145,7 +195,7 @@ export function DailyView() {
                   <div className="text-sm text-muted-foreground">
                     {format(start, "HH:mm")} - {format(end, "HH:mm")}
                   </div>
-                  {event.location && (
+                  {event.location && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.location) && (
                     <div className="text-xs text-muted-foreground mt-1">
                       📍 {event.location}
                     </div>
@@ -167,23 +217,41 @@ export function DailyView() {
                     <div className="text-sm text-muted-foreground text-center py-4">
                       Loading...
                     </div>
-                  ) : sortedEvents.length > 0 ? (
-                    sortedEvents.map((event) => (
-                      <div
-                        key={event.id}
-                        className="p-2 rounded border cursor-pointer hover:bg-muted"
-                      >
-                        <div className="font-medium text-sm">{event.title}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {formatDateRange(new Date(event.start), new Date(event.end))}
-                        </div>
-                        {event.location && (
-                          <div className="text-xs text-muted-foreground mt-1">
-                            📍 {event.location}
+                  ) : (allDayEvents.length > 0 || timedEvents.length > 0) ? (
+                    <>
+                      {allDayEvents.map((event) => (
+                        <div
+                          key={event.id}
+                          className="p-2 rounded border cursor-pointer hover:bg-muted bg-blue-50 dark:bg-blue-950/20"
+                        >
+                          <div className="font-medium text-sm">{event.title}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Ganztägig
                           </div>
-                        )}
-                      </div>
-                    ))
+                          {event.location && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.location) && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              📍 {event.location}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {timedEvents.map((event) => (
+                        <div
+                          key={event.id}
+                          className="p-2 rounded border cursor-pointer hover:bg-muted"
+                        >
+                          <div className="font-medium text-sm">{event.title}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {formatDateRange(new Date(event.start), new Date(event.end))}
+                          </div>
+                          {event.location && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.location) && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              📍 {event.location}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </>
                   ) : (
                     <div className="text-sm text-muted-foreground text-center py-4">
                       No events scheduled

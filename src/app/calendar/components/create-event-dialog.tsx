@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { api } from "@/trpc/react"
 import { toast } from "sonner"
 
@@ -29,7 +30,11 @@ export function CreateEventDialog({
   defaultTime = "09:00",
 }: CreateEventDialogProps) {
   const [title, setTitle] = React.useState("")
+  const [isAllDay, setIsAllDay] = React.useState(false)
   const [date, setDate] = React.useState(
+    defaultDate ? defaultDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+  )
+  const [endDate, setEndDate] = React.useState(
     defaultDate ? defaultDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   )
   const [startTime, setStartTime] = React.useState(defaultTime)
@@ -51,6 +56,7 @@ export function CreateEventDialog({
       onOpenChange(false)
       // Reset form
       setTitle("")
+      setIsAllDay(false)
       setLocation("")
       setDescription("")
       // Invalidate queries to refresh the calendar
@@ -69,19 +75,39 @@ export function CreateEventDialog({
       return
     }
 
-    // Combine date and time into ISO strings
-    const startDateTime = new Date(`${date}T${startTime}:00`).toISOString()
-    const endDateTime = new Date(`${date}T${endTime}:00`).toISOString()
+    let startDateTime: string
+    let endDateTime: string
 
-    if (endDateTime <= startDateTime) {
-      toast.error("Endzeit muss nach Startzeit liegen")
-      return
+    if (isAllDay) {
+      // For all-day events, use date only (YYYY-MM-DD format)
+      // End date should be the day after the last day of the event
+      const startDateObj = new Date(date)
+      const endDateObj = new Date(endDate)
+      endDateObj.setDate(endDateObj.getDate() + 1) // Add one day for exclusive end date
+      
+      startDateTime = date // YYYY-MM-DD format
+      endDateTime = endDateObj.toISOString().split('T')[0] // YYYY-MM-DD format
+      
+      if (endDate < date) {
+        toast.error("Enddatum muss nach Startdatum liegen")
+        return
+      }
+    } else {
+      // Combine date and time into ISO strings
+      startDateTime = new Date(`${date}T${startTime}:00`).toISOString()
+      endDateTime = new Date(`${date}T${endTime}:00`).toISOString()
+
+      if (endDateTime <= startDateTime) {
+        toast.error("Endzeit muss nach Startzeit liegen")
+        return
+      }
     }
 
     createEvent.mutate({
       title: title.trim(),
       startDateTime,
       endDateTime,
+      allDay: isAllDay,
       description: description.trim() || undefined,
       location: location.trim() || undefined,
     })
@@ -108,40 +134,78 @@ export function CreateEventDialog({
                 required
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="date">Datum *</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                />
-              </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="allDay"
+                checked={isAllDay}
+                onCheckedChange={(checked) => setIsAllDay(checked === true)}
+              />
+              <Label htmlFor="allDay" className="cursor-pointer">
+                Ganztägig
+              </Label>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="startTime">Startzeit *</Label>
-                <Input
-                  id="startTime"
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => setStartTime(e.target.value)}
-                  required
-                />
+            {isAllDay ? (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="date">Startdatum *</Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="endDate">Enddatum *</Label>
+                  <Input
+                    id="endDate"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    min={date}
+                    required
+                  />
+                </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="endTime">Endzeit *</Label>
-                <Input
-                  id="endTime"
-                  type="time"
-                  value={endTime}
-                  onChange={(e) => setEndTime(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="date">Datum *</Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="startTime">Startzeit *</Label>
+                    <Input
+                      id="startTime"
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="endTime">Endzeit *</Label>
+                    <Input
+                      id="endTime"
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             <div className="grid gap-2">
               <Label htmlFor="location">Ort</Label>
               <Input
