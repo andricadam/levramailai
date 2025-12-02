@@ -165,7 +165,7 @@ const ThreadList = () => {
     }
 
     return (
-        <div className='w-full h-full overflow-hidden'>
+        <div className='w-full h-full overflow-y-auto'>
             <div className='flex flex-col gap-2 p-2 pt-0 w-full'>
                 {Object.entries(groupedThreads).map(([date, threads]) => (
                     <React.Fragment key={date}>

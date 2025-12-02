@@ -1,4 +1,4 @@
-export const FREE_CREDITS_PER_DAY = 10;
+export const FREE_CREDITS_PER_DAY = 100; // Temporarily increased for testing
 
 // Q&A Cache Configuration
 export const QA_CACHE_SIMILARITY_THRESHOLD = 0.85; // Similarity threshold for cache hits

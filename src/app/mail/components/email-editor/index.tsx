@@ -242,7 +242,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
         content: '',
         editorProps: {
             attributes: {
-                class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] px-4 py-3',
+                class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] pl-4 pr-24 py-3',
             },
         },
         onUpdate: ({ editor }) => {

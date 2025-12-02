@@ -102,8 +102,8 @@ export function EmailContextSelector({
             <span>Add email context</span>
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-[450px] p-0" align="start">
-          <div className="p-3 border-b">
+        <PopoverContent className="w-[450px] p-0 max-h-[500px] flex flex-col" align="start">
+          <div className="p-3 border-b flex-shrink-0">
             <Input
               placeholder="Search emails by subject or sender..."
               value={searchQuery}
@@ -112,7 +112,7 @@ export function EmailContextSelector({
               className="w-full"
             />
           </div>
-          <div className="max-h-[400px] overflow-y-auto">
+          <div className="flex-1 overflow-y-auto min-h-0">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="size-5 animate-spin text-muted-foreground" />
