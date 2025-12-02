@@ -19,10 +19,16 @@ export class Account {
 
     private async getAccount() {
         if (this.accountId) {
-            const account = await db.account.findUnique({
-                where: { id: this.accountId },
-                select: { id: true, provider: true, accessToken: true, refreshToken: true, expiresAt: true, nextDeltaToken: true }
-            });
+            const account = await retryDbOperation(
+                async () => {
+                    return await db.account.findUnique({
+                        where: { id: this.accountId },
+                        select: { id: true, provider: true, accessToken: true, refreshToken: true, expiresAt: true, nextDeltaToken: true }
+                    });
+                },
+                3,
+                1000
+            );
             if (account) {
                 this.provider = account.provider as 'google' | 'microsoft';
                 this.token = account.accessToken;
@@ -30,10 +36,16 @@ export class Account {
             }
         } else {
             // Fallback: find by accessToken (for backward compatibility)
-            const account = await db.account.findFirst({
-                where: { accessToken: this.token },
-                select: { id: true, provider: true, accessToken: true, refreshToken: true, expiresAt: true, nextDeltaToken: true }
-            });
+            const account = await retryDbOperation(
+                async () => {
+                    return await db.account.findFirst({
+                        where: { accessToken: this.token },
+                        select: { id: true, provider: true, accessToken: true, refreshToken: true, expiresAt: true, nextDeltaToken: true }
+                    });
+                },
+                3,
+                1000
+            );
             if (account) {
                 this.accountId = account.id;
                 this.provider = account.provider as 'google' | 'microsoft';
@@ -81,14 +93,20 @@ export class Account {
                 ? new Date(newTokens.expiry_date) 
                 : null;
 
-            await db.account.update({
-                where: { id: account.id },
-                data: {
-                    accessToken: newTokens.access_token,
-                    refreshToken: newTokens.refresh_token || account.refreshToken,
-                    expiresAt: expiresAtDate || account.expiresAt || null,
+            await retryDbOperation(
+                async () => {
+                    return await db.account.update({
+                        where: { id: account.id },
+                        data: {
+                            accessToken: newTokens.access_token,
+                            refreshToken: newTokens.refresh_token || account.refreshToken,
+                            expiresAt: expiresAtDate || account.expiresAt || null,
+                        },
+                    });
                 },
-            });
+                3,
+                1000
+            );
 
             this.token = newTokens.access_token;
             console.log(`Token refreshed for account ${account.emailAddress}`);
@@ -166,10 +184,16 @@ export class Account {
                 const gmail = new GmailAPI(this.token, tokenRefreshCallback);
                 await gmail.performInitialSync(account.id);
                 // Get updated delta token
-                const updatedAccount = await db.account.findUnique({
-                    where: { id: account.id },
-                    select: { nextDeltaToken: true }
-                });
+                const updatedAccount = await retryDbOperation(
+                    async () => {
+                        return await db.account.findUnique({
+                            where: { id: account.id },
+                            select: { nextDeltaToken: true }
+                        });
+                    },
+                    3,
+                    1000
+                );
                 return {
                     emails: [], // Already synced in performInitialSync
                     deltaToken: updatedAccount?.nextDeltaToken || ''
@@ -178,10 +202,16 @@ export class Account {
                 const graph = new MicrosoftGraphAPI(this.token, tokenRefreshCallback);
                 await graph.performInitialSync(account.id);
                 // Get updated delta token
-                const updatedAccount = await db.account.findUnique({
-                    where: { id: account.id },
-                    select: { nextDeltaToken: true }
-                });
+                const updatedAccount = await retryDbOperation(
+                    async () => {
+                        return await db.account.findUnique({
+                            where: { id: account.id },
+                            select: { nextDeltaToken: true }
+                        });
+                    },
+                    3,
+                    1000
+                );
                 return {
                     emails: [], // Already synced in performInitialSync
                     deltaToken: updatedAccount?.nextDeltaToken || ''
