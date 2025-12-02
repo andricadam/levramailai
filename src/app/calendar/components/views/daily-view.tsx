@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils"
 import { formatDateRange } from "little-date"
 import { NoCalendarMessage } from "./no-calendar-message"
 import { useLocalStorage } from "usehooks-ts"
+import { CreateEventDialog } from "../create-event-dialog"
 
 export function DailyView() {
   const [currentDate, setCurrentDate] = React.useState(new Date())
+  const [createDialogOpen, setCreateDialogOpen] = React.useState(false)
 
   // Fetch events for the current day
   const startOfDayISO = startOfDay(currentDate).toISOString()
@@ -86,7 +88,11 @@ export function DailyView() {
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setCreateDialogOpen(true)}
+          >
             <PlusIcon className="h-4 w-4 mr-2" />
             Create
           </Button>
@@ -189,6 +195,12 @@ export function DailyView() {
           </div>
         </div>
       </div>
+
+      <CreateEventDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+        defaultDate={currentDate}
+      />
     </div>
   )
 }

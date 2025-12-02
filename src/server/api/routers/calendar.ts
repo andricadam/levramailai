@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
 import { db } from "@/server/db";
+import { createGoogleCalendarEvent } from '@/lib/integrations/google-calendar-sync'
+import { createMicrosoftCalendarEvent } from '@/lib/integrations/microsoft-calendar-sync'
 
 /**
  * Check if a string looks like a date (ISO format)
@@ -221,6 +223,80 @@ export const calendarRouter = createTRPCRouter({
         endOfDay,
         undefined // getEventsForDate doesn't filter by accountId for now
       );
+    }),
+
+  /**
+   * Create a new calendar event
+   */
+  createEvent: privateProcedure
+    .input(
+      z.object({
+        title: z.string().min(1),
+        startDateTime: z.string(), // ISO date string
+        endDateTime: z.string(), // ISO date string
+        description: z.string().optional(),
+        location: z.string().optional(),
+        accountId: z.string().optional(), // Filter by account ID
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Find calendar connections for this user
+      const whereClause: any = {
+        userId: ctx.auth.userId,
+        appType: { in: ['google_calendar', 'microsoft_calendar'] },
+        enabled: true,
+      }
+
+      // Filter by accountId if provided
+      if (input.accountId) {
+        whereClause.accountId = input.accountId
+      }
+
+      const connections = await db.appConnection.findMany({
+        where: whereClause,
+      })
+
+      if (connections.length === 0) {
+        throw new Error('No calendar connection found')
+      }
+
+      // Create event in all connected calendars
+      const results = await Promise.allSettled(
+        connections.map(async (connection) => {
+          if (connection.appType === 'google_calendar') {
+            return await createGoogleCalendarEvent(
+              connection.id,
+              input.title,
+              input.startDateTime,
+              input.endDateTime,
+              input.description,
+              input.location
+            )
+          } else if (connection.appType === 'microsoft_calendar') {
+            return await createMicrosoftCalendarEvent(
+              connection.id,
+              input.title,
+              input.startDateTime,
+              input.endDateTime,
+              input.description,
+              input.location
+            )
+          } else {
+            throw new Error(`Unsupported calendar type: ${connection.appType}`)
+          }
+        })
+      )
+
+      // Check if at least one succeeded
+      const successful = results.filter((r) => r.status === 'fulfilled')
+      if (successful.length === 0) {
+        const errors = results
+          .filter((r) => r.status === 'rejected')
+          .map((r) => (r as PromiseRejectedResult).reason)
+        throw new Error(`Failed to create event: ${errors.map((e) => e instanceof Error ? e.message : String(e)).join(', ')}`)
+      }
+
+      return { success: true, created: successful.length }
     }),
 });
 

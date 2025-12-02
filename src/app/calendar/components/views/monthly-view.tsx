@@ -8,6 +8,7 @@ import { api } from "@/trpc/react"
 import { cn } from "@/lib/utils"
 import { NoCalendarMessage } from "./no-calendar-message"
 import { useLocalStorage } from "usehooks-ts"
+import { CreateEventDialog } from "../create-event-dialog"
 
 type CalendarEvent = {
   id: string
@@ -19,6 +20,7 @@ type CalendarEvent = {
 
 export function MonthlyView() {
   const [currentDate, setCurrentDate] = React.useState(new Date())
+  const [createDialogOpen, setCreateDialogOpen] = React.useState(false)
   const monthStart = startOfMonth(currentDate)
   const monthEnd = endOfMonth(currentDate)
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 }) // Monday
@@ -112,7 +114,11 @@ export function MonthlyView() {
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setCreateDialogOpen(true)}
+          >
             <PlusIcon className="h-4 w-4 mr-2" />
             Create
           </Button>
@@ -181,6 +187,11 @@ export function MonthlyView() {
           })}
         </div>
       </div>
+
+      <CreateEventDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
     </div>
   )
 }

@@ -8,9 +8,11 @@ import { api } from "@/trpc/react"
 import { cn } from "@/lib/utils"
 import { NoCalendarMessage } from "./no-calendar-message"
 import { useLocalStorage } from "usehooks-ts"
+import { CreateEventDialog } from "../create-event-dialog"
 
 export function YearlyView() {
   const [currentYear, setCurrentYear] = React.useState(new Date().getFullYear())
+  const [createDialogOpen, setCreateDialogOpen] = React.useState(false)
   const yearStart = startOfYear(new Date(currentYear, 0, 1))
   const yearEnd = endOfYear(new Date(currentYear, 0, 1))
   const months = eachMonthOfInterval({ start: yearStart, end: yearEnd })
@@ -106,7 +108,11 @@ export function YearlyView() {
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setCreateDialogOpen(true)}
+          >
             <PlusIcon className="h-4 w-4 mr-2" />
             Create
           </Button>
@@ -173,6 +179,11 @@ export function YearlyView() {
           })}
         </div>
       </div>
+
+      <CreateEventDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+      />
     </div>
   )
 }
