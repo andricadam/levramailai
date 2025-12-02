@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { db } from '@/server/db'
 import { processFile, MAX_FILE_SIZE } from '@/lib/file-processor'
-import { PgVectorClient } from '@/lib/pgvector'
+import { getEmbeddings } from '@/lib/embedding'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 
@@ -71,33 +71,39 @@ export async function POST(req: NextRequest) {
         fileUrl,
         extractedText: processed.text,
         inKnowledgeBase: addToKnowledgeBase,
-        processedAt: new Date(),
+        textEmbeddings: processed.embeddings || [],
       }
     })
 
     // Index in pgvector if added to knowledge base
+    // Embeddings are already stored in textEmbeddings field above
+    // No need for separate indexing - pgvector will search directly from database
     if (addToKnowledgeBase) {
-      const vectorClient = new PgVectorClient(accountId)
-      await vectorClient.initialize()
-      
-      await vectorClient.insert({
-        subject: file.name,
-        body: processed.text,
-        rowBody: processed.text,
-        from: userId,
-        to: [],
-        sentAt: new Date().toISOString(),
-        threadId: attachment.id,
-        source: 'file',
-        sourceId: attachment.id,
-        fileName: file.name,
-        embeddings: processed.embeddings
-      } as any) // Type assertion needed due to schema evolution
-
-      await db.chatAttachment.update({
-        where: { id: attachment.id },
-        data: { indexedAt: new Date() }
-      })
+      // Update indexedAt timestamp
+      if (processed.embeddings && processed.embeddings.length > 0) {
+        await db.chatAttachment.update({
+          where: { id: attachment.id },
+          data: { 
+            textEmbeddings: processed.embeddings,
+            indexedAt: new Date()
+          }
+        })
+      } else {
+        // Generate embeddings if not already generated
+        try {
+          const embeddings = await getEmbeddings(processed.text)
+          await db.chatAttachment.update({
+            where: { id: attachment.id },
+            data: { 
+              textEmbeddings: embeddings,
+              indexedAt: new Date()
+            }
+          })
+        } catch (error) {
+          console.error('Error generating embeddings for file:', error)
+          // Continue without embeddings - file will still be searchable via keyword
+        }
+      }
     }
 
     return NextResponse.json({

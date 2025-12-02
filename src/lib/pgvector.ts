@@ -116,8 +116,8 @@ export class PgVectorClient {
                 const emails = await db.email.findMany({
                     where: {
                         threadId: { in: threadIds },
-                        embeddings: { not: Prisma.DbNull },
-                        NOT: { embeddings: [] }
+                        // Filter for non-empty embeddings arrays
+                        NOT: { embeddings: { isEmpty: true } }
                     },
                     select: {
                         id: true,
@@ -134,30 +134,36 @@ export class PgVectorClient {
 
                 // Calculate cosine similarity in JavaScript
                 const calculateCosineSimilarity = (a: number[], b: number[]): number => {
-                    if (a.length !== b.length) return 0
+                    if (!a || !b || a.length !== b.length || a.length === 0) return 0
                     let dotProduct = 0
                     let normA = 0
                     let normB = 0
                     for (let i = 0; i < a.length; i++) {
-                        dotProduct += a[i] * b[i]
-                        normA += a[i] * a[i]
-                        normB += b[i] * b[i]
+                        const aVal = a[i] ?? 0
+                        const bVal = b[i] ?? 0
+                        dotProduct += aVal * bVal
+                        normA += aVal * aVal
+                        normB += bVal * bVal
                     }
-                    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))
+                    const denominator = Math.sqrt(normA) * Math.sqrt(normB)
+                    return denominator > 0 ? dotProduct / denominator : 0
                 }
 
                 results = emails
                     .filter(e => e.embeddings && Array.isArray(e.embeddings) && e.embeddings.length === 1536)
-                    .map(e => ({
-                        id: e.id,
-                        threadId: e.threadId,
-                        subject: e.subject,
-                        body: e.body,
-                        bodySnippet: e.bodySnippet,
-                        sentAt: e.sentAt,
-                        fromId: e.fromId,
-                        similarity: calculateCosineSimilarity(queryEmbeddings, e.embeddings as number[])
-                    }))
+                    .map(e => {
+                        const embeddings = (e.embeddings as number[]) || []
+                        return {
+                            id: e.id,
+                            threadId: e.threadId,
+                            subject: e.subject || '',
+                            body: e.body || null,
+                            bodySnippet: e.bodySnippet || null,
+                            sentAt: e.sentAt,
+                            fromId: e.fromId,
+                            similarity: calculateCosineSimilarity(queryEmbeddings, embeddings)
+                        }
+                    })
                     .sort((a, b) => b.similarity - a.similarity)
                     .slice(0, limit * 2)
             }
@@ -372,8 +378,7 @@ export class PgVectorClient {
                 const attachments = await db.chatAttachment.findMany({
                     where: {
                         accountId: this.accountId,
-                        textEmbeddings: { not: Prisma.DbNull },
-                        NOT: { textEmbeddings: [] }
+                        NOT: { textEmbeddings: { isEmpty: true } }
                     },
                     select: {
                         id: true,
@@ -385,26 +390,32 @@ export class PgVectorClient {
                 })
 
                 const calculateCosineSimilarity = (a: number[], b: number[]): number => {
-                    if (a.length !== b.length) return 0
+                    if (!a || !b || a.length !== b.length || a.length === 0) return 0
                     let dotProduct = 0
                     let normA = 0
                     let normB = 0
                     for (let i = 0; i < a.length; i++) {
-                        dotProduct += a[i] * b[i]
-                        normA += a[i] * a[i]
-                        normB += b[i] * b[i]
+                        const aVal = a[i] ?? 0
+                        const bVal = b[i] ?? 0
+                        dotProduct += aVal * bVal
+                        normA += aVal * aVal
+                        normB += bVal * bVal
                     }
-                    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))
+                    const denominator = Math.sqrt(normA) * Math.sqrt(normB)
+                    return denominator > 0 ? dotProduct / denominator : 0
                 }
 
                 results = attachments
                     .filter(a => a.textEmbeddings && Array.isArray(a.textEmbeddings) && a.textEmbeddings.length === 1536)
-                    .map(a => ({
-                        id: a.id,
-                        fileName: a.fileName,
-                        extractedText: a.extractedText,
-                        similarity: calculateCosineSimilarity(queryEmbeddings!, a.textEmbeddings as number[])
-                    }))
+                    .map(a => {
+                        const embeddings = (a.textEmbeddings as number[]) || []
+                        return {
+                            id: a.id,
+                            fileName: a.fileName,
+                            extractedText: a.extractedText,
+                            similarity: calculateCosineSimilarity(queryEmbeddings!, embeddings)
+                        }
+                    })
                     .sort((a, b) => b.similarity - a.similarity)
                     .slice(0, limit * 2)
             }
@@ -514,8 +525,7 @@ export class PgVectorClient {
                 const syncedItems = await db.syncedItem.findMany({
                     where: {
                         connectionId: { in: connectionIds },
-                        embeddings: { not: Prisma.DbNull },
-                        NOT: { embeddings: [] }
+                        NOT: { embeddings: { isEmpty: true } }
                     },
                     select: {
                         id: true,
@@ -529,28 +539,34 @@ export class PgVectorClient {
                 })
 
                 const calculateCosineSimilarity = (a: number[], b: number[]): number => {
-                    if (a.length !== b.length) return 0
+                    if (!a || !b || a.length !== b.length || a.length === 0) return 0
                     let dotProduct = 0
                     let normA = 0
                     let normB = 0
                     for (let i = 0; i < a.length; i++) {
-                        dotProduct += a[i] * b[i]
-                        normA += a[i] * a[i]
-                        normB += b[i] * b[i]
+                        const aVal = a[i] ?? 0
+                        const bVal = b[i] ?? 0
+                        dotProduct += aVal * bVal
+                        normA += aVal * aVal
+                        normB += bVal * bVal
                     }
-                    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB))
+                    const denominator = Math.sqrt(normA) * Math.sqrt(normB)
+                    return denominator > 0 ? dotProduct / denominator : 0
                 }
 
                 results = syncedItems
                     .filter(si => si.embeddings && Array.isArray(si.embeddings) && si.embeddings.length === 1536)
-                    .map(si => ({
-                        id: si.id,
-                        title: si.title,
-                        content: si.content,
-                        itemType: si.itemType,
-                        url: si.url,
-                        similarity: calculateCosineSimilarity(queryEmbeddings!, si.embeddings as number[])
-                    }))
+                    .map(si => {
+                        const embeddings = (si.embeddings as number[]) || []
+                        return {
+                            id: si.id,
+                            title: si.title,
+                            content: si.content,
+                            itemType: si.itemType,
+                            url: si.url,
+                            similarity: calculateCosineSimilarity(queryEmbeddings!, embeddings)
+                        }
+                    })
                     .sort((a, b) => b.similarity - a.similarity)
                     .slice(0, limit * 2)
             }
@@ -731,8 +747,7 @@ export class PgVectorClient {
             const emailCount = threadIds.length > 0 ? await db.email.count({
                 where: {
                     threadId: { in: threadIds },
-                    embeddings: { not: Prisma.DbNull },
-                    NOT: { embeddings: [] }
+                    NOT: { embeddings: { isEmpty: true } }
                 }
             }) : 0
 
@@ -740,8 +755,7 @@ export class PgVectorClient {
             const fileCount = await db.chatAttachment.count({
                 where: {
                     accountId: this.accountId,
-                    textEmbeddings: { not: Prisma.DbNull },
-                    NOT: { textEmbeddings: [] }
+                    NOT: { textEmbeddings: { isEmpty: true } }
                 }
             })
 
@@ -760,8 +774,7 @@ export class PgVectorClient {
             const syncedCount = connectionIds.length > 0 ? await db.syncedItem.count({
                 where: {
                     connectionId: { in: connectionIds },
-                    embeddings: { not: Prisma.DbNull },
-                    NOT: { embeddings: [] }
+                    NOT: { embeddings: { isEmpty: true } }
                 }
             }) : 0
 
