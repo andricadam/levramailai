@@ -1,5 +1,12 @@
 "use client"
 
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
+
+// Task Manager temporarily disabled - all code preserved below
+// Uncomment the code below to re-enable the Task Manager
+
+/*
 import ThemeToggle from '@/components/theme-toggle'
 import dynamic from 'next/dynamic'
 import React, { Suspense } from 'react'
@@ -35,10 +42,7 @@ function TaskManagerDashboardContent() {
 
   return (
     <div className="h-screen w-screen overflow-hidden relative flex">
-      {/* Permanent Navigation Bar */}
       <AppNav />
-      
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         <div className="absolute bottom-4 left-20 z-10">
           <div className="flex items-center gap-2">
@@ -63,6 +67,20 @@ const TaskManagerDashboard = () => {
     </Suspense>
   )
 }
+*/
 
-export default TaskManagerDashboard
-
+export default function TaskManagerDashboard() {
+  const router = useRouter()
+  
+  // Immediate redirect - runs before render
+  useEffect(() => {
+    router.replace('/mail')
+  }, [router])
+  
+  // Also use window.location as fallback for immediate redirect
+  if (typeof window !== 'undefined' && window.location.pathname === '/task-manager') {
+    window.location.replace('/mail')
+  }
+  
+  return null
+}

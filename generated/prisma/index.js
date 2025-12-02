@@ -373,7 +373,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/andriadam/Documents/levramailai/levramailai/generated/prisma",
+      "value": "/Users/andriadam/Documents/levramailai/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -387,12 +387,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/andriadam/Documents/levramailai/levramailai/prisma/schema.prisma",
+    "sourceFilePath": "/Users/andriadam/Documents/levramailai/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.19.0",
@@ -401,6 +400,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

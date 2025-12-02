@@ -23,12 +23,14 @@ export function AppNav() {
       icon: Clock,
       badge: null,
     },
-    {
-      title: 'Tasks',
-      href: '/task-manager',
-      icon: CheckSquare,
-      badge: null,
-    },
+    //test
+    // Task Manager temporarily disabled - uncomment to re-enable
+    //{
+    //  title: 'Tasks',
+    //  href: '/task-manager',
+    //  icon: CheckSquare,
+    //  badge: null,
+    //},
     {
       title: 'Settings',
       href: '/settings',

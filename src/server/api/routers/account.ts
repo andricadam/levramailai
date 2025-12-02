@@ -8,14 +8,20 @@ import { OramaClient } from "@/lib/orama";
 import { FREE_CREDITS_PER_DAY } from "@/constants";
 
 export const authoriseAccess = async (accountId: string, userId: string) => {
-    const account = await db.account.findFirst({
-        where: {
-            id: accountId,
-            userId
-        }, select: {
-            id: true, emailAddress: true, name: true, accessToken: true
-        }
-    })
+    const account = await retryDbOperation(
+        async () => {
+            return await db.account.findFirst({
+                where: {
+                    id: accountId,
+                    userId
+                }, select: {
+                    id: true, emailAddress: true, name: true, accessToken: true
+                }
+            })
+        },
+        3, // maxRetries
+        1000 // baseDelay
+    )
     if (!account) throw new Error("Account not found")
     return account
 }
@@ -138,20 +144,23 @@ export const accountRouter = createTRPCRouter({
             equals: input.done
         };
 
-        return await ctx.db.thread.findMany({
-            where: filter,
-            include: {
-                emails: {
-                    orderBy: {
-                        sentAt: 'asc'
-                    },
-                    select: {
-                        from: true,
-                        body: true,
-                        bodySnippet: true,
-                        emailLabel: true,
-                        subject: true,
-                        sysLabels: true,
+        // Use retry logic to handle connection pool timeouts
+        return await retryDbOperation(
+            async () => {
+                return await ctx.db.thread.findMany({
+                    where: filter,
+                    include: {
+                        emails: {
+                            orderBy: {
+                                sentAt: 'asc'
+                            },
+                            select: {
+                                from: true,
+                                body: true,
+                                bodySnippet: true,
+                                emailLabel: true,
+                                subject: true,
+                                sysLabels: true,
                         id: true,
                         sentAt: true,
                         priority: true,
@@ -167,7 +176,11 @@ export const accountRouter = createTRPCRouter({
             orderBy: {
                 lastMessageDate: 'desc'
             }
-        })
+                })
+            },
+            3, // maxRetries
+            1000 // baseDelay
+        )
     }),
     getThread: privateProcedure.input(z.object({
         accountId: z.string(),

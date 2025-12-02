@@ -9,8 +9,9 @@ import TagInput from './tag-input'
 import { Input } from '@/components/ui/input'
 import AIComposeButton from './ai/compose/ai-compose-button'
 import { generate } from './ai/autocomplete/action'
+import { improveText } from './ai/improve-text'
 import { readStreamableValue } from '@ai-sdk/rsc'
-import { X, Minus, Sparkles, Mic, Bot, Paperclip, Trash2, ChevronDown, Calendar, Loader2, Pencil, MessageCircle, Bold, Italic, Underline, Strikethrough } from 'lucide-react'
+import { X, Minus, Sparkles, Mic, Bot, Paperclip, Trash2, ChevronDown, Calendar, Loader2, Pencil, MessageCircle, Bold, Italic, Underline, Strikethrough, Check, RotateCcw } from 'lucide-react'
 import {
     Dialog,
     DialogContent,
@@ -95,9 +96,19 @@ const EmailEditor = ({
     const aiGenerateRef = React.useRef<((editorInstance: any) => Promise<void>) | null>(null)
     const { account: accountData, threads, accountId } = useThreads()
     const [threadId] = useThread()
-    const thread = threads?.find(t => t.id === threadId)
+    const thread = threads?.find((t: { id: string }) => t.id === threadId)
     const [attachments, setAttachments] = React.useState<File[]>([])
     const fileInputRef = React.useRef<HTMLInputElement>(null)
+    
+    // Text improvement state
+    const [textSuggestion, setTextSuggestion] = React.useState<{
+        improvedText: string
+        originalText: string
+        from: number
+        to: number
+    } | null>(null)
+    const [isImprovingText, setIsImprovingText] = React.useState(false)
+    const [suggestionPosition, setSuggestionPosition] = React.useState<{ x: number; y: number } | null>(null)
 
     const aiGenerate = React.useCallback(async (editorInstance: any) => {
         if (!editorInstance) return
@@ -160,7 +171,7 @@ const EmailEditor = ({
         const files = e.target.files
         if (files) {
             const newFiles = Array.from(files)
-            setAttachments(prev => [...prev, ...newFiles])
+            setAttachments((prev: File[]) => [...prev, ...newFiles])
         }
         // Reset input so the same file can be selected again
         if (fileInputRef.current) {
@@ -169,7 +180,7 @@ const EmailEditor = ({
     }
 
     const handleRemoveAttachment = (index: number) => {
-        setAttachments(prev => prev.filter((_, i) => i !== index))
+        setAttachments((prev: File[]) => prev.filter((_: File, i: number) => i !== index))
     }
 
     const formatFileSize = (bytes: number) => {
@@ -260,13 +271,13 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                 class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] px-4 py-3',
             },
         },
-        onUpdate: ({ editor }) => {
+        onUpdate: ({ editor }: { editor: any }) => {
             setValue(editor.getHTML())
             // Update cursor position
             const { from } = editor.state.selection
             setCursorPosition(from)
         },
-        onSelectionUpdate: ({ editor }) => {
+        onSelectionUpdate: ({ editor }: { editor: any }) => {
             // Update cursor position on selection change
             const { from, to } = editor.state.selection
             setCursorPosition(from)
@@ -291,6 +302,12 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                         
                         setToolbarPosition({ x, y })
                         setHasSelection(true)
+                        
+                        // Close suggestion if a new selection is made (different from the one with suggestion)
+                        if (textSuggestion && (from !== textSuggestion.from || to !== textSuggestion.to)) {
+                            setTextSuggestion(null)
+                            setSuggestionPosition(null)
+                        }
                     }
                 } catch (error) {
                     // Silently handle any coordinate calculation errors
@@ -299,6 +316,11 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
             } else {
                 setHasSelection(false)
                 setToolbarPosition(null)
+                // Close suggestion if selection is cleared
+                if (textSuggestion) {
+                    setTextSuggestion(null)
+                    setSuggestionPosition(null)
+                }
             }
         },
         onFocus: () => {
@@ -311,11 +333,20 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                 }
             }, 0)
         },
-        onBlur: () => {
+        onBlur: ({ event }: { event: FocusEvent }) => {
+            // Don't hide toolbar if clicking on toolbar buttons
+            const target = event.relatedTarget as HTMLElement
+            if (target && editorContainerRef.current?.contains(target)) {
+                return // Keep toolbar visible if clicking within editor container
+            }
+            
             setIsEditorFocused(false)
-            // Hide toolbar when editor loses focus
-            setHasSelection(false)
-            setToolbarPosition(null)
+            // Hide toolbar when editor loses focus (with small delay to allow button clicks)
+            setTimeout(() => {
+                setHasSelection(false)
+                setToolbarPosition(null)
+            }, 200)
+            // Don't close suggestion on blur - let user interact with buttons
         }
     })
 
@@ -466,7 +497,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                     id='subject' 
                     placeholder='Betreff' 
                     value={subject} 
-                    onChange={(e) => setSubject(e.target.value)} 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSubject(e.target.value)} 
                     className="h-8 text-sm border-0 focus-visible:ring-0" 
                 />
             </div>
@@ -510,9 +541,12 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                 top: `${toolbarPosition.y}px`,
                                 transform: 'translateY(-100%)',
                             }}
-                            onMouseDown={(e) => {
-                                // Prevent toolbar from closing when clicking on it
-                                e.preventDefault()
+                            onMouseDown={(e: React.MouseEvent) => {
+                                // Prevent toolbar from closing when clicking on it, but allow button clicks
+                                // Only prevent default if clicking on the container itself, not buttons
+                                if (e.target === e.currentTarget) {
+                                    e.preventDefault()
+                                }
                             }}
                         >
                             {/* Text verbessern Button */}
@@ -520,9 +554,81 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                 variant="ghost"
                                 size="sm"
                                 className="h-7 px-2 gap-1.5 text-xs"
+                                onMouseDown={(e: React.MouseEvent<HTMLButtonElement>) => {
+                                    // Prevent default to stop editor blur
+                                    e.preventDefault()
+                                    e.stopPropagation()
+                                }}
+                                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
+                                    e.stopPropagation()
+                                    
+                                    if (!editor || !editorContainerRef.current) {
+                                        console.log('Editor or container not available')
+                                        return
+                                    }
+                                    
+                                    // Capture selection immediately before any blur can happen
+                                    const { from, to } = editor.state.selection
+                                    if (from === to) {
+                                        console.log('No text selected')
+                                        return
+                                    }
+                                    
+                                    const selectedText = editor.state.doc.textBetween(from, to)
+                                    if (!selectedText.trim()) {
+                                        console.log('Selected text is empty')
+                                        return
+                                    }
+                                    
+                                    console.log('Improving text:', selectedText)
+                                    
+                                    // Store selection values to use even if editor loses focus
+                                    const selectionFrom = from
+                                    const selectionTo = to
+                                    
+                                    // Calculate position for suggestion (below the selected text)
+                                    try {
+                                        const endPos = editor.view.coordsAtPos(selectionTo)
+                                        if (endPos && editorContainerRef.current) {
+                                            const containerRect = editorContainerRef.current.getBoundingClientRect()
+                                            const x = 16 // Fixed left padding (px-4 = 16px)
+                                            const y = endPos.bottom - containerRect.top + 8 // 8px below the selection
+                                            setSuggestionPosition({ x, y })
+                                        }
+                                    } catch (error) {
+                                        console.debug('Error calculating suggestion position:', error)
+                                    }
+                                    
+                                    setIsImprovingText(true)
+                                    try {
+                                        const improvedText = await improveText(selectedText)
+                                        console.log('Improved text received:', improvedText)
+                                        setTextSuggestion({
+                                            improvedText,
+                                            originalText: selectedText,
+                                            from: selectionFrom,
+                                            to: selectionTo
+                                        })
+                                    } catch (error) {
+                                        console.error('Failed to improve text:', error)
+                                        setSuggestionPosition(null)
+                                    } finally {
+                                        setIsImprovingText(false)
+                                    }
+                                }}
+                                disabled={isImprovingText}
                             >
-                                <Pencil className="h-3.5 w-3.5" />
-                                <span>Text verbessern</span>
+                                {isImprovingText ? (
+                                    <>
+                                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                        <span>Verbessern...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Pencil className="h-3.5 w-3.5" />
+                                        <span>Text verbessern</span>
+                                    </>
+                                )}
                             </Button>
 
                             {/* Frag Levra Button */}
@@ -613,6 +719,124 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                             Schreibe oder drücke die Leertaste für KI...
                         </div>
                     )}
+                    
+                    {/* Text Suggestion UI */}
+                    {textSuggestion && editor && suggestionPosition && (
+                        <div 
+                            className="absolute z-40 bg-background border rounded-lg shadow-lg p-3"
+                            style={{
+                                left: `${suggestionPosition.x}px`,
+                                top: `${suggestionPosition.y}px`,
+                                minWidth: '300px',
+                                maxWidth: 'calc(100% - 32px)',
+                            }}
+                            onMouseDown={(e) => {
+                                // Prevent suggestion from closing when clicking on it
+                                e.preventDefault()
+                            }}
+                        >
+                            <div className="space-y-3">
+                                {/* Original text with highlight */}
+                                <div className="text-sm">
+                                    <div className="text-xs text-muted-foreground mb-1">Original:</div>
+                                    <div className="bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded text-foreground">
+                                        {textSuggestion.originalText}
+                                    </div>
+                                </div>
+                                
+                                {/* Improved text suggestion */}
+                                <div className="text-sm">
+                                    <div className="text-xs text-muted-foreground mb-1">Verbessert:</div>
+                                    <div className="bg-blue-500/20 dark:bg-blue-500/30 px-2 py-1 rounded text-foreground">
+                                        {textSuggestion.improvedText}
+                                    </div>
+                                </div>
+                                
+                                {/* Action buttons */}
+                                <div className="flex items-center gap-2 pt-1 border-t border-border">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-8 px-3 gap-2 text-xs flex-1"
+                                        onClick={() => {
+                                            if (!editor || !textSuggestion) return
+                                            
+                                            // Replace the selected text with improved text
+                                            editor
+                                                .chain()
+                                                .focus()
+                                                .setTextSelection({ from: textSuggestion.from, to: textSuggestion.to })
+                                                .deleteSelection()
+                                                .insertContent(textSuggestion.improvedText)
+                                                .run()
+                                            
+                                            setTextSuggestion(null)
+                                            setSuggestionPosition(null)
+                                        }}
+                                    >
+                                        <Check className="h-3.5 w-3.5" />
+                                        Zustimmen
+                                    </Button>
+                                    
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-8 px-3 gap-2 text-xs flex-1"
+                                        onClick={() => {
+                                            setTextSuggestion(null)
+                                            setSuggestionPosition(null)
+                                        }}
+                                    >
+                                        <X className="h-3.5 w-3.5" />
+                                        Verwerfen
+                                    </Button>
+                                    
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-8 px-3 gap-2 text-xs flex-1"
+                                        onClick={async () => {
+                                            if (!editor || !textSuggestion) return
+                                            
+                                            setIsImprovingText(true)
+                                            try {
+                                                const improvedText = await improveText(textSuggestion.originalText)
+                                                setTextSuggestion({
+                                                    ...textSuggestion,
+                                                    improvedText
+                                                })
+                                                
+                                                // Update position when retrying
+                                                try {
+                                                    const endPos = editor.view.coordsAtPos(textSuggestion.to)
+                                                    if (endPos && editorContainerRef.current) {
+                                                        const containerRect = editorContainerRef.current.getBoundingClientRect()
+                                                        const x = 16
+                                                        const y = endPos.bottom - containerRect.top + 8
+                                                        setSuggestionPosition({ x, y })
+                                                    }
+                                                } catch (error) {
+                                                    console.debug('Error updating suggestion position:', error)
+                                                }
+                                            } catch (error) {
+                                                console.error('Failed to improve text:', error)
+                                            } finally {
+                                                setIsImprovingText(false)
+                                            }
+                                        }}
+                                        disabled={isImprovingText}
+                                    >
+                                        {isImprovingText ? (
+                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                        ) : (
+                                            <RotateCcw className="h-3.5 w-3.5" />
+                                        )}
+                                        Erneut versuchen
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -620,7 +844,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
             {attachments.length > 0 && (
                 <div className='px-4 py-2 border-t bg-muted/20 flex-shrink-0'>
                     <div className='flex flex-wrap gap-2'>
-                        {attachments.map((file, index) => (
+                        {attachments.map((file: File, index: number) => (
                             <div
                                 key={index}
                                 className='flex items-center gap-2 px-3 py-1.5 bg-background border rounded-md text-sm'
@@ -728,7 +952,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <Popover open={customDateOpen} onOpenChange={(open) => {
+                            <Popover open={customDateOpen}                             onOpenChange={(open: boolean) => {
                                 setCustomDateOpen(open)
                                 if (open && !selectedDate) {
                                     setSelectedDate(new Date())
@@ -740,7 +964,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                             }} modal={false}>
                                 <PopoverTrigger asChild>
                                     <DropdownMenuItem 
-                                        onSelect={(e) => {
+                                        onSelect={(e: Event) => {
                                             e.preventDefault()
                                             setCustomDateOpen(true)
                                         }}
@@ -757,11 +981,11 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                 <PopoverContent 
                                     className="w-auto p-0" 
                                     align="start"
-                                    onInteractOutside={(e) => {
+                                    onInteractOutside={(e: Event) => {
                                         // Prevent closing when clicking outside
                                         e.preventDefault()
                                     }}
-                                    onEscapeKeyDown={(e) => {
+                                    onEscapeKeyDown={(e: KeyboardEvent) => {
                                         // Prevent closing on escape, only close on button clicks
                                         e.preventDefault()
                                     }}
@@ -778,7 +1002,7 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                                             <Input
                                                 type="time"
                                                 value={selectedTime}
-                                                onChange={(e) => setSelectedTime(e.target.value)}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSelectedTime(e.target.value)}
                                                 className="w-32"
                                             />
                                         </div>
@@ -914,8 +1138,8 @@ My name is ${accountData?.name} and my email is ${accountData?.emailAddress}.
                             type="text"
                             placeholder="Bitte die KI, eine E-Mail zu entwerfen..."
                             value={aiPrompt}
-                            onChange={(e) => setAiPrompt(e.target.value)}
-                            onKeyDown={(e) => {
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAiPrompt(e.target.value)}
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                                 if (e.key === 'Enter' && aiPrompt.trim() && !isAiComposing) {
                                     handleAiCompose(aiPrompt)
                                 }
